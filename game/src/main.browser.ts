@@ -1,4 +1,4 @@
-import { MyGame } from './my-game';
+import { PhysicsGame } from './physics.game';
 
-let game = new MyGame();
+let game = new PhysicsGame();
 game.start();

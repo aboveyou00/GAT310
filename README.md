@@ -1,3 +1,3 @@
-# html5-game-seed
+# GAT310
 
-Html5 game seed!
+Classwork for GAT310 at Neumont University.
