@@ -72,6 +72,27 @@
 
 "use strict";
 
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(4));
+__export(__webpack_require__(6));
+__export(__webpack_require__(2));
+__export(__webpack_require__(11));
+__export(__webpack_require__(13));
+__export(__webpack_require__(5));
+__export(__webpack_require__(10));
+__export(__webpack_require__(12));
+__export(__webpack_require__(17));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 function degToRad(deg) {
     return (deg / 180) * Math.PI;
@@ -104,13 +125,13 @@ exports.pointDirection = pointDirection;
 //# sourceMappingURL=math.js.map
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(0);
+var math_1 = __webpack_require__(1);
 var Camera = (function () {
     function Camera(_scene) {
         this._scene = _scene;
@@ -263,14 +284,14 @@ exports.Camera = Camera;
 //# sourceMappingURL=camera.js.map
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var sprite_1 = __webpack_require__(8);
-var math_1 = __webpack_require__(0);
+var math_1 = __webpack_require__(1);
 var LINE_HEIGHT = 12;
 function fillText(context, text, x, y) {
     var lines = text.split('\n');
@@ -327,7 +348,7 @@ exports.measureSprite = measureSprite;
 //# sourceMappingURL=render.js.map
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -504,15 +525,15 @@ exports.EventQueue = EventQueue;
 //# sourceMappingURL=event-queue.js.map
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(0);
+var math_1 = __webpack_require__(1);
 var rect_1 = __webpack_require__(7);
-var render_1 = __webpack_require__(2);
+var render_1 = __webpack_require__(3);
 ;
 var GameObject = (function () {
     function GameObject(name, opts) {
@@ -847,34 +868,13 @@ exports.GameObject = GameObject;
 //# sourceMappingURL=game-object.js.map
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(3));
-__export(__webpack_require__(6));
-__export(__webpack_require__(1));
-__export(__webpack_require__(11));
-__export(__webpack_require__(13));
-__export(__webpack_require__(4));
-__export(__webpack_require__(10));
-__export(__webpack_require__(12));
-__export(__webpack_require__(17));
-//# sourceMappingURL=index.js.map
-
-/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(2);
+var render_1 = __webpack_require__(3);
 var ResourceLoader = (function () {
     function ResourceLoader() {
         this.DEBUG_RESOURCES = false;
@@ -1063,21 +1063,21 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(5);
-var start_scene_1 = __webpack_require__(19);
-var MyGame = (function (_super) {
-    __extends(MyGame, _super);
-    function MyGame(framesPerSecond) {
+var engine_1 = __webpack_require__(0);
+var start_scene_1 = __webpack_require__(21);
+var PhysicsGame = (function (_super) {
+    __extends(PhysicsGame, _super);
+    function PhysicsGame(framesPerSecond) {
         if (framesPerSecond === void 0) { framesPerSecond = 30; }
         return _super.call(this, framesPerSecond) || this;
     }
-    MyGame.prototype.start = function () {
+    PhysicsGame.prototype.start = function () {
         _super.prototype.start.call(this);
         this.changeScene(new start_scene_1.StartScene());
     };
-    return MyGame;
+    return PhysicsGame;
 }(engine_1.Game));
-exports.MyGame = MyGame;
+exports.PhysicsGame = PhysicsGame;
 
 
 /***/ }),
@@ -1097,8 +1097,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var game_object_1 = __webpack_require__(4);
-var merge = __webpack_require__(20);
+var game_object_1 = __webpack_require__(5);
+var merge = __webpack_require__(22);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -1171,7 +1171,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(1);
+var camera_1 = __webpack_require__(2);
 var FollowCamera = (function (_super) {
     __extends(FollowCamera, _super);
     function FollowCamera(scene) {
@@ -1220,7 +1220,7 @@ exports.FollowCamera = FollowCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(1);
+var camera_1 = __webpack_require__(2);
 var GameScene = (function () {
     function GameScene(_game) {
         if (_game === void 0) { _game = null; }
@@ -1366,7 +1366,7 @@ exports.GameScene = GameScene;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var resource_loader_1 = __webpack_require__(6);
-var event_queue_1 = __webpack_require__(3);
+var event_queue_1 = __webpack_require__(4);
 var Game = (function () {
     function Game(framesPerSecond) {
         if (framesPerSecond === void 0) { framesPerSecond = 30; }
@@ -1619,9 +1619,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(14));
 __export(__webpack_require__(15));
 __export(__webpack_require__(16));
-__export(__webpack_require__(0));
+__export(__webpack_require__(1));
 __export(__webpack_require__(7));
-__export(__webpack_require__(2));
+__export(__webpack_require__(3));
 __export(__webpack_require__(8));
 //# sourceMappingURL=index.js.map
 
@@ -1632,8 +1632,8 @@ __export(__webpack_require__(8));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var my_game_1 = __webpack_require__(9);
-var game = new my_game_1.MyGame();
+var physics_game_1 = __webpack_require__(9);
+var game = new physics_game_1.PhysicsGame();
 game.start();
 
 
@@ -1654,7 +1654,80 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(5);
+var engine_1 = __webpack_require__(0);
+var BOULDER_RADIUS = 48;
+var BoulderObject = (function (_super) {
+    __extends(BoulderObject, _super);
+    function BoulderObject(opts) {
+        return _super.call(this, 'Boulder', opts) || this;
+    }
+    BoulderObject.prototype.renderImpl = function (context) {
+        context.fillStyle = 'grey';
+        context.beginPath();
+        context.ellipse(0, 0, BOULDER_RADIUS, BOULDER_RADIUS, 0, 0, 2 * Math.PI);
+        context.fill();
+    };
+    return BoulderObject;
+}(engine_1.GameObject));
+exports.BoulderObject = BoulderObject;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var GOLF_BALL_RADIUS = 12;
+var GolfBallObject = (function (_super) {
+    __extends(GolfBallObject, _super);
+    function GolfBallObject(opts) {
+        return _super.call(this, 'GolfBall', opts) || this;
+    }
+    GolfBallObject.prototype.renderImpl = function (context) {
+        context.fillStyle = 'white';
+        context.beginPath();
+        context.ellipse(0, 0, GOLF_BALL_RADIUS, GOLF_BALL_RADIUS, 0, 0, 2 * Math.PI);
+        context.fill();
+    };
+    return GolfBallObject;
+}(engine_1.GameObject));
+exports.GolfBallObject = GolfBallObject;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var boulder_1 = __webpack_require__(19);
+var golf_ball_1 = __webpack_require__(20);
+var BALL_COUNT = 10;
 var StartScene = (function (_super) {
     __extends(StartScene, _super);
     function StartScene() {
@@ -1669,6 +1742,13 @@ var StartScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
+        var bounds = this.camera.bounds;
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj = Math.random() < .5 ? new boulder_1.BoulderObject() : new golf_ball_1.GolfBallObject();
+            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
+            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
+            this.addObject(obj);
+        }
     };
     return StartScene;
 }(engine_1.GameScene));
@@ -1676,7 +1756,7 @@ exports.StartScene = StartScene;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -3887,10 +3967,10 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(22)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23), __webpack_require__(24)(module)))
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports) {
 
 var g;
@@ -3917,7 +3997,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
