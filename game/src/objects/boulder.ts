@@ -1,10 +1,11 @@
-import { GameObject, GameObjectOptions } from 'engine';
+import { GameObject, GameObjectOptions, CircleCollisionMask } from 'engine';
 
 const BOULDER_RADIUS = 48;
 
 export class BoulderObject extends GameObject {
     constructor(opts?: GameObjectOptions) {
         super('Boulder', opts);
+        this.mask = new CircleCollisionMask(this, BOULDER_RADIUS);
     }
     
     renderImpl(context: CanvasRenderingContext2D) {

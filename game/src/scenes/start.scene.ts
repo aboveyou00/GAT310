@@ -1,6 +1,7 @@
 import { GameScene, Camera } from 'engine';
 import { BoulderObject } from '../objects/boulder';
 import { GolfBallObject } from '../objects/golf-ball';
+import { PhysicsControllerObject } from '../objects/physics-controller';
 
 const BALL_COUNT = 10;
 
@@ -19,6 +20,9 @@ export class StartScene extends GameScene {
         
         let camera = this.camera = new Camera(this);
         camera.clearColor = 'black';
+        
+        let physicsController = new PhysicsControllerObject();
+        this.addObject(physicsController);
         
         let bounds = this.camera.bounds;
         
