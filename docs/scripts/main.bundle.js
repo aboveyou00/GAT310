@@ -1076,7 +1076,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var start_scene_1 = __webpack_require__(24);
+var menu_scene_1 = __webpack_require__(33);
+var main_menu_1 = __webpack_require__(30);
 var PhysicsGame = (function (_super) {
     __extends(PhysicsGame, _super);
     function PhysicsGame(framesPerSecond) {
@@ -1085,7 +1086,7 @@ var PhysicsGame = (function (_super) {
     }
     PhysicsGame.prototype.start = function () {
         _super.prototype.start.call(this);
-        this.changeScene(new start_scene_1.StartScene());
+        this.changeScene(new menu_scene_1.MenuScene(new main_menu_1.MainMenuObject(), null));
     };
     return PhysicsGame;
 }(engine_1.Game));
@@ -1885,57 +1886,7 @@ exports.GolfBallObject = GolfBallObject;
 
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(22);
-var golf_ball_1 = __webpack_require__(23);
-var physics_controller_1 = __webpack_require__(28);
-var BALL_COUNT = 10;
-var StartScene = (function (_super) {
-    __extends(StartScene, _super);
-    function StartScene() {
-        var _this = _super.call(this) || this;
-        _this.initialized = false;
-        return _this;
-    }
-    StartScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject();
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        for (var q = 0; q < BALL_COUNT; q++) {
-            var obj = Math.random() < .5 ? new boulder_1.BoulderObject() : new golf_ball_1.GolfBallObject();
-            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
-            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
-            this.addObject(obj);
-        }
-    };
-    return StartScene;
-}(engine_1.GameScene));
-exports.StartScene = StartScene;
-
-
-/***/ }),
+/* 24 */,
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4239,6 +4190,276 @@ var PhysicsControllerObject = (function (_super) {
     return PhysicsControllerObject;
 }(engine_1.GameObject));
 exports.PhysicsControllerObject = PhysicsControllerObject;
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var StackScene = (function (_super) {
+    __extends(StackScene, _super);
+    function StackScene(_parentScene) {
+        var _this = _super.call(this) || this;
+        _this._parentScene = _parentScene;
+        return _this;
+    }
+    Object.defineProperty(StackScene.prototype, "parentScene", {
+        get: function () {
+            return this._parentScene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StackScene.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
+            this.game.changeScene(this.parentScene);
+            return true;
+        }
+        return false;
+    };
+    return StackScene;
+}(engine_1.GameScene));
+exports.StackScene = StackScene;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var menu_1 = __webpack_require__(31);
+var circles_scene_1 = __webpack_require__(32);
+var MainMenuObject = (function (_super) {
+    __extends(MainMenuObject, _super);
+    function MainMenuObject() {
+        return _super.call(this, 'MainMenu') || this;
+    }
+    MainMenuObject.prototype.initItems = function () {
+        var _this = this;
+        this.addMenuItem({
+            text: "Circles",
+            handler: function () {
+                _this.game.changeScene(new circles_scene_1.CirclesScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Exit",
+            handler: function () {
+                window.close();
+            }
+        });
+    };
+    return MainMenuObject;
+}(menu_1.MenuObject));
+exports.MainMenuObject = MainMenuObject;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var MenuObject = (function (_super) {
+    __extends(MenuObject, _super);
+    function MenuObject(name, lockedPostfix) {
+        if (lockedPostfix === void 0) { lockedPostfix = ' - Locked'; }
+        var _this = _super.call(this, name, {
+            renderCamera: 'none'
+        }) || this;
+        _this.lockedPostfix = lockedPostfix;
+        _this.items = [];
+        _this.currentSelection = 0;
+        _this.lastSelection = 0;
+        return _this;
+    }
+    MenuObject.prototype.addToScene = function (scene) {
+        _super.prototype.addToScene.call(this, scene);
+        this.initItems();
+    };
+    MenuObject.prototype.addMenuItem = function (item) {
+        this.items.push(item);
+    };
+    MenuObject.prototype.handleEvent = function (evt) {
+        var currentItem = this.items[this.currentSelection];
+        if (currentItem && !currentItem.isLocked || !currentItem.isLocked()) {
+            if (evt.type === 'keyTyped' && this.items.length && (evt.code === 'Enter' || evt.code === 'Space')) {
+                var currentItem_1 = this.items[this.currentSelection];
+                currentItem_1.handler();
+                return true;
+            }
+        }
+        var prevSelection = this.currentSelection;
+        switch (evt.type) {
+            case 'keyTyped':
+                if (evt.code === 'ArrowUp' || evt.code === 'ArrowLeft')
+                    this.currentSelection--;
+                else if (evt.code === 'ArrowRight' || evt.code === 'ArrowDown')
+                    this.currentSelection++;
+                if (this.currentSelection < 0)
+                    this.currentSelection = this.items.length - 1;
+                if (this.currentSelection >= this.items.length)
+                    this.currentSelection = 0;
+                break;
+            case 'mouseMoved':
+                break;
+        }
+        return this.currentSelection !== prevSelection;
+    };
+    MenuObject.prototype.renderImpl = function (context) {
+        context.textBaseline = 'top';
+        context.textAlign = 'left';
+        context.font = '24px cambria';
+        for (var q = 0; q < this.items.length; q++) {
+            var item = this.items[q];
+            var locked = (item.isLocked ? item.isLocked() : false);
+            context.fillStyle = locked ? 'gray' :
+                this.currentSelection === q ? 'orange' :
+                    'white';
+            context.fillText(item.text + (locked ? this.lockedPostfix : ''), 35, 20 + (30 * q));
+        }
+        context.textAlign = 'right';
+        if (this.items.length) {
+            context.fillStyle = 'orange';
+            context.fillText('\u203a', 30, 20 + (30 * this.currentSelection));
+        }
+    };
+    return MenuObject;
+}(engine_1.GameObject));
+exports.MenuObject = MenuObject;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var boulder_1 = __webpack_require__(22);
+var golf_ball_1 = __webpack_require__(23);
+var physics_controller_1 = __webpack_require__(28);
+var stack_scene_1 = __webpack_require__(29);
+var BALL_COUNT = 10;
+var CirclesScene = (function (_super) {
+    __extends(CirclesScene, _super);
+    function CirclesScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    CirclesScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject();
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj = Math.random() < .5 ? new boulder_1.BoulderObject() : new golf_ball_1.GolfBallObject();
+            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
+            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
+            this.addObject(obj);
+        }
+    };
+    return CirclesScene;
+}(stack_scene_1.StackScene));
+exports.CirclesScene = CirclesScene;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var stack_scene_1 = __webpack_require__(29);
+var MenuScene = (function (_super) {
+    __extends(MenuScene, _super);
+    function MenuScene(menu, parentScene) {
+        var _this = _super.call(this, parentScene) || this;
+        _this.menu = menu;
+        _this.initialized = false;
+        return _this;
+    }
+    MenuScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        this.addObject(this.menu);
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+    };
+    return MenuScene;
+}(stack_scene_1.StackScene));
+exports.MenuScene = MenuScene;
 
 
 /***/ })

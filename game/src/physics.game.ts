@@ -1,5 +1,6 @@
 import { Game } from 'engine';
-import { StartScene } from './scenes/start.scene';
+import { MenuScene } from './scenes/menu.scene';
+import { MainMenuObject } from './menu/main-menu';
 
 export class PhysicsGame extends Game {
     constructor(framesPerSecond = 30) {
@@ -8,6 +9,6 @@ export class PhysicsGame extends Game {
 
     start() {
         super.start();
-        this.changeScene(new StartScene());
+        this.changeScene(new MenuScene(new MainMenuObject(), null));
     }
 }

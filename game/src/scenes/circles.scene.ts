@@ -1,13 +1,14 @@
-import { GameScene, Camera } from 'engine';
+import { Camera, GameScene } from 'engine';
 import { BoulderObject } from '../objects/boulder';
 import { GolfBallObject } from '../objects/golf-ball';
 import { PhysicsControllerObject } from '../objects/physics-controller';
+import { StackScene } from './stack-scene';
 
 const BALL_COUNT = 10;
 
-export class StartScene extends GameScene {
-    constructor() {
-        super();
+export class CirclesScene extends StackScene {
+    constructor(parent: GameScene) {
+        super(parent);
     }
     
     private initialized = false;
