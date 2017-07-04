@@ -4,7 +4,7 @@ import { MainMenuObject } from './menu/main-menu';
 
 export class PhysicsGame extends Game {
     constructor(framesPerSecond = 30) {
-        super(framesPerSecond);
+        super({ framesPerSecond: framesPerSecond });
     }
 
     start() {

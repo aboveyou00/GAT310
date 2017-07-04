@@ -1,4 +1,4 @@
-import { GameObject, GameScene, GameEvent } from 'engine';
+import { GameObject, GameScene, GameEvent, GraphicsAdapter } from 'engine';
 
 export type MenuItemT = {
     text: string,
@@ -52,7 +52,12 @@ export abstract class MenuObject extends GameObject {
         return this.currentSelection !== prevSelection;
     }
     
-    renderImpl(context: CanvasRenderingContext2D) {
+    protected renderImpl(adapter: GraphicsAdapter) {
+        if ((<any>adapter).context instanceof CanvasRenderingContext2D) this.renderImplContext2d((<any>adapter).context);
+        else throw new Error(`Not implemented!`);
+    }
+    protected renderImplContext2d(context: CanvasRenderingContext2D) {
+        let [canvasWidth, canvasHeight] = this.game.canvasSize;
         context.textBaseline = 'top';
         context.textAlign = 'left';
         context.font = '24px cambria';
@@ -71,25 +76,4 @@ export abstract class MenuObject extends GameObject {
             context.fillText('\u203a', 30, 20 + (30 * this.currentSelection));
         }
     }
-    //The following three methods are optimizations that are currently not being used
-    //They are quckly becoming outdated
-    // saveUnrenderFrameState() {
-    //     this.lastSelection = this.currentSelection;
-    // }
-    // unrenderFrame(context: CanvasRenderingContext2D) {
-    //     if (this.lastSelection !== this.currentSelection) {
-    //         let wid = this.game.canvasSize[0];
-    //         context.fillStyle = 'black';
-    //         context.fillRect(20, 20 + (30 * this.lastSelection), wid - 40, 30);
-    //         context.fillRect(20, 20 + (30 * this.currentSelection), wid - 40, 30);
-    //     }
-    // }
-    // renderFrame(context: CanvasRenderingContext2D) {
-    //     if (this.lastSelection !== this.currentSelection) {
-    //         context.fillStyle = 'white';
-    //         context.fillText(this.items[this.lastSelection].text, 20, 20 + (30 * this.lastSelection));
-    //         context.fillStyle = 'orange';
-    //         context.fillText(this.items[this.currentSelection].text, 20, 20 + (30 * this.currentSelection));
-    //     }
-    // }
 }

@@ -1,17 +1,14 @@
-import { GameObject, GameObjectOptions, CircleCollisionMask } from 'engine';
+import { GameObject, GameObjectOptions } from 'engine';
+import { BallObject } from './ball';
+import merge = require('lodash.merge');
 
 const BOULDER_RADIUS = 48;
 
-export class BoulderObject extends GameObject {
+export class BoulderObject extends BallObject {
     constructor(opts?: GameObjectOptions) {
-        super('Boulder', opts);
-        this.mask = new CircleCollisionMask(this, BOULDER_RADIUS);
-    }
-    
-    renderImpl(context: CanvasRenderingContext2D) {
-        context.fillStyle = 'grey';
-        context.beginPath();
-        context.ellipse(0, 0, BOULDER_RADIUS, BOULDER_RADIUS, 0, 0, 2 * Math.PI);
-        context.fill();
+        super('Boulder', merge(opts, {
+            color: 'grey',
+            radius: BOULDER_RADIUS
+        }));
     }
 }

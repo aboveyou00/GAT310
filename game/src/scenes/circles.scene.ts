@@ -29,8 +29,10 @@ export class CirclesScene extends StackScene {
         
         for (let q = 0; q < BALL_COUNT; q++) {
             let obj = Math.random() < .5 ? new BoulderObject() : new GolfBallObject();
-            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
-            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
+            obj.x = -20 + Math.random() * 40;
+            obj.y = -20 + Math.random() * 40;
+            // obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
+            // obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
             this.addObject(obj);
         }
     }
