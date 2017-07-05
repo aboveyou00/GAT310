@@ -4,7 +4,7 @@ import { BowlingBallObject } from './bowling-ball';
 import { GolfBallObject } from './golf-ball';
 
 export class PhysicsControllerObject extends GameObject {
-    constructor(private message: string) {
+    constructor(private message: string, private useGravity = false, private updatePositions = false) {
         super('PhysicsController', {
             renderCamera: 'none'
         });
@@ -22,9 +22,10 @@ export class PhysicsControllerObject extends GameObject {
         }
         else if (evt.type === 'mouseButtonPressed' && evt.button === MouseButton.Left) {
             let chance = Math.floor(Math.random() * 3);
-            let obj = chance === 0 ? new BoulderObject() :
-                      chance === 1 ? new BowlingBallObject() :
-                                     new GolfBallObject();
+            let obj = chance === 0 ? new BoulderObject({ useGravity: this.useGravity }) :
+                      chance === 1 ? new BowlingBallObject({ useGravity: this.useGravity }) :
+                                     new GolfBallObject({ useGravity: this.useGravity });
+            (<any>obj.mask).updatePositions = this.updatePositions;
             let mousePos = this.events.mousePosition;
             [obj.x, obj.y] = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y);
             this.scene.addObject(obj);

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,17 +76,17 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(6));
-__export(__webpack_require__(10));
-__export(__webpack_require__(2));
-__export(__webpack_require__(16));
-__export(__webpack_require__(18));
-__export(__webpack_require__(7));
+__export(__webpack_require__(11));
 __export(__webpack_require__(15));
-__export(__webpack_require__(17));
-__export(__webpack_require__(25));
+__export(__webpack_require__(3));
+__export(__webpack_require__(20));
+__export(__webpack_require__(22));
+__export(__webpack_require__(12));
 __export(__webpack_require__(19));
 __export(__webpack_require__(21));
+__export(__webpack_require__(29));
+__export(__webpack_require__(23));
+__export(__webpack_require__(25));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -136,324 +136,6 @@ exports.pointDistance = pointDistance;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(1);
-var Camera = (function () {
-    function Camera(_scene) {
-        this._scene = _scene;
-        this._clearColor = null;
-        this._center = [0, 0];
-        this._floorCenterPosition = true;
-        this._zoomScale = 1;
-        this._maxZoomScale = 4;
-        this._minZoomScale = .25;
-        if (!this._scene)
-            throw new Error("You must pass in a valid Scene when you create a Camera.");
-    }
-    Object.defineProperty(Camera.prototype, "scene", {
-        get: function () {
-            return this._scene;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "game", {
-        get: function () {
-            return this.scene.game;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "clearColor", {
-        get: function () {
-            return this._clearColor;
-        },
-        set: function (val) {
-            this._clearColor = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "center", {
-        get: function () {
-            return [this._center[0], this._center[1]];
-        },
-        set: function (_a) {
-            var x = _a[0], y = _a[1];
-            this._center = [x, y];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "floorCenterPosition", {
-        get: function () {
-            return this._floorCenterPosition;
-        },
-        set: function (val) {
-            this._floorCenterPosition = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "zoomScale", {
-        get: function () {
-            return this._zoomScale;
-        },
-        set: function (val) {
-            if (val <= 0)
-                throw new Error("The zoom scale must be positive");
-            this._zoomScale = math_1.clamp(val, this.minZoomScale, this.maxZoomScale);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "maxZoomScale", {
-        get: function () {
-            return this._maxZoomScale;
-        },
-        set: function (val) {
-            if (val <= 0)
-                throw new Error("The max zoom scale must be positive");
-            if (val < this._minZoomScale)
-                throw new Error("The min zoom scale is greater than the max zoom scale.");
-            this._maxZoomScale = val;
-            this.zoomScale = this.zoomScale;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "minZoomScale", {
-        get: function () {
-            return this._minZoomScale;
-        },
-        set: function (val) {
-            if (val <= 0)
-                throw new Error("The min zoom scale must be positive");
-            if (val > this._maxZoomScale)
-                throw new Error("The max zoom scale is less than the min zoom scale.");
-            this._minZoomScale = val;
-            this.zoomScale = this.zoomScale;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Camera.prototype, "bounds", {
-        get: function () {
-            return this.calculateBounds(this.center, this.zoomScale);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Camera.prototype.calculateBounds = function (center, zoomScale) {
-        var _a = this.game.canvasSize, cvWidth = _a[0], cvHeight = _a[1];
-        var _b = [(cvWidth / 2) / zoomScale, (cvHeight / 2) / zoomScale], hoff = _b[0], voff = _b[1];
-        return {
-            left: center[0] - hoff,
-            right: center[0] + hoff,
-            top: center[1] + voff,
-            bottom: center[1] - voff
-        };
-    };
-    Camera.prototype.tick = function (delta) { };
-    Camera.prototype.fixedTick = function () { };
-    Camera.prototype.clear = function (adapter) {
-        if (this._clearColor)
-            adapter.clear(this._clearColor);
-    };
-    Camera.prototype.renderTransformed = function (adapter, act) {
-        var _a = this._center, tx = _a[0], ty = _a[1];
-        if (this.floorCenterPosition) {
-            tx = Math.floor(tx);
-            ty = Math.floor(ty);
-        }
-        var _b = this.game.canvasSize, cvWidth = _b[0], cvHeight = _b[1];
-        tx = Math.floor(cvWidth / 2) - (tx * this._zoomScale);
-        ty = Math.floor(cvHeight / 2) - (ty * this._zoomScale);
-        adapter.renderTransformed(tx, ty, 0, this._zoomScale, this._zoomScale, act);
-    };
-    Camera.prototype.transformPixelCoordinates = function (x, y) {
-        if (typeof x === 'object') {
-            y = x.y;
-            x = x.x;
-        }
-        var _a = this._center, tx = _a[0], ty = _a[1];
-        if (this.floorCenterPosition) {
-            tx = Math.floor(tx);
-            ty = Math.floor(ty);
-        }
-        var _b = this.game.canvasSize, cvWidth = _b[0], cvHeight = _b[1];
-        tx = Math.floor(cvWidth / 2) - (tx * this._zoomScale);
-        ty = Math.floor(cvHeight / 2) - (ty * this._zoomScale);
-        return [(x - tx) / this._zoomScale, (y - ty) / this._zoomScale];
-    };
-    return Camera;
-}());
-exports.Camera = Camera;
-//# sourceMappingURL=camera.js.map
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(11);
-var graphics_adapter_1 = __webpack_require__(8);
-var sprite_1 = __webpack_require__(4);
-var math_1 = __webpack_require__(1);
-var DefaultGraphicsAdapter = (function (_super) {
-    __extends(DefaultGraphicsAdapter, _super);
-    function DefaultGraphicsAdapter(_context) {
-        if (_context === void 0) { _context = null; }
-        var _this = _super.call(this) || this;
-        _this._context = _context;
-        _this._initialized = false;
-        return _this;
-    }
-    DefaultGraphicsAdapter.prototype.init = function () {
-        if (this._initialized)
-            throw new Error("Cannot initialize DefaultGraphicsAdapter twice.");
-        this._initialized = true;
-        if (this._context)
-            throw new Error("This DefaultGraphicsAdapter was created with a context");
-        if (!this.canvas)
-            this._canvas = document.getElementById('gameCanvas');
-        this._context = this.canvas.getContext("2d");
-    };
-    Object.defineProperty(DefaultGraphicsAdapter.prototype, "canvas", {
-        get: function () {
-            return this._canvas;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DefaultGraphicsAdapter.prototype, "context", {
-        get: function () {
-            return this._context;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    DefaultGraphicsAdapter.prototype.clear = function (color) {
-        var context = this.context;
-        context.fillStyle = color;
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    };
-    DefaultGraphicsAdapter.prototype.renderResourceLoader = function (resourcesLoaded, totalResources, errors) {
-        var context = this.context;
-        context.fillStyle = 'grey';
-        context.fillRect(0, 0, context.canvas.scrollWidth, context.canvas.scrollHeight);
-        if (totalResources > 0) {
-            context.fillStyle = 'white';
-            context.fillRect(4, 4, 100, 4);
-            context.fillStyle = 'black';
-            context.fillRect(4, 4, 100 * (resourcesLoaded / totalResources), 4);
-        }
-        var msg = resourcesLoaded + "/" + totalResources;
-        if (errors && errors.length)
-            msg += '\n' + errors;
-        context.textBaseline = 'top';
-        context.textAlign = 'left';
-        context.fillStyle = 'black';
-        render_1.fillText(context, msg, 4, 12);
-    };
-    DefaultGraphicsAdapter.prototype.renderObject = function (obj) {
-        var context = this.context;
-        if (obj.sprite) {
-            this.drawSprite(obj.resources, obj.sprite, 0, 0, obj.animationAge);
-        }
-        else {
-            context.fillStyle = 'red';
-            context.fillRect(0, 0, 16, 16);
-            context.fillStyle = 'white';
-            context.font = '16px Consolas';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText('?', 0 + 8, 0 + 8);
-        }
-    };
-    DefaultGraphicsAdapter.prototype.renderTransformed = function (translateX, translateY, rotate, scaleX, scaleY, act) {
-        var context = this.context;
-        context.save();
-        try {
-            context.translate(translateX, translateY);
-            context.rotate(rotate);
-            context.scale(scaleX, scaleY);
-            act();
-        }
-        finally {
-            context.restore();
-        }
-    };
-    DefaultGraphicsAdapter.prototype.drawSprite = function (loader, sprite, x, y, imageIndex, defaultFps) {
-        if (x === void 0) { x = 0; }
-        if (y === void 0) { y = 0; }
-        if (imageIndex === void 0) { imageIndex = 0; }
-        if (defaultFps === void 0) { defaultFps = 30; }
-        if (!loader || !loader.loadImage)
-            throw new Error("You must pass in a valid ResourceLoader to draw a sprite.");
-        if (!sprite || !sprite.src)
-            throw new Error("Invalid sprite. Cannot render " + sprite + ".");
-        var img = loader.loadImage(sprite.src);
-        var pivot = sprite.pivot || { x: 0, y: 0 };
-        var context = this.context;
-        if (sprite_1.isAnimationSprite(sprite)) {
-            var tileset = sprite.tileset;
-            var frames_1 = sprite.frames;
-            var fps = sprite.framesPerSecond;
-            if (typeof fps === 'undefined')
-                fps = defaultFps;
-            var frameIdx = math_1.fmod(Math.floor(imageIndex * fps), frames_1.length);
-            var frame = frames_1[frameIdx];
-            context.drawImage(img, frame.tilex * tileset.width, frame.tiley * tileset.height, tileset.width, tileset.height, x - pivot.x, y - pivot.y, tileset.width, tileset.height);
-        }
-        else if (sprite_1.isSingleTileSprite(sprite)) {
-            var tileset = sprite.tileset;
-            context.drawImage(img, tileset.tilex * tileset.width, tileset.tiley * tileset.height, tileset.width, tileset.height, x - pivot.x, y - pivot.y, tileset.width, tileset.height);
-        }
-        else {
-            context.drawImage(img, x - pivot.x, y - pivot.y);
-        }
-    };
-    return DefaultGraphicsAdapter;
-}(graphics_adapter_1.GraphicsAdapter));
-exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
-//# sourceMappingURL=default-graphics-adapter.js.map
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function isSingleTileSprite(sprite) {
-    return !!sprite.tileset && !sprite.frames;
-}
-exports.isSingleTileSprite = isSingleTileSprite;
-function isAnimationSprite(sprite) {
-    return !!sprite.frames;
-}
-exports.isAnimationSprite = isAnimationSprite;
-//# sourceMappingURL=sprite.js.map
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -2664,10 +2346,550 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35), __webpack_require__(36)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37), __webpack_require__(38)(module)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var math_1 = __webpack_require__(1);
+var Camera = (function () {
+    function Camera(_scene) {
+        this._scene = _scene;
+        this._clearColor = null;
+        this._center = [0, 0];
+        this._floorCenterPosition = true;
+        this._zoomScale = 1;
+        this._maxZoomScale = 4;
+        this._minZoomScale = .25;
+        if (!this._scene)
+            throw new Error("You must pass in a valid Scene when you create a Camera.");
+    }
+    Object.defineProperty(Camera.prototype, "scene", {
+        get: function () {
+            return this._scene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "game", {
+        get: function () {
+            return this.scene.game;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "clearColor", {
+        get: function () {
+            return this._clearColor;
+        },
+        set: function (val) {
+            this._clearColor = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "center", {
+        get: function () {
+            return [this._center[0], this._center[1]];
+        },
+        set: function (_a) {
+            var x = _a[0], y = _a[1];
+            this._center = [x, y];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "floorCenterPosition", {
+        get: function () {
+            return this._floorCenterPosition;
+        },
+        set: function (val) {
+            this._floorCenterPosition = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "zoomScale", {
+        get: function () {
+            return this._zoomScale;
+        },
+        set: function (val) {
+            if (val <= 0)
+                throw new Error("The zoom scale must be positive");
+            this._zoomScale = math_1.clamp(val, this.minZoomScale, this.maxZoomScale);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "maxZoomScale", {
+        get: function () {
+            return this._maxZoomScale;
+        },
+        set: function (val) {
+            if (val <= 0)
+                throw new Error("The max zoom scale must be positive");
+            if (val < this._minZoomScale)
+                throw new Error("The min zoom scale is greater than the max zoom scale.");
+            this._maxZoomScale = val;
+            this.zoomScale = this.zoomScale;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "minZoomScale", {
+        get: function () {
+            return this._minZoomScale;
+        },
+        set: function (val) {
+            if (val <= 0)
+                throw new Error("The min zoom scale must be positive");
+            if (val > this._maxZoomScale)
+                throw new Error("The max zoom scale is less than the min zoom scale.");
+            this._minZoomScale = val;
+            this.zoomScale = this.zoomScale;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "bounds", {
+        get: function () {
+            return this.calculateBounds(this.center, this.zoomScale);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Camera.prototype.calculateBounds = function (center, zoomScale) {
+        var _a = this.game.canvasSize, cvWidth = _a[0], cvHeight = _a[1];
+        var _b = [(cvWidth / 2) / zoomScale, (cvHeight / 2) / zoomScale], hoff = _b[0], voff = _b[1];
+        return {
+            left: center[0] - hoff,
+            right: center[0] + hoff,
+            top: center[1] + voff,
+            bottom: center[1] - voff
+        };
+    };
+    Camera.prototype.tick = function (delta) { };
+    Camera.prototype.fixedTick = function () { };
+    Camera.prototype.clear = function (adapter) {
+        if (this._clearColor)
+            adapter.clear(this._clearColor);
+    };
+    Camera.prototype.renderTransformed = function (adapter, act) {
+        var _a = this._center, tx = _a[0], ty = _a[1];
+        if (this.floorCenterPosition) {
+            tx = Math.floor(tx);
+            ty = Math.floor(ty);
+        }
+        var _b = this.game.canvasSize, cvWidth = _b[0], cvHeight = _b[1];
+        tx = Math.floor(cvWidth / 2) - (tx * this._zoomScale);
+        ty = Math.floor(cvHeight / 2) - (ty * this._zoomScale);
+        adapter.renderTransformed(tx, ty, 0, this._zoomScale, this._zoomScale, act);
+    };
+    Camera.prototype.transformPixelCoordinates = function (x, y) {
+        if (typeof x === 'object') {
+            y = x.y;
+            x = x.x;
+        }
+        var _a = this._center, tx = _a[0], ty = _a[1];
+        if (this.floorCenterPosition) {
+            tx = Math.floor(tx);
+            ty = Math.floor(ty);
+        }
+        var _b = this.game.canvasSize, cvWidth = _b[0], cvHeight = _b[1];
+        tx = Math.floor(cvWidth / 2) - (tx * this._zoomScale);
+        ty = Math.floor(cvHeight / 2) - (ty * this._zoomScale);
+        return [(x - tx) / this._zoomScale, (y - ty) / this._zoomScale];
+    };
+    return Camera;
+}());
+exports.Camera = Camera;
+//# sourceMappingURL=camera.js.map
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var render_1 = __webpack_require__(16);
+var graphics_adapter_1 = __webpack_require__(13);
+var sprite_1 = __webpack_require__(5);
+var math_1 = __webpack_require__(1);
+var DefaultGraphicsAdapter = (function (_super) {
+    __extends(DefaultGraphicsAdapter, _super);
+    function DefaultGraphicsAdapter(_context) {
+        if (_context === void 0) { _context = null; }
+        var _this = _super.call(this) || this;
+        _this._context = _context;
+        _this._initialized = false;
+        return _this;
+    }
+    DefaultGraphicsAdapter.prototype.init = function () {
+        if (this._initialized)
+            throw new Error("Cannot initialize DefaultGraphicsAdapter twice.");
+        this._initialized = true;
+        if (this._context)
+            throw new Error("This DefaultGraphicsAdapter was created with a context");
+        if (!this.canvas)
+            this._canvas = document.getElementById('gameCanvas');
+        this._context = this.canvas.getContext("2d");
+    };
+    Object.defineProperty(DefaultGraphicsAdapter.prototype, "canvas", {
+        get: function () {
+            return this._canvas;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DefaultGraphicsAdapter.prototype, "context", {
+        get: function () {
+            return this._context;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DefaultGraphicsAdapter.prototype.clear = function (color) {
+        var context = this.context;
+        context.fillStyle = color;
+        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    };
+    DefaultGraphicsAdapter.prototype.renderResourceLoader = function (resourcesLoaded, totalResources, errors) {
+        var context = this.context;
+        context.fillStyle = 'grey';
+        context.fillRect(0, 0, context.canvas.scrollWidth, context.canvas.scrollHeight);
+        if (totalResources > 0) {
+            context.fillStyle = 'white';
+            context.fillRect(4, 4, 100, 4);
+            context.fillStyle = 'black';
+            context.fillRect(4, 4, 100 * (resourcesLoaded / totalResources), 4);
+        }
+        var msg = resourcesLoaded + "/" + totalResources;
+        if (errors && errors.length)
+            msg += '\n' + errors;
+        context.textBaseline = 'top';
+        context.textAlign = 'left';
+        context.fillStyle = 'black';
+        render_1.fillText(context, msg, 4, 12);
+    };
+    DefaultGraphicsAdapter.prototype.renderObject = function (obj) {
+        var context = this.context;
+        if (obj.sprite) {
+            this.drawSprite(obj.resources, obj.sprite, 0, 0, obj.animationAge);
+        }
+        else {
+            context.fillStyle = 'red';
+            context.fillRect(0, 0, 16, 16);
+            context.fillStyle = 'white';
+            context.font = '16px Consolas';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText('?', 0 + 8, 0 + 8);
+        }
+    };
+    DefaultGraphicsAdapter.prototype.renderTransformed = function (translateX, translateY, rotate, scaleX, scaleY, act) {
+        var context = this.context;
+        context.save();
+        try {
+            context.translate(translateX, translateY);
+            context.rotate(rotate);
+            context.scale(scaleX, scaleY);
+            act();
+        }
+        finally {
+            context.restore();
+        }
+    };
+    DefaultGraphicsAdapter.prototype.drawSprite = function (loader, sprite, x, y, imageIndex, defaultFps) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (imageIndex === void 0) { imageIndex = 0; }
+        if (defaultFps === void 0) { defaultFps = 30; }
+        if (!loader || !loader.loadImage)
+            throw new Error("You must pass in a valid ResourceLoader to draw a sprite.");
+        if (!sprite || !sprite.src)
+            throw new Error("Invalid sprite. Cannot render " + sprite + ".");
+        var img = loader.loadImage(sprite.src);
+        var pivot = sprite.pivot || { x: 0, y: 0 };
+        var context = this.context;
+        if (sprite_1.isAnimationSprite(sprite)) {
+            var tileset = sprite.tileset;
+            var frames_1 = sprite.frames;
+            var fps = sprite.framesPerSecond;
+            if (typeof fps === 'undefined')
+                fps = defaultFps;
+            var frameIdx = math_1.fmod(Math.floor(imageIndex * fps), frames_1.length);
+            var frame = frames_1[frameIdx];
+            context.drawImage(img, frame.tilex * tileset.width, frame.tiley * tileset.height, tileset.width, tileset.height, x - pivot.x, y - pivot.y, tileset.width, tileset.height);
+        }
+        else if (sprite_1.isSingleTileSprite(sprite)) {
+            var tileset = sprite.tileset;
+            context.drawImage(img, tileset.tilex * tileset.width, tileset.tiley * tileset.height, tileset.width, tileset.height, x - pivot.x, y - pivot.y, tileset.width, tileset.height);
+        }
+        else {
+            context.drawImage(img, x - pivot.x, y - pivot.y);
+        }
+    };
+    return DefaultGraphicsAdapter;
+}(graphics_adapter_1.GraphicsAdapter));
+exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
+//# sourceMappingURL=default-graphics-adapter.js.map
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function isSingleTileSprite(sprite) {
+    return !!sprite.tileset && !sprite.frames;
+}
+exports.isSingleTileSprite = isSingleTileSprite;
+function isAnimationSprite(sprite) {
+    return !!sprite.frames;
+}
+exports.isAnimationSprite = isAnimationSprite;
+//# sourceMappingURL=sprite.js.map
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var BallObject = (function (_super) {
+    __extends(BallObject, _super);
+    function BallObject(name, opts) {
+        var _this = _super.call(this, name, opts) || this;
+        _this.gravity = 0;
+        _this.radius = opts.radius;
+        _this.color = opts.color;
+        _this.mask = new engine_1.CircleCollisionMask(_this, _this.radius);
+        if (opts.useGravity)
+            _this.gravity = 9.8;
+        return _this;
+    }
+    BallObject.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Enter')
+            this.mask.updatePositions = 'once';
+        return false;
+    };
+    BallObject.prototype.tick = function (delta) {
+        _super.prototype.tick.call(this, delta);
+        if (this.gravity) {
+            this.vspeed += this.gravity * delta;
+            var bounds = this.scene.camera.bounds;
+            if (this.y + this.radius > bounds.top) {
+                this.y = bounds.top - this.radius;
+                if (this.vspeed > 0)
+                    this.vspeed *= -.8;
+            }
+            if (this.x + this.radius > bounds.right) {
+                this.x = bounds.right - this.radius;
+                if (this.hspeed > 0)
+                    this.hspeed *= -1;
+            }
+            if (this.x - this.radius < bounds.left) {
+                this.x = bounds.left + this.radius;
+                if (this.hspeed < 0)
+                    this.hspeed *= -1;
+            }
+        }
+    };
+    BallObject.prototype.renderImpl = function (adapter) {
+        if (adapter.context instanceof CanvasRenderingContext2D)
+            this.renderImplContext2d(adapter.context);
+        else
+            throw new Error("Not implemented!");
+    };
+    BallObject.prototype.renderImplContext2d = function (context) {
+        var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
+        context.fill();
+    };
+    return BallObject;
+}(engine_1.GameObject));
+exports.BallObject = BallObject;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(6);
+var merge = __webpack_require__(2);
+var BOULDER_RADIUS = 128;
+var BoulderObject = (function (_super) {
+    __extends(BoulderObject, _super);
+    function BoulderObject(opts) {
+        return _super.call(this, 'Boulder', merge(opts, {
+            color: 'grey',
+            radius: BOULDER_RADIUS
+        })) || this;
+    }
+    return BoulderObject;
+}(ball_1.BallObject));
+exports.BoulderObject = BoulderObject;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(6);
+var merge = __webpack_require__(2);
+var BOWLING_BALL_RADIUS = 48;
+var BowlingBallObject = (function (_super) {
+    __extends(BowlingBallObject, _super);
+    function BowlingBallObject(opts) {
+        return _super.call(this, 'BowlingBall', merge(opts, {
+            color: 'green',
+            radius: BOWLING_BALL_RADIUS
+        })) || this;
+    }
+    return BowlingBallObject;
+}(ball_1.BallObject));
+exports.BowlingBallObject = BowlingBallObject;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(6);
+var merge = __webpack_require__(2);
+var GOLF_BALL_RADIUS = 24;
+var GolfBallObject = (function (_super) {
+    __extends(GolfBallObject, _super);
+    function GolfBallObject(opts) {
+        return _super.call(this, 'GolfBall', merge(opts, {
+            color: 'white',
+            radius: GOLF_BALL_RADIUS
+        })) || this;
+    }
+    return GolfBallObject;
+}(ball_1.BallObject));
+exports.GolfBallObject = GolfBallObject;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var StackScene = (function (_super) {
+    __extends(StackScene, _super);
+    function StackScene(_parentScene) {
+        var _this = _super.call(this) || this;
+        _this._parentScene = _parentScene;
+        return _this;
+    }
+    Object.defineProperty(StackScene.prototype, "parentScene", {
+        get: function () {
+            return this._parentScene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StackScene.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
+            this.game.changeScene(this.parentScene);
+            return true;
+        }
+        return false;
+    };
+    return StackScene;
+}(engine_1.GameScene));
+exports.StackScene = StackScene;
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2855,7 +3077,7 @@ exports.EventQueue = EventQueue;
 //# sourceMappingURL=event-queue.js.map
 
 /***/ }),
-/* 7 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3196,7 +3418,7 @@ exports.GameObject = GameObject;
 //# sourceMappingURL=game-object.js.map
 
 /***/ }),
-/* 8 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3211,14 +3433,14 @@ exports.GraphicsAdapter = GraphicsAdapter;
 //# sourceMappingURL=graphics-adapter.js.map
 
 /***/ }),
-/* 9 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = __webpack_require__(1);
-var default_graphics_adapter_1 = __webpack_require__(3);
+var default_graphics_adapter_1 = __webpack_require__(4);
 var CollisionMask = (function () {
     function CollisionMask(_gobj) {
         this._gobj = _gobj;
@@ -3270,7 +3492,7 @@ exports.CollisionMask = CollisionMask;
 //# sourceMappingURL=collision-mask.js.map
 
 /***/ }),
-/* 10 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3382,13 +3604,13 @@ exports.ResourceLoader = ResourceLoader;
 //# sourceMappingURL=resource-loader.js.map
 
 /***/ }),
-/* 11 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sprite_1 = __webpack_require__(4);
+var sprite_1 = __webpack_require__(5);
 var LINE_HEIGHT = 12;
 function fillText(context, text, x, y) {
     var lines = text.split('\n');
@@ -3415,7 +3637,7 @@ exports.measureSprite = measureSprite;
 //# sourceMappingURL=render.js.map
 
 /***/ }),
-/* 12 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3432,89 +3654,65 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var BallObject = (function (_super) {
-    __extends(BallObject, _super);
-    function BallObject(name, opts) {
-        var _this = _super.call(this, name, opts) || this;
-        _this.radius = opts.radius;
-        _this.color = opts.color;
-        _this.mask = new engine_1.CircleCollisionMask(_this, _this.radius);
-        _this.mask.updatePositions = false;
+var boulder_1 = __webpack_require__(7);
+var bowling_ball_1 = __webpack_require__(8);
+var golf_ball_1 = __webpack_require__(9);
+var PhysicsControllerObject = (function (_super) {
+    __extends(PhysicsControllerObject, _super);
+    function PhysicsControllerObject(message, useGravity, updatePositions) {
+        if (useGravity === void 0) { useGravity = false; }
+        if (updatePositions === void 0) { updatePositions = false; }
+        var _this = _super.call(this, 'PhysicsController', {
+            renderCamera: 'none'
+        }) || this;
+        _this.message = message;
+        _this.useGravity = useGravity;
+        _this.updatePositions = updatePositions;
         return _this;
     }
-    BallObject.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
+    PhysicsControllerObject.prototype.addToScene = function (scene) {
+        _super.prototype.addToScene.call(this, scene);
+        this.game.renderPhysics = true;
+    };
+    PhysicsControllerObject.prototype.handleEvent = function (evt) {
+        if (evt.type === 'keyPressed' && evt.code === 'F3') {
+            this.game.renderPhysics = !this.game.renderPhysics;
             return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Enter')
-            this.mask.updatePositions = 'once';
-        return false;
-    };
-    BallObject.prototype.renderImpl = function (adapter) {
-        if (adapter.context instanceof CanvasRenderingContext2D)
-            this.renderImplContext2d(adapter.context);
-        else
-            throw new Error("Not implemented!");
-    };
-    BallObject.prototype.renderImplContext2d = function (context) {
-        var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
-        context.fillStyle = this.color;
-        context.beginPath();
-        context.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
-        context.fill();
-    };
-    return BallObject;
-}(engine_1.GameObject));
-exports.BallObject = BallObject;
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var StackScene = (function (_super) {
-    __extends(StackScene, _super);
-    function StackScene(_parentScene) {
-        var _this = _super.call(this) || this;
-        _this._parentScene = _parentScene;
-        return _this;
-    }
-    Object.defineProperty(StackScene.prototype, "parentScene", {
-        get: function () {
-            return this._parentScene;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    StackScene.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
-            return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
-            this.game.changeScene(this.parentScene);
+        }
+        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: this.useGravity }) :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: this.useGravity }) :
+                    new golf_ball_1.GolfBallObject({ useGravity: this.useGravity });
+            obj.mask.updatePositions = this.updatePositions;
+            var mousePos = this.events.mousePosition;
+            _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
+            this.scene.addObject(obj);
             return true;
         }
         return false;
+        var _a;
     };
-    return StackScene;
-}(engine_1.GameScene));
-exports.StackScene = StackScene;
+    PhysicsControllerObject.prototype.render = function (adapter) {
+        if (adapter.context instanceof CanvasRenderingContext2D)
+            this.renderContext2d(adapter.context);
+        else
+            throw new Error('Not implemented');
+    };
+    PhysicsControllerObject.prototype.renderContext2d = function (context) {
+        context.fillStyle = 'white';
+        context.textAlign = 'left';
+        context.textBaseline = 'top';
+        context.font = '20px Cambria';
+        context.fillText(this.message, 20, 20);
+    };
+    return PhysicsControllerObject;
+}(engine_1.GameObject));
+exports.PhysicsControllerObject = PhysicsControllerObject;
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3531,8 +3729,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var menu_scene_1 = __webpack_require__(34);
-var main_menu_1 = __webpack_require__(28);
+var menu_scene_1 = __webpack_require__(36);
+var main_menu_1 = __webpack_require__(32);
 var PhysicsGame = (function (_super) {
     __extends(PhysicsGame, _super);
     function PhysicsGame(framesPerSecond) {
@@ -3549,7 +3747,7 @@ exports.PhysicsGame = PhysicsGame;
 
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3565,8 +3763,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var game_object_1 = __webpack_require__(7);
-var merge = __webpack_require__(5);
+var game_object_1 = __webpack_require__(12);
+var merge = __webpack_require__(2);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -3623,7 +3821,7 @@ exports.AudioSourceObject = AudioSourceObject;
 //# sourceMappingURL=audio-source-object.js.map
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3639,7 +3837,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(2);
+var camera_1 = __webpack_require__(3);
 var FollowCamera = (function (_super) {
     __extends(FollowCamera, _super);
     function FollowCamera(scene) {
@@ -3682,13 +3880,13 @@ exports.FollowCamera = FollowCamera;
 //# sourceMappingURL=follow-camera.js.map
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(2);
+var camera_1 = __webpack_require__(3);
 var GameScene = (function () {
     function GameScene(_game) {
         if (_game === void 0) { _game = null; }
@@ -3870,15 +4068,15 @@ exports.GameScene = GameScene;
 //# sourceMappingURL=game-scene.js.map
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var resource_loader_1 = __webpack_require__(10);
-var event_queue_1 = __webpack_require__(6);
-var default_graphics_adapter_1 = __webpack_require__(3);
+var resource_loader_1 = __webpack_require__(15);
+var event_queue_1 = __webpack_require__(11);
+var default_graphics_adapter_1 = __webpack_require__(4);
 ;
 var Game = (function () {
     function Game(options) {
@@ -4109,7 +4307,7 @@ exports.Game = Game;
 //# sourceMappingURL=game.js.map
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4118,12 +4316,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(8));
-__export(__webpack_require__(3));
+__export(__webpack_require__(13));
+__export(__webpack_require__(4));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4139,7 +4337,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var collision_mask_1 = __webpack_require__(9);
+var collision_mask_1 = __webpack_require__(14);
 var math_1 = __webpack_require__(1);
 var CircleCollisionMask = (function (_super) {
     __extends(CircleCollisionMask, _super);
@@ -4202,7 +4400,7 @@ var CircleCollisionMask = (function (_super) {
         for (var q = 0; q < this.contacts.length; q++) {
             var contact = this.contacts[q];
             if (contact.first !== this)
-                return;
+                continue;
             var other = contact.second;
             var relativeMass = this.mass / (this.mass + other.mass);
             var eAbsorb = 1 - relativeMass;
@@ -4241,7 +4439,7 @@ exports.CircleCollisionMask = CircleCollisionMask;
 //# sourceMappingURL=circle-collision-mask.js.map
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4250,12 +4448,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(9));
-__export(__webpack_require__(20));
+__export(__webpack_require__(14));
+__export(__webpack_require__(24));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4270,7 +4468,7 @@ exports.delay = delay;
 //# sourceMappingURL=delay.js.map
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4302,7 +4500,7 @@ exports.EventEmitter = EventEmitter;
 //# sourceMappingURL=event-emitter.js.map
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4319,7 +4517,7 @@ var MouseButton;
 //# sourceMappingURL=events.js.map
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4328,17 +4526,17 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(22));
-__export(__webpack_require__(23));
-__export(__webpack_require__(24));
-__export(__webpack_require__(1));
 __export(__webpack_require__(26));
-__export(__webpack_require__(11));
-__export(__webpack_require__(4));
+__export(__webpack_require__(27));
+__export(__webpack_require__(28));
+__export(__webpack_require__(1));
+__export(__webpack_require__(30));
+__export(__webpack_require__(16));
+__export(__webpack_require__(5));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4373,19 +4571,19 @@ exports.Rect = Rect;
 //# sourceMappingURL=rect.js.map
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var physics_game_1 = __webpack_require__(14);
+var physics_game_1 = __webpack_require__(18);
 var game = new physics_game_1.PhysicsGame();
 game.start();
 
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4401,8 +4599,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var menu_1 = __webpack_require__(29);
-var circles_scene_1 = __webpack_require__(33);
+var menu_1 = __webpack_require__(33);
+var circles_scene_1 = __webpack_require__(35);
+var bouncing_circles_scene_1 = __webpack_require__(34);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -4414,6 +4613,12 @@ var MainMenuObject = (function (_super) {
             text: "Circle Separation - Step by Step",
             handler: function () {
                 _this.game.changeScene(new circles_scene_1.CirclesScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Circle Collision",
+            handler: function () {
+                _this.game.changeScene(new bouncing_circles_scene_1.BouncingCirclesScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -4429,7 +4634,7 @@ exports.MainMenuObject = MainMenuObject;
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4523,73 +4728,7 @@ exports.MenuObject = MenuObject;
 
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(12);
-var merge = __webpack_require__(5);
-var BOULDER_RADIUS = 128;
-var BoulderObject = (function (_super) {
-    __extends(BoulderObject, _super);
-    function BoulderObject(opts) {
-        return _super.call(this, 'Boulder', merge(opts, {
-            color: 'grey',
-            radius: BOULDER_RADIUS
-        })) || this;
-    }
-    return BoulderObject;
-}(ball_1.BallObject));
-exports.BoulderObject = BoulderObject;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(12);
-var merge = __webpack_require__(5);
-var GOLF_BALL_RADIUS = 24;
-var GolfBallObject = (function (_super) {
-    __extends(GolfBallObject, _super);
-    function GolfBallObject(opts) {
-        return _super.call(this, 'GolfBall', merge(opts, {
-            color: 'white',
-            radius: GOLF_BALL_RADIUS
-        })) || this;
-    }
-    return GolfBallObject;
-}(ball_1.BallObject));
-exports.GolfBallObject = GolfBallObject;
-
-
-/***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4606,60 +4745,46 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(30);
-var bowling_ball_1 = __webpack_require__(37);
-var golf_ball_1 = __webpack_require__(31);
-var PhysicsControllerObject = (function (_super) {
-    __extends(PhysicsControllerObject, _super);
-    function PhysicsControllerObject(message) {
-        var _this = _super.call(this, 'PhysicsController', {
-            renderCamera: 'none'
-        }) || this;
-        _this.message = message;
+var boulder_1 = __webpack_require__(7);
+var bowling_ball_1 = __webpack_require__(8);
+var golf_ball_1 = __webpack_require__(9);
+var physics_controller_1 = __webpack_require__(17);
+var stack_scene_1 = __webpack_require__(10);
+var BALL_COUNT = 0;
+var BouncingCirclesScene = (function (_super) {
+    __extends(BouncingCirclesScene, _super);
+    function BouncingCirclesScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
         return _this;
     }
-    PhysicsControllerObject.prototype.addToScene = function (scene) {
-        _super.prototype.addToScene.call(this, scene);
-        this.game.renderPhysics = true;
-    };
-    PhysicsControllerObject.prototype.handleEvent = function (evt) {
-        if (evt.type === 'keyPressed' && evt.code === 'F3') {
-            this.game.renderPhysics = !this.game.renderPhysics;
-            return true;
-        }
-        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+    BouncingCirclesScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true, true);
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        for (var q = 0; q < BALL_COUNT; q++) {
             var chance = Math.floor(Math.random() * 3);
-            var obj = chance === 0 ? new boulder_1.BoulderObject() :
-                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
-                    new golf_ball_1.GolfBallObject();
-            var mousePos = this.events.mousePosition;
-            _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
-            this.scene.addObject(obj);
-            return true;
+            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: true }) :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: true }) :
+                    new golf_ball_1.GolfBallObject({ useGravity: true });
+            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
+            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
+            this.addObject(obj);
         }
-        return false;
-        var _a;
     };
-    PhysicsControllerObject.prototype.render = function (adapter) {
-        if (adapter.context instanceof CanvasRenderingContext2D)
-            this.renderContext2d(adapter.context);
-        else
-            throw new Error('Not implemented');
-    };
-    PhysicsControllerObject.prototype.renderContext2d = function (context) {
-        context.fillStyle = 'white';
-        context.textAlign = 'left';
-        context.textBaseline = 'top';
-        context.font = '20px Cambria';
-        context.fillText(this.message, 20, 20);
-    };
-    return PhysicsControllerObject;
-}(engine_1.GameObject));
-exports.PhysicsControllerObject = PhysicsControllerObject;
+    return BouncingCirclesScene;
+}(stack_scene_1.StackScene));
+exports.BouncingCirclesScene = BouncingCirclesScene;
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4676,11 +4801,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(30);
-var bowling_ball_1 = __webpack_require__(37);
-var golf_ball_1 = __webpack_require__(31);
-var physics_controller_1 = __webpack_require__(32);
-var stack_scene_1 = __webpack_require__(13);
+var boulder_1 = __webpack_require__(7);
+var bowling_ball_1 = __webpack_require__(8);
+var golf_ball_1 = __webpack_require__(9);
+var physics_controller_1 = __webpack_require__(17);
+var stack_scene_1 = __webpack_require__(10);
 var BALL_COUNT = 2;
 var CirclesScene = (function (_super) {
     __extends(CirclesScene, _super);
@@ -4704,6 +4829,7 @@ var CirclesScene = (function (_super) {
             var obj = chance === 0 ? new boulder_1.BoulderObject() :
                 chance === 1 ? new bowling_ball_1.BowlingBallObject() :
                     new golf_ball_1.GolfBallObject();
+            obj.mask.updatePositions = false;
             obj.x = -20 + Math.random() * 40;
             obj.y = -20 + Math.random() * 40;
             this.addObject(obj);
@@ -4715,7 +4841,7 @@ exports.CirclesScene = CirclesScene;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4732,7 +4858,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var stack_scene_1 = __webpack_require__(13);
+var stack_scene_1 = __webpack_require__(10);
 var MenuScene = (function (_super) {
     __extends(MenuScene, _super);
     function MenuScene(menu, parentScene) {
@@ -4756,7 +4882,7 @@ exports.MenuScene = MenuScene;
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4783,7 +4909,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -4808,39 +4934,6 @@ module.exports = function(module) {
 	}
 	return module;
 };
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(12);
-var merge = __webpack_require__(5);
-var BOWLING_BALL_RADIUS = 48;
-var BowlingBallObject = (function (_super) {
-    __extends(BowlingBallObject, _super);
-    function BowlingBallObject(opts) {
-        return _super.call(this, 'BowlingBall', merge(opts, {
-            color: 'green',
-            radius: BOWLING_BALL_RADIUS
-        })) || this;
-    }
-    return BowlingBallObject;
-}(ball_1.BallObject));
-exports.BowlingBallObject = BowlingBallObject;
 
 
 /***/ })
