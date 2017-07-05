@@ -1,4 +1,4 @@
-import { GameObject, GameObjectOptions, CircleCollisionMask, GraphicsAdapter } from 'engine';
+import { GameObject, GameObjectOptions, CircleCollisionMask, GraphicsAdapter, GameEvent } from 'engine';
 
 type BallOptions = GameObjectOptions & {
     radius: number,
@@ -11,10 +11,19 @@ export class BallObject extends GameObject {
         this.radius = opts.radius;
         this.color = opts.color;
         this.mask = new CircleCollisionMask(this, this.radius);
+        (<any>this.mask).updatePositions = false;
     }
     
     private radius: number;
     private color: string;
+    
+    handleEvent(evt: GameEvent) {
+        if (super.handleEvent(evt)) return true;
+        
+        if (evt.type === 'keyPressed' && evt.code === 'Enter') (<any>this.mask).updatePositions = 'once';
+        
+        return false;
+    }
     
     protected renderImpl(adapter: GraphicsAdapter) {
         if ((<any>adapter).context instanceof CanvasRenderingContext2D) this.renderImplContext2d((<any>adapter).context);

@@ -8,7 +8,7 @@ export class MainMenuObject extends MenuObject {
     
     initItems() {
         this.addMenuItem({
-            text:"Circles",
+            text:"Circle Separation - Step by Step",
             handler: () => {
                 this.game.changeScene(new CirclesScene(this.scene));
             }

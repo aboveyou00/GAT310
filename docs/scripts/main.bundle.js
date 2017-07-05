@@ -3439,8 +3439,16 @@ var BallObject = (function (_super) {
         _this.radius = opts.radius;
         _this.color = opts.color;
         _this.mask = new engine_1.CircleCollisionMask(_this, _this.radius);
+        _this.mask.updatePositions = false;
         return _this;
     }
+    BallObject.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Enter')
+            this.mask.updatePositions = 'once';
+        return false;
+    };
     BallObject.prototype.renderImpl = function (adapter) {
         if (adapter.context instanceof CanvasRenderingContext2D)
             this.renderImplContext2d(adapter.context);
@@ -4141,6 +4149,7 @@ var CircleCollisionMask = (function (_super) {
         var _this = _super.call(this, gobj) || this;
         _this._radius = _radius;
         _this._offset = _offset;
+        _this.updatePositions = true;
         _this.mass = isNaN(mass) ? Math.PI * _this.radius * _this.radius : mass;
         return _this;
     }
@@ -4180,9 +4189,8 @@ var CircleCollisionMask = (function (_super) {
                 second: other,
                 contactNormal: normal,
                 contactPoint: [x + normal[0] * (this.radius - (penetration / 2)), y + normal[1] * (this.radius - (penetration / 2))],
-                penetration: penetration
+                penetration: penetration + .01
             };
-            console.log('Adding collision:', collision);
             this.contacts.push(collision);
             other.contacts.push(collision);
             return collision;
@@ -4198,11 +4206,15 @@ var CircleCollisionMask = (function (_super) {
             var other = contact.second;
             var relativeMass = this.mass / (this.mass + other.mass);
             var eAbsorb = 1 - relativeMass;
-            this.gameObject.x -= contact.contactNormal[0] * eAbsorb * contact.penetration;
-            this.gameObject.y -= contact.contactNormal[1] * eAbsorb * contact.penetration;
-            other.gameObject.x += contact.contactNormal[0] * relativeMass * contact.penetration;
-            other.gameObject.y += contact.contactNormal[1] * relativeMass * contact.penetration;
+            if (this.updatePositions !== false) {
+                this.gameObject.x -= contact.contactNormal[0] * eAbsorb * contact.penetration;
+                this.gameObject.y -= contact.contactNormal[1] * eAbsorb * contact.penetration;
+                other.gameObject.x += contact.contactNormal[0] * relativeMass * contact.penetration;
+                other.gameObject.y += contact.contactNormal[1] * relativeMass * contact.penetration;
+            }
         }
+        if (this.updatePositions === 'once')
+            this.updatePositions = false;
     };
     CircleCollisionMask.prototype.renderImpl = function (context) {
         context.strokeStyle = this.contacts.length ? 'red' : 'green';
@@ -4210,17 +4222,16 @@ var CircleCollisionMask = (function (_super) {
         context.ellipse(this._offset[0], this._offset[1], this.radius, this.radius, 0, 0, 2 * Math.PI);
         context.stroke();
         context.fillStyle = 'red';
-        var _a = [this._offset[0], this._offset[1]], x = _a[0], y = _a[1];
-        context.fillRect(x - 5, y - 5, 10, 10);
+        context.fillRect(this._offset[0] - 3, this._offset[1] - 3, 6, 6);
         context.strokeStyle = 'purple';
         for (var q = 0; q < this.contacts.length; q++) {
             var contact = this.contacts[q];
             if (contact.first !== this)
                 continue;
-            context.fillRect(contact.contactPoint[0] - 3, contact.contactPoint[1] - 3, 6, 6);
+            context.fillRect(contact.contactPoint[0] - this.gameObject.x - 1, contact.contactPoint[1] - this.gameObject.y - 1, 2, 2);
             context.beginPath();
-            context.moveTo(contact.contactPoint[0] - contact.contactNormal[0] * contact.penetration / 2, contact.contactPoint[1] - contact.contactNormal[1] * contact.penetration / 2);
-            context.lineTo(contact.contactPoint[0] + contact.contactNormal[0] * contact.penetration / 2, contact.contactPoint[1] + contact.contactNormal[1] * contact.penetration / 2);
+            context.moveTo(contact.contactPoint[0] - this.gameObject.x - contact.contactNormal[0] * contact.penetration / 2, contact.contactPoint[1] - this.gameObject.y - contact.contactNormal[1] * contact.penetration / 2);
+            context.lineTo(contact.contactPoint[0] - this.gameObject.x + contact.contactNormal[0] * contact.penetration / 2, contact.contactPoint[1] - this.gameObject.y + contact.contactNormal[1] * contact.penetration / 2);
             context.stroke();
         }
     };
@@ -4400,7 +4411,7 @@ var MainMenuObject = (function (_super) {
     MainMenuObject.prototype.initItems = function () {
         var _this = this;
         this.addMenuItem({
-            text: "Circles",
+            text: "Circle Separation - Step by Step",
             handler: function () {
                 _this.game.changeScene(new circles_scene_1.CirclesScene(_this.scene));
             }
@@ -4530,7 +4541,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(12);
 var merge = __webpack_require__(5);
-var BOULDER_RADIUS = 48;
+var BOULDER_RADIUS = 128;
 var BoulderObject = (function (_super) {
     __extends(BoulderObject, _super);
     function BoulderObject(opts) {
@@ -4563,7 +4574,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(12);
 var merge = __webpack_require__(5);
-var GOLF_BALL_RADIUS = 12;
+var GOLF_BALL_RADIUS = 24;
 var GolfBallObject = (function (_super) {
     __extends(GolfBallObject, _super);
     function GolfBallObject(opts) {
@@ -4595,19 +4606,52 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
+var boulder_1 = __webpack_require__(30);
+var bowling_ball_1 = __webpack_require__(37);
+var golf_ball_1 = __webpack_require__(31);
 var PhysicsControllerObject = (function (_super) {
     __extends(PhysicsControllerObject, _super);
-    function PhysicsControllerObject() {
-        return _super.call(this, 'PhysicsController', {
-            shouldRender: false
+    function PhysicsControllerObject(message) {
+        var _this = _super.call(this, 'PhysicsController', {
+            renderCamera: 'none'
         }) || this;
+        _this.message = message;
+        return _this;
     }
+    PhysicsControllerObject.prototype.addToScene = function (scene) {
+        _super.prototype.addToScene.call(this, scene);
+        this.game.renderPhysics = true;
+    };
     PhysicsControllerObject.prototype.handleEvent = function (evt) {
         if (evt.type === 'keyPressed' && evt.code === 'F3') {
             this.game.renderPhysics = !this.game.renderPhysics;
             return true;
         }
+        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject() :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
+                    new golf_ball_1.GolfBallObject();
+            var mousePos = this.events.mousePosition;
+            _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
+            this.scene.addObject(obj);
+            return true;
+        }
         return false;
+        var _a;
+    };
+    PhysicsControllerObject.prototype.render = function (adapter) {
+        if (adapter.context instanceof CanvasRenderingContext2D)
+            this.renderContext2d(adapter.context);
+        else
+            throw new Error('Not implemented');
+    };
+    PhysicsControllerObject.prototype.renderContext2d = function (context) {
+        context.fillStyle = 'white';
+        context.textAlign = 'left';
+        context.textBaseline = 'top';
+        context.font = '20px Cambria';
+        context.fillText(this.message, 20, 20);
     };
     return PhysicsControllerObject;
 }(engine_1.GameObject));
@@ -4633,10 +4677,11 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
 var boulder_1 = __webpack_require__(30);
+var bowling_ball_1 = __webpack_require__(37);
 var golf_ball_1 = __webpack_require__(31);
 var physics_controller_1 = __webpack_require__(32);
 var stack_scene_1 = __webpack_require__(13);
-var BALL_COUNT = 10;
+var BALL_COUNT = 2;
 var CirclesScene = (function (_super) {
     __extends(CirclesScene, _super);
     function CirclesScene(parent) {
@@ -4651,11 +4696,14 @@ var CirclesScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject();
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Press enter to execute a single physics step. Click anywhere on the screen to place a random ball.');
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
         for (var q = 0; q < BALL_COUNT; q++) {
-            var obj = Math.random() < .5 ? new boulder_1.BoulderObject() : new golf_ball_1.GolfBallObject();
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject() :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
+                    new golf_ball_1.GolfBallObject();
             obj.x = -20 + Math.random() * 40;
             obj.y = -20 + Math.random() * 40;
             this.addObject(obj);
@@ -4760,6 +4808,39 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(12);
+var merge = __webpack_require__(5);
+var BOWLING_BALL_RADIUS = 48;
+var BowlingBallObject = (function (_super) {
+    __extends(BowlingBallObject, _super);
+    function BowlingBallObject(opts) {
+        return _super.call(this, 'BowlingBall', merge(opts, {
+            color: 'green',
+            radius: BOWLING_BALL_RADIUS
+        })) || this;
+    }
+    return BowlingBallObject;
+}(ball_1.BallObject));
+exports.BowlingBallObject = BowlingBallObject;
 
 
 /***/ })
