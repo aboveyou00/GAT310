@@ -12,7 +12,7 @@ export class BallObject extends GameObject {
         this.radius = opts.radius;
         this.color = opts.color;
         this.mask = new CircleCollisionMask(this, this.radius);
-        if (opts.useGravity) this.gravity = 9.8;
+        if (opts.useGravity) this.gravity = 98;
     }
     
     private radius: number;
@@ -22,7 +22,7 @@ export class BallObject extends GameObject {
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
         
-        if (evt.type === 'keyPressed' && evt.code === 'Enter') (<any>this.mask).updatePositions = 'once';
+        if (evt.type === 'keyTyped' && evt.code === 'Enter') (<any>this.mask).updatePositions = 'once';
         
         return false;
     }

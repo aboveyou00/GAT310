@@ -2693,13 +2693,13 @@ var BallObject = (function (_super) {
         _this.color = opts.color;
         _this.mask = new engine_1.CircleCollisionMask(_this, _this.radius);
         if (opts.useGravity)
-            _this.gravity = 9.8;
+            _this.gravity = 98;
         return _this;
     }
     BallObject.prototype.handleEvent = function (evt) {
         if (_super.prototype.handleEvent.call(this, evt))
             return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Enter')
+        if (evt.type === 'keyTyped' && evt.code === 'Enter')
             this.mask.updatePositions = 'once';
         return false;
     };
@@ -3446,6 +3446,9 @@ var CollisionMask = (function () {
         this._gobj = _gobj;
         this._mass = 1;
         this.contacts = [];
+        this.impulsex = 0;
+        this.impulsey = 0;
+        this.impulseCount = 0;
         if (!this._gobj)
             throw new Error("Collision mask created without a game object!");
     }
@@ -3468,6 +3471,13 @@ var CollisionMask = (function () {
     });
     CollisionMask.prototype.clearContacts = function () {
         this.contacts.length = 0;
+    };
+    CollisionMask.prototype.resolveImpulses = function () {
+        if (this.impulseCount == 0)
+            return;
+        this.gameObject.x += this.impulsex / this.impulseCount;
+        this.gameObject.y += this.impulsey / this.impulseCount;
+        this.impulsex = this.impulsey = this.impulseCount = 0;
     };
     CollisionMask.prototype.render = function (adapter) {
         if (adapter instanceof default_graphics_adapter_1.DefaultGraphicsAdapter)
@@ -3965,8 +3975,12 @@ var GameScene = (function () {
             }
         }
         for (var q = 0; q < this._colliders.length; q++) {
-            var first = this._colliders[q];
-            first.resolveCollisions();
+            var collider = this._colliders[q];
+            collider.resolveCollisions();
+        }
+        for (var q = 0; q < this._colliders.length; q++) {
+            var collider = this._colliders[q];
+            collider.resolveImpulses();
         }
     };
     GameScene.prototype.render = function (adapter) {
@@ -4405,14 +4419,28 @@ var CircleCollisionMask = (function (_super) {
             var relativeMass = this.mass / (this.mass + other.mass);
             var eAbsorb = 1 - relativeMass;
             if (this.updatePositions !== false) {
-                this.gameObject.x -= contact.contactNormal[0] * eAbsorb * contact.penetration;
-                this.gameObject.y -= contact.contactNormal[1] * eAbsorb * contact.penetration;
-                other.gameObject.x += contact.contactNormal[0] * relativeMass * contact.penetration;
-                other.gameObject.y += contact.contactNormal[1] * relativeMass * contact.penetration;
+                this.impulsex -= contact.contactNormal[0] * eAbsorb * contact.penetration;
+                this.impulsey -= contact.contactNormal[1] * eAbsorb * contact.penetration;
+                other.impulsex += contact.contactNormal[0] * relativeMass * contact.penetration;
+                other.impulsey += contact.contactNormal[1] * relativeMass * contact.penetration;
+                this.impulseCount++;
+                other.impulseCount++;
+                var a1 = (contact.contactNormal[0] * this.gameObject.hspeed) + ((contact.contactNormal[1] * this.gameObject.vspeed));
+                var a2 = (contact.contactNormal[0] * other.gameObject.hspeed) + ((contact.contactNormal[1] * other.gameObject.vspeed));
+                var optimizedP = (2 * (a1 - a2)) / (this.mass + other.mass);
+                _a = [
+                    this.gameObject.hspeed - optimizedP * other.mass * contact.contactNormal[0],
+                    this.gameObject.vspeed - optimizedP * other.mass * contact.contactNormal[1]
+                ], this.gameObject.hspeed = _a[0], this.gameObject.vspeed = _a[1];
+                _b = [
+                    other.gameObject.hspeed + optimizedP * this.mass * contact.contactNormal[0],
+                    other.gameObject.vspeed + optimizedP * this.mass * contact.contactNormal[1]
+                ], other.gameObject.hspeed = _b[0], other.gameObject.vspeed = _b[1];
             }
         }
         if (this.updatePositions === 'once')
             this.updatePositions = false;
+        var _a, _b;
     };
     CircleCollisionMask.prototype.renderImpl = function (context) {
         context.strokeStyle = this.contacts.length ? 'red' : 'green';
