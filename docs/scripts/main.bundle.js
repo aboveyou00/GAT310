@@ -5123,11 +5123,30 @@ var BallSelectObject = (function (_super) {
                 this.refreshColor();
             }
         }
+        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Right) {
+            BallSelectObject.paused = true;
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Right) {
+            BallSelectObject.paused = false;
+        }
         return false;
     };
     BallSelectObject.prototype.refreshColor = function () {
         var cc = 280 - Math.ceil(this.radius * 2.5);
         this.color = "rgb(" + cc + ", " + cc + ", " + cc + ")";
+    };
+    BallSelectObject.prototype.tick = function (delta) {
+        if (BallSelectObject.paused) {
+            if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
+                var bounds = this.scene.camera.bounds;
+                var mc = this.events.mousePosition;
+                var mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
+                _a = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _a[0], this.vspeed = _a[1];
+            }
+            return;
+        }
+        _super.prototype.tick.call(this, delta);
+        var _a;
     };
     BallSelectObject.prototype.renderImplContext2d = function (context) {
         _super.prototype.renderImplContext2d.call(this, context);
@@ -5156,6 +5175,7 @@ var BallSelectObject = (function (_super) {
             context.stroke();
         }
     };
+    BallSelectObject.paused = false;
     return BallSelectObject;
 }(ball_1.BallObject));
 exports.BallSelectObject = BallSelectObject;

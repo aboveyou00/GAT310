@@ -12,6 +12,7 @@ export class BallSelectObject extends BallObject {
     }
     
     static currentSelection: BallSelectObject;
+    static paused = false;
     
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
@@ -37,11 +38,30 @@ export class BallSelectObject extends BallObject {
                 this.refreshColor();
             }
         }
+        else if (evt.type === 'mouseButtonPressed' && evt.button === MouseButton.Right) {
+            BallSelectObject.paused = true;
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === MouseButton.Right) {
+            BallSelectObject.paused = false;
+        }
         return false;
     }
     private refreshColor() {
         let cc = 280 - Math.ceil(this.radius * 2.5);
         this.color = `rgb(${cc}, ${cc}, ${cc})`;
+    }
+    
+    tick(delta: number) {
+        if (BallSelectObject.paused) {
+            if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
+                let bounds = this.scene.camera.bounds;
+                let mc = this.events.mousePosition;
+                let mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
+                [this.hspeed, this.vspeed] = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2];
+            }
+            return;
+        }
+        super.tick(delta);
     }
     
     protected renderImplContext2d(context: CanvasRenderingContext2D) {
