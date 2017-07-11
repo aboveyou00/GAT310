@@ -56,10 +56,12 @@ export class PhysicsControllerObject extends GameObject {
         context.font = '20px Cambria';
         fillText(context, this.message, 20, 20);
         
-        context.fillStyle = 'white';
-        context.textAlign = 'right';
-        context.textBaseline = 'top';
-        context.font = '20px Cambria';
-        fillText(context, `Preserve momentum: ${this.preserveMomentum ? 'Enabled' : 'Disabled'}`, canvasWidth - 20, 20);
+        if (this.displayPreserveMass) {
+            context.fillStyle = 'white';
+            context.textAlign = 'right';
+            context.textBaseline = 'top';
+            context.font = '20px Cambria';
+            fillText(context, `Preserve momentum: ${this.preserveMomentum ? 'Enabled' : 'Disabled'}`, canvasWidth - 20, 20);
+        }
     }
 }

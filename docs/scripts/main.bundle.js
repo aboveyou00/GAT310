@@ -2995,11 +2995,13 @@ var PhysicsControllerObject = (function (_super) {
         context.textBaseline = 'top';
         context.font = '20px Cambria';
         engine_1.fillText(context, this.message, 20, 20);
-        context.fillStyle = 'white';
-        context.textAlign = 'right';
-        context.textBaseline = 'top';
-        context.font = '20px Cambria';
-        engine_1.fillText(context, "Preserve momentum: " + (this.preserveMomentum ? 'Enabled' : 'Disabled'), canvasWidth - 20, 20);
+        if (this.displayPreserveMass) {
+            context.fillStyle = 'white';
+            context.textAlign = 'right';
+            context.textBaseline = 'top';
+            context.font = '20px Cambria';
+            engine_1.fillText(context, "Preserve momentum: " + (this.preserveMomentum ? 'Enabled' : 'Disabled'), canvasWidth - 20, 20);
+        }
     };
     return PhysicsControllerObject;
 }(engine_1.GameObject));
