@@ -1,6 +1,7 @@
 import { MenuObject } from './menu';
 import { CirclesScene } from '../scenes/circles.scene';
 import { BouncingCirclesScene } from '../scenes/bouncing-circles.scene';
+import { MomentumMassScene } from '../scenes/momentum-mass.scene';
 
 export class MainMenuObject extends MenuObject {
     constructor() {
@@ -18,6 +19,12 @@ export class MainMenuObject extends MenuObject {
             text:"Circle Collision",
             handler: () => {
                 this.game.changeScene(new BouncingCirclesScene(this.scene));
+            }
+        });
+        this.addMenuItem({
+            text:"Mass and Force",
+            handler: () => {
+                this.game.changeScene(new MomentumMassScene(this.scene));
             }
         });
         this.addMenuItem({

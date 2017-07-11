@@ -9,15 +9,35 @@ export type BallOptions = GameObjectOptions & {
 export class BallObject extends GameObject {
     constructor(name: string, opts: BallOptions) {
         super(name, opts);
-        this.radius = opts.radius;
-        this.color = opts.color;
-        this.mask = new CircleCollisionMask(this, this.radius);
-        if (opts.useGravity) this.gravity = 98;
+        this._radius = opts.radius;
+        this._color = opts.color;
+        this.mask = new CircleCollisionMask(this, this._radius);
+        if (opts.useGravity) this._gravity = 98;
     }
     
-    private radius: number;
-    private color: string;
-    private gravity: number = 0;
+    private _radius: number;
+    get radius() {
+        return this._radius;
+    }
+    set radius(val: number) {
+        this._radius = val;
+        let mask: CircleCollisionMask = <any>this.mask;
+        mask.radius = this._radius;
+        mask.mass = Math.PI * this.radius * this.radius;
+    }
+    
+    private _color: string;
+    get color() {
+        return this._color;
+    }
+    set color(val: string) {
+        this._color = val;
+    }
+    
+    private _gravity: number = 0;
+    get gravity() {
+        return this._gravity;
+    }
     
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
@@ -29,19 +49,19 @@ export class BallObject extends GameObject {
     
     tick(delta: number) {
         super.tick(delta);
-        if (this.gravity) {
-            this.vspeed += this.gravity * delta;
+        if (this._gravity) {
+            this.vspeed += this._gravity * delta;
             let bounds = this.scene.camera.bounds;
-            if (this.y + this.radius > bounds.top) {
-                this.y = bounds.top - this.radius;
+            if (this.y + this._radius > bounds.top) {
+                this.y = bounds.top - this._radius;
                 if (this.vspeed > 0) this.vspeed *= -.8;
             }
-            if (this.x + this.radius > bounds.right) {
-                this.x = bounds.right - this.radius;
+            if (this.x + this._radius > bounds.right) {
+                this.x = bounds.right - this._radius;
                 if (this.hspeed > 0) this.hspeed *= -1;
             }
-            if (this.x - this.radius < bounds.left) {
-                this.x = bounds.left + this.radius;
+            if (this.x - this._radius < bounds.left) {
+                this.x = bounds.left + this._radius;
                 if (this.hspeed < 0) this.hspeed *= -1;
             }
         }
@@ -53,9 +73,9 @@ export class BallObject extends GameObject {
     }
     protected renderImplContext2d(context: CanvasRenderingContext2D) {
         let [canvasWidth, canvasHeight] = this.game.canvasSize;
-        context.fillStyle = this.color;
+        context.fillStyle = this._color;
         context.beginPath();
-        context.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
+        context.ellipse(0, 0, this._radius, this._radius, 0, 0, 2 * Math.PI);
         context.fill();
     }
 }

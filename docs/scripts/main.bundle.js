@@ -76,12 +76,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(11));
-__export(__webpack_require__(15));
-__export(__webpack_require__(3));
+__export(__webpack_require__(12));
+__export(__webpack_require__(16));
+__export(__webpack_require__(7));
 __export(__webpack_require__(20));
 __export(__webpack_require__(22));
-__export(__webpack_require__(12));
+__export(__webpack_require__(13));
 __export(__webpack_require__(19));
 __export(__webpack_require__(21));
 __export(__webpack_require__(29));
@@ -136,6 +136,151 @@ exports.pointDistance = pointDistance;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(10);
+var merge = __webpack_require__(6);
+var BOULDER_RADIUS = 128;
+var BoulderObject = (function (_super) {
+    __extends(BoulderObject, _super);
+    function BoulderObject(opts) {
+        return _super.call(this, 'Boulder', merge(opts, {
+            color: 'grey',
+            radius: BOULDER_RADIUS
+        })) || this;
+    }
+    return BoulderObject;
+}(ball_1.BallObject));
+exports.BoulderObject = BoulderObject;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(10);
+var merge = __webpack_require__(6);
+var BOWLING_BALL_RADIUS = 48;
+var BowlingBallObject = (function (_super) {
+    __extends(BowlingBallObject, _super);
+    function BowlingBallObject(opts) {
+        return _super.call(this, 'BowlingBall', merge(opts, {
+            color: 'green',
+            radius: BOWLING_BALL_RADIUS
+        })) || this;
+    }
+    return BowlingBallObject;
+}(ball_1.BallObject));
+exports.BowlingBallObject = BowlingBallObject;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(10);
+var merge = __webpack_require__(6);
+var GOLF_BALL_RADIUS = 24;
+var GolfBallObject = (function (_super) {
+    __extends(GolfBallObject, _super);
+    function GolfBallObject(opts) {
+        return _super.call(this, 'GolfBall', merge(opts, {
+            color: 'white',
+            radius: GOLF_BALL_RADIUS
+        })) || this;
+    }
+    return GolfBallObject;
+}(ball_1.BallObject));
+exports.GolfBallObject = GolfBallObject;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var StackScene = (function (_super) {
+    __extends(StackScene, _super);
+    function StackScene(_parentScene) {
+        var _this = _super.call(this) || this;
+        _this._parentScene = _parentScene;
+        return _this;
+    }
+    Object.defineProperty(StackScene.prototype, "parentScene", {
+        get: function () {
+            return this._parentScene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StackScene.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
+            this.game.changeScene(this.parentScene);
+            return true;
+        }
+        return false;
+    };
+    return StackScene;
+}(engine_1.GameScene));
+exports.StackScene = StackScene;
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -2346,10 +2491,10 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37), __webpack_require__(38)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38), __webpack_require__(39)(module)))
 
 /***/ }),
-/* 3 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2510,7 +2655,7 @@ exports.Camera = Camera;
 //# sourceMappingURL=camera.js.map
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2526,9 +2671,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(16);
-var graphics_adapter_1 = __webpack_require__(13);
-var sprite_1 = __webpack_require__(5);
+var render_1 = __webpack_require__(17);
+var graphics_adapter_1 = __webpack_require__(14);
+var sprite_1 = __webpack_require__(9);
 var math_1 = __webpack_require__(1);
 var DefaultGraphicsAdapter = (function (_super) {
     __extends(DefaultGraphicsAdapter, _super);
@@ -2650,7 +2795,7 @@ exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
 //# sourceMappingURL=default-graphics-adapter.js.map
 
 /***/ }),
-/* 5 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2667,7 +2812,7 @@ exports.isAnimationSprite = isAnimationSprite;
 //# sourceMappingURL=sprite.js.map
 
 /***/ }),
-/* 6 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2688,14 +2833,44 @@ var BallObject = (function (_super) {
     __extends(BallObject, _super);
     function BallObject(name, opts) {
         var _this = _super.call(this, name, opts) || this;
-        _this.gravity = 0;
-        _this.radius = opts.radius;
-        _this.color = opts.color;
-        _this.mask = new engine_1.CircleCollisionMask(_this, _this.radius);
+        _this._gravity = 0;
+        _this._radius = opts.radius;
+        _this._color = opts.color;
+        _this.mask = new engine_1.CircleCollisionMask(_this, _this._radius);
         if (opts.useGravity)
-            _this.gravity = 98;
+            _this._gravity = 98;
         return _this;
     }
+    Object.defineProperty(BallObject.prototype, "radius", {
+        get: function () {
+            return this._radius;
+        },
+        set: function (val) {
+            this._radius = val;
+            var mask = this.mask;
+            mask.radius = this._radius;
+            mask.mass = Math.PI * this.radius * this.radius;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BallObject.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (val) {
+            this._color = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BallObject.prototype, "gravity", {
+        get: function () {
+            return this._gravity;
+        },
+        enumerable: true,
+        configurable: true
+    });
     BallObject.prototype.handleEvent = function (evt) {
         if (_super.prototype.handleEvent.call(this, evt))
             return true;
@@ -2705,21 +2880,21 @@ var BallObject = (function (_super) {
     };
     BallObject.prototype.tick = function (delta) {
         _super.prototype.tick.call(this, delta);
-        if (this.gravity) {
-            this.vspeed += this.gravity * delta;
+        if (this._gravity) {
+            this.vspeed += this._gravity * delta;
             var bounds = this.scene.camera.bounds;
-            if (this.y + this.radius > bounds.top) {
-                this.y = bounds.top - this.radius;
+            if (this.y + this._radius > bounds.top) {
+                this.y = bounds.top - this._radius;
                 if (this.vspeed > 0)
                     this.vspeed *= -.8;
             }
-            if (this.x + this.radius > bounds.right) {
-                this.x = bounds.right - this.radius;
+            if (this.x + this._radius > bounds.right) {
+                this.x = bounds.right - this._radius;
                 if (this.hspeed > 0)
                     this.hspeed *= -1;
             }
-            if (this.x - this.radius < bounds.left) {
-                this.x = bounds.left + this.radius;
+            if (this.x - this._radius < bounds.left) {
+                this.x = bounds.left + this._radius;
                 if (this.hspeed < 0)
                     this.hspeed *= -1;
             }
@@ -2733,9 +2908,9 @@ var BallObject = (function (_super) {
     };
     BallObject.prototype.renderImplContext2d = function (context) {
         var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
-        context.fillStyle = this.color;
+        context.fillStyle = this._color;
         context.beginPath();
-        context.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
+        context.ellipse(0, 0, this._radius, this._radius, 0, 0, 2 * Math.PI);
         context.fill();
     };
     return BallObject;
@@ -2744,106 +2919,7 @@ exports.BallObject = BallObject;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(6);
-var merge = __webpack_require__(2);
-var BOULDER_RADIUS = 128;
-var BoulderObject = (function (_super) {
-    __extends(BoulderObject, _super);
-    function BoulderObject(opts) {
-        return _super.call(this, 'Boulder', merge(opts, {
-            color: 'grey',
-            radius: BOULDER_RADIUS
-        })) || this;
-    }
-    return BoulderObject;
-}(ball_1.BallObject));
-exports.BoulderObject = BoulderObject;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(6);
-var merge = __webpack_require__(2);
-var BOWLING_BALL_RADIUS = 48;
-var BowlingBallObject = (function (_super) {
-    __extends(BowlingBallObject, _super);
-    function BowlingBallObject(opts) {
-        return _super.call(this, 'BowlingBall', merge(opts, {
-            color: 'green',
-            radius: BOWLING_BALL_RADIUS
-        })) || this;
-    }
-    return BowlingBallObject;
-}(ball_1.BallObject));
-exports.BowlingBallObject = BowlingBallObject;
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(6);
-var merge = __webpack_require__(2);
-var GOLF_BALL_RADIUS = 24;
-var GolfBallObject = (function (_super) {
-    __extends(GolfBallObject, _super);
-    function GolfBallObject(opts) {
-        return _super.call(this, 'GolfBall', merge(opts, {
-            color: 'white',
-            radius: GOLF_BALL_RADIUS
-        })) || this;
-    }
-    return GolfBallObject;
-}(ball_1.BallObject));
-exports.GolfBallObject = GolfBallObject;
-
-
-/***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2860,36 +2936,78 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var StackScene = (function (_super) {
-    __extends(StackScene, _super);
-    function StackScene(_parentScene) {
-        var _this = _super.call(this) || this;
-        _this._parentScene = _parentScene;
+var boulder_1 = __webpack_require__(2);
+var bowling_ball_1 = __webpack_require__(3);
+var golf_ball_1 = __webpack_require__(4);
+var PhysicsControllerObject = (function (_super) {
+    __extends(PhysicsControllerObject, _super);
+    function PhysicsControllerObject(message, useGravity, updatePositions) {
+        if (useGravity === void 0) { useGravity = false; }
+        if (updatePositions === void 0) { updatePositions = false; }
+        var _this = _super.call(this, 'PhysicsController', {
+            renderCamera: 'none'
+        }) || this;
+        _this.message = message;
+        _this.useGravity = useGravity;
+        _this.updatePositions = updatePositions;
+        _this.createMore = true;
+        _this.displayPreserveMass = false;
+        _this.preserveMomentum = true;
         return _this;
     }
-    Object.defineProperty(StackScene.prototype, "parentScene", {
-        get: function () {
-            return this._parentScene;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    StackScene.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
+    PhysicsControllerObject.prototype.addToScene = function (scene) {
+        _super.prototype.addToScene.call(this, scene);
+        this.game.renderPhysics = true;
+    };
+    PhysicsControllerObject.prototype.handleEvent = function (evt) {
+        if (evt.type === 'keyPressed' && evt.code === 'F3') {
+            this.game.renderPhysics = !this.game.renderPhysics;
             return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
-            this.game.changeScene(this.parentScene);
+        }
+        else if (evt.type === 'keyPressed' && evt.code === 'KeyP') {
+            this.preserveMomentum = !this.preserveMomentum;
+            return true;
+        }
+        else if (this.createMore && evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: this.useGravity }) :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: this.useGravity }) :
+                    new golf_ball_1.GolfBallObject({ useGravity: this.useGravity });
+            obj.mask.updatePositions = this.updatePositions;
+            var mousePos = this.events.mousePosition;
+            _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
+            this.scene.addObject(obj);
             return true;
         }
         return false;
+        var _a;
     };
-    return StackScene;
-}(engine_1.GameScene));
-exports.StackScene = StackScene;
+    PhysicsControllerObject.prototype.render = function (adapter) {
+        if (adapter.context instanceof CanvasRenderingContext2D)
+            this.renderContext2d(adapter.context);
+        else
+            throw new Error('Not implemented');
+    };
+    PhysicsControllerObject.prototype.renderContext2d = function (context) {
+        var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
+        context.fillStyle = 'white';
+        context.textAlign = 'left';
+        context.textBaseline = 'top';
+        context.font = '20px Cambria';
+        engine_1.fillText(context, this.message, 20, 20);
+        context.fillStyle = 'white';
+        context.textAlign = 'right';
+        context.textBaseline = 'top';
+        context.font = '20px Cambria';
+        engine_1.fillText(context, "Preserve momentum: " + (this.preserveMomentum ? 'Enabled' : 'Disabled'), canvasWidth - 20, 20);
+    };
+    return PhysicsControllerObject;
+}(engine_1.GameObject));
+exports.PhysicsControllerObject = PhysicsControllerObject;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3077,7 +3195,7 @@ exports.EventQueue = EventQueue;
 //# sourceMappingURL=event-queue.js.map
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3418,7 +3536,7 @@ exports.GameObject = GameObject;
 //# sourceMappingURL=game-object.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3433,14 +3551,14 @@ exports.GraphicsAdapter = GraphicsAdapter;
 //# sourceMappingURL=graphics-adapter.js.map
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = __webpack_require__(1);
-var default_graphics_adapter_1 = __webpack_require__(4);
+var default_graphics_adapter_1 = __webpack_require__(8);
 var CollisionMask = (function () {
     function CollisionMask(_gobj) {
         this._gobj = _gobj;
@@ -3502,7 +3620,7 @@ exports.CollisionMask = CollisionMask;
 //# sourceMappingURL=collision-mask.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3614,20 +3732,20 @@ exports.ResourceLoader = ResourceLoader;
 //# sourceMappingURL=resource-loader.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sprite_1 = __webpack_require__(5);
+var sprite_1 = __webpack_require__(9);
 var LINE_HEIGHT = 12;
 function fillText(context, text, x, y) {
     var lines = text.split('\n');
     for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
         var line = lines_1[_i];
         context.fillText(line, x, y);
-        y += LINE_HEIGHT;
+        y += Math.floor(parseInt(context.font) * 1.2);
     }
 }
 exports.fillText = fillText;
@@ -3645,81 +3763,6 @@ function measureSprite(loader, sprite) {
 }
 exports.measureSprite = measureSprite;
 //# sourceMappingURL=render.js.map
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(7);
-var bowling_ball_1 = __webpack_require__(8);
-var golf_ball_1 = __webpack_require__(9);
-var PhysicsControllerObject = (function (_super) {
-    __extends(PhysicsControllerObject, _super);
-    function PhysicsControllerObject(message, useGravity, updatePositions) {
-        if (useGravity === void 0) { useGravity = false; }
-        if (updatePositions === void 0) { updatePositions = false; }
-        var _this = _super.call(this, 'PhysicsController', {
-            renderCamera: 'none'
-        }) || this;
-        _this.message = message;
-        _this.useGravity = useGravity;
-        _this.updatePositions = updatePositions;
-        return _this;
-    }
-    PhysicsControllerObject.prototype.addToScene = function (scene) {
-        _super.prototype.addToScene.call(this, scene);
-        this.game.renderPhysics = true;
-    };
-    PhysicsControllerObject.prototype.handleEvent = function (evt) {
-        if (evt.type === 'keyPressed' && evt.code === 'F3') {
-            this.game.renderPhysics = !this.game.renderPhysics;
-            return true;
-        }
-        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
-            var chance = Math.floor(Math.random() * 3);
-            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: this.useGravity }) :
-                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: this.useGravity }) :
-                    new golf_ball_1.GolfBallObject({ useGravity: this.useGravity });
-            obj.mask.updatePositions = this.updatePositions;
-            var mousePos = this.events.mousePosition;
-            _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
-            this.scene.addObject(obj);
-            return true;
-        }
-        return false;
-        var _a;
-    };
-    PhysicsControllerObject.prototype.render = function (adapter) {
-        if (adapter.context instanceof CanvasRenderingContext2D)
-            this.renderContext2d(adapter.context);
-        else
-            throw new Error('Not implemented');
-    };
-    PhysicsControllerObject.prototype.renderContext2d = function (context) {
-        context.fillStyle = 'white';
-        context.textAlign = 'left';
-        context.textBaseline = 'top';
-        context.font = '20px Cambria';
-        context.fillText(this.message, 20, 20);
-    };
-    return PhysicsControllerObject;
-}(engine_1.GameObject));
-exports.PhysicsControllerObject = PhysicsControllerObject;
-
 
 /***/ }),
 /* 18 */
@@ -3773,8 +3816,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var game_object_1 = __webpack_require__(12);
-var merge = __webpack_require__(2);
+var game_object_1 = __webpack_require__(13);
+var merge = __webpack_require__(6);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -3847,7 +3890,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(3);
+var camera_1 = __webpack_require__(7);
 var FollowCamera = (function (_super) {
     __extends(FollowCamera, _super);
     function FollowCamera(scene) {
@@ -3896,7 +3939,7 @@ exports.FollowCamera = FollowCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(3);
+var camera_1 = __webpack_require__(7);
 var GameScene = (function () {
     function GameScene(_game) {
         if (_game === void 0) { _game = null; }
@@ -4088,9 +4131,9 @@ exports.GameScene = GameScene;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var resource_loader_1 = __webpack_require__(15);
-var event_queue_1 = __webpack_require__(11);
-var default_graphics_adapter_1 = __webpack_require__(4);
+var resource_loader_1 = __webpack_require__(16);
+var event_queue_1 = __webpack_require__(12);
+var default_graphics_adapter_1 = __webpack_require__(8);
 ;
 var Game = (function () {
     function Game(options) {
@@ -4330,8 +4373,8 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(13));
-__export(__webpack_require__(4));
+__export(__webpack_require__(14));
+__export(__webpack_require__(8));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4351,7 +4394,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var collision_mask_1 = __webpack_require__(14);
+var collision_mask_1 = __webpack_require__(15);
 var math_1 = __webpack_require__(1);
 var CircleCollisionMask = (function (_super) {
     __extends(CircleCollisionMask, _super);
@@ -4476,7 +4519,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(14));
+__export(__webpack_require__(15));
 __export(__webpack_require__(24));
 //# sourceMappingURL=index.js.map
 
@@ -4559,8 +4602,8 @@ __export(__webpack_require__(27));
 __export(__webpack_require__(28));
 __export(__webpack_require__(1));
 __export(__webpack_require__(30));
-__export(__webpack_require__(16));
-__export(__webpack_require__(5));
+__export(__webpack_require__(17));
+__export(__webpack_require__(9));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4630,6 +4673,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var menu_1 = __webpack_require__(33);
 var circles_scene_1 = __webpack_require__(35);
 var bouncing_circles_scene_1 = __webpack_require__(34);
+var momentum_mass_scene_1 = __webpack_require__(37);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -4647,6 +4691,12 @@ var MainMenuObject = (function (_super) {
             text: "Circle Collision",
             handler: function () {
                 _this.game.changeScene(new bouncing_circles_scene_1.BouncingCirclesScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Mass and Force",
+            handler: function () {
+                _this.game.changeScene(new momentum_mass_scene_1.MomentumMassScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -4773,11 +4823,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(7);
-var bowling_ball_1 = __webpack_require__(8);
-var golf_ball_1 = __webpack_require__(9);
-var physics_controller_1 = __webpack_require__(17);
-var stack_scene_1 = __webpack_require__(10);
+var boulder_1 = __webpack_require__(2);
+var bowling_ball_1 = __webpack_require__(3);
+var golf_ball_1 = __webpack_require__(4);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(5);
 var BALL_COUNT = 0;
 var BouncingCirclesScene = (function (_super) {
     __extends(BouncingCirclesScene, _super);
@@ -4829,11 +4879,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(7);
-var bowling_ball_1 = __webpack_require__(8);
-var golf_ball_1 = __webpack_require__(9);
-var physics_controller_1 = __webpack_require__(17);
-var stack_scene_1 = __webpack_require__(10);
+var boulder_1 = __webpack_require__(2);
+var bowling_ball_1 = __webpack_require__(3);
+var golf_ball_1 = __webpack_require__(4);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(5);
 var BALL_COUNT = 2;
 var CirclesScene = (function (_super) {
     __extends(CirclesScene, _super);
@@ -4886,7 +4936,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var stack_scene_1 = __webpack_require__(10);
+var stack_scene_1 = __webpack_require__(5);
 var MenuScene = (function (_super) {
     __extends(MenuScene, _super);
     function MenuScene(menu, parentScene) {
@@ -4911,6 +4961,59 @@ exports.MenuScene = MenuScene;
 
 /***/ }),
 /* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(40);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(5);
+var BALL_COUNT = 12;
+var MomentumMassScene = (function (_super) {
+    __extends(MomentumMassScene, _super);
+    function MomentumMassScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    MomentumMassScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.", true, true);
+        physicsController.createMore = false;
+        physicsController.displayPreserveMass = true;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj = new ball_select_1.BallSelectObject({ useGravity: true });
+            obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
+            obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
+            this.addObject(obj);
+        }
+    };
+    return MomentumMassScene;
+}(stack_scene_1.StackScene));
+exports.MomentumMassScene = MomentumMassScene;
+
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4937,7 +5040,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -4962,6 +5065,100 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_1 = __webpack_require__(10);
+var merge = __webpack_require__(6);
+var BallSelectObject = (function (_super) {
+    __extends(BallSelectObject, _super);
+    function BallSelectObject(opts) {
+        var _this = _super.call(this, 'Ball', merge(opts, {
+            color: 'white',
+            radius: 10 + Math.floor(Math.random() * 86)
+        })) || this;
+        _this.refreshColor();
+        return _this;
+    }
+    BallSelectObject.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+            var clickPos = this.scene.camera.transformPixelCoordinates(evt.pageX, evt.pageY);
+            if (engine_1.pointDistance2(this.x, this.y, clickPos[0], clickPos[1]) <= Math.pow(this.radius, 2)) {
+                BallSelectObject.currentSelection = this;
+                return true;
+            }
+            else if (BallSelectObject.currentSelection === this) {
+                BallSelectObject.currentSelection = null;
+                return false;
+            }
+        }
+        else if (BallSelectObject.currentSelection === this) {
+            if (evt.type === 'mouseWheel') {
+                var delta = (evt.delta > 0 ? -1 : 1) * 4;
+                var oldMass = this.mask.mass;
+                this.radius = engine_1.clamp(this.radius + delta, 10, 96);
+                var newMass = this.mask.mass;
+                var preserveMomentum = this.scene.findObject('PhysicsController').preserveMomentum;
+                if (preserveMomentum)
+                    this.speed = (this.speed / newMass) * oldMass;
+                this.refreshColor();
+            }
+        }
+        return false;
+    };
+    BallSelectObject.prototype.refreshColor = function () {
+        var cc = 280 - Math.ceil(this.radius * 2.5);
+        this.color = "rgb(" + cc + ", " + cc + ", " + cc + ")";
+    };
+    BallSelectObject.prototype.renderImplContext2d = function (context) {
+        _super.prototype.renderImplContext2d.call(this, context);
+        if (this.game.renderPhysics) {
+            context.save();
+            context.rotate(-engine_1.degToRad(this.direction + 90));
+            context.lineCap = 'arrow';
+            context.lineWidth = 3;
+            context.strokeStyle = 'green';
+            context.beginPath();
+            context.moveTo(3, 0);
+            context.lineTo(3, this.speed * .5);
+            context.stroke();
+            context.strokeStyle = 'red';
+            context.beginPath();
+            context.moveTo(-3, 0);
+            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
+            context.stroke();
+            context.restore();
+        }
+        if (BallSelectObject.currentSelection === this) {
+            context.strokeStyle = 'rgba(0, 0, 255, .4)';
+            context.lineWidth = 6;
+            context.beginPath();
+            context.ellipse(0, 0, this.radius + 4, this.radius + 4, 0, 0, 2 * Math.PI);
+            context.stroke();
+        }
+    };
+    return BallSelectObject;
+}(ball_1.BallObject));
+exports.BallSelectObject = BallSelectObject;
 
 
 /***/ })
