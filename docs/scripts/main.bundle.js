@@ -4730,6 +4730,7 @@ var menu_1 = __webpack_require__(33);
 var circles_scene_1 = __webpack_require__(36);
 var bouncing_circles_scene_1 = __webpack_require__(35);
 var momentum_mass_scene_1 = __webpack_require__(38);
+var force_generator_scene_1 = __webpack_require__(43);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -4753,6 +4754,12 @@ var MainMenuObject = (function (_super) {
             text: "Mass and Force",
             handler: function () {
                 _this.game.changeScene(new momentum_mass_scene_1.MomentumMassScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Force Generator",
+            handler: function () {
+                _this.game.changeScene(new force_generator_scene_1.ForceGeneratorScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -5288,6 +5295,127 @@ var GravityForceGenerator = (function () {
 }());
 exports.GravityForceGenerator = GravityForceGenerator;
 //# sourceMappingURL=gravity-force-generator.js.map
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var MOVEMENT_AMT = 300;
+var PcBallObject = (function (_super) {
+    __extends(PcBallObject, _super);
+    function PcBallObject(opts) {
+        var _this = _super.call(this, 'PcBall', merge(opts, {
+            color: 'orange',
+            radius: 64
+        })) || this;
+        _this.mask.addForceGenerator(_this);
+        return _this;
+    }
+    PcBallObject.prototype.updateCollider = function (collider, delta) {
+        var fx = (this.events.isKeyDown('ArrowLeft') && -1) + (this.events.isKeyDown('ArrowRight') && 1);
+        var fy = (this.events.isKeyDown('ArrowUp') && -1) + (this.events.isKeyDown('ArrowDown') && 1);
+        var method = this.events.isKeyDown('KeyI') ? 'addImpulse' : 'addForce';
+        collider[method](fx * MOVEMENT_AMT * delta, fy * MOVEMENT_AMT * delta);
+    };
+    PcBallObject.prototype.renderImplContext2d = function (context) {
+        _super.prototype.renderImplContext2d.call(this, context);
+        if (this.game.renderPhysics) {
+            context.save();
+            context.rotate(-engine_1.degToRad(this.direction + 90));
+            context.lineCap = 'arrow';
+            context.lineWidth = 3;
+            context.strokeStyle = 'green';
+            context.beginPath();
+            context.moveTo(3, 0);
+            context.lineTo(3, this.speed * .5);
+            context.stroke();
+            context.strokeStyle = 'red';
+            context.beginPath();
+            context.moveTo(-3, 0);
+            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
+            context.stroke();
+            context.restore();
+        }
+    };
+    return PcBallObject;
+}(ball_1.BallObject));
+exports.PcBallObject = PcBallObject;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(34);
+var pc_ball_1 = __webpack_require__(42);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(4);
+var BALL_COUNT = 12;
+var ForceGeneratorScene = (function (_super) {
+    __extends(ForceGeneratorScene, _super);
+    function ForceGeneratorScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    ForceGeneratorScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.\nMove the orange ball using a force generator with the arrow keys.", true, true);
+        physicsController.createMore = false;
+        physicsController.displayPreserveMass = true;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj_1 = new ball_select_1.BallSelectObject();
+            obj_1.x = bounds.left + obj_1.radius + Math.random() * (bounds.right - bounds.left - obj_1.radius * 2);
+            obj_1.y = bounds.bottom + obj_1.radius + Math.random() * (bounds.top - bounds.bottom - obj_1.radius * 2);
+            this.addObject(obj_1);
+        }
+        var obj = new pc_ball_1.PcBallObject();
+        obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
+        obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
+        this.addObject(obj);
+    };
+    return ForceGeneratorScene;
+}(stack_scene_1.StackScene));
+exports.ForceGeneratorScene = ForceGeneratorScene;
+
 
 /***/ })
 /******/ ]);
