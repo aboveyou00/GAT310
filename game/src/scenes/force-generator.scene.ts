@@ -1,4 +1,4 @@
-import { Camera, GameScene, GravityForceGenerator } from 'engine';
+import { Camera, GameScene, GravityForceGenerator, DragForceGenerator } from 'engine';
 import { BallSelectObject } from '../objects/ball-select';
 import { PcBallObject } from '../objects/pc-ball';
 import { PhysicsControllerObject } from '../objects/physics-controller';
@@ -33,6 +33,8 @@ Move the orange ball using a force generator with the arrow keys.`, true, true);
         
         let bounds = this.camera.bounds;
         this.addForceGenerator(new GravityForceGenerator(98));
+        this.addForceGenerator(physicsController.dragForce = new DragForceGenerator(.001, .001));
+        // physicsController.dragForce.enabled = false;
         
         for (let q = 0; q < BALL_COUNT; q++) {
             let obj = new BallSelectObject();

@@ -2942,6 +2942,7 @@ var PhysicsControllerObject = (function (_super) {
         _this.createMore = true;
         _this.displayPreserveMass = false;
         _this.preserveMomentum = true;
+        _this.dragForce = null;
         return _this;
     }
     PhysicsControllerObject.prototype.addToScene = function (scene) {
@@ -2959,13 +2960,25 @@ var PhysicsControllerObject = (function (_super) {
         }
         else if (this.createMore && evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
             var chance = Math.floor(Math.random() * 3);
-            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: this.useGravity }) :
-                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: this.useGravity }) :
-                    new golf_ball_1.GolfBallObject({ useGravity: this.useGravity });
+            var obj = chance === 0 ? new boulder_1.BoulderObject() :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
+                    new golf_ball_1.GolfBallObject();
             obj.mask.updatePositions = this.updatePositions;
             var mousePos = this.events.mousePosition;
             _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), obj.x = _a[0], obj.y = _a[1];
             this.scene.addObject(obj);
+            return true;
+        }
+        else if (evt.type === 'keyPressed' && evt.code === 'KeyD' && this.dragForce) {
+            this.dragForce.enabled = !this.dragForce.enabled;
+            return true;
+        }
+        else if (evt.type === 'keyPressed' && evt.code === 'KeyL' && this.dragForce) {
+            this.dragForce.k1 = +window.prompt("Enter the new low speed");
+            return true;
+        }
+        else if (evt.type === 'keyPressed' && evt.code === 'KeyH' && this.dragForce) {
+            this.dragForce.k2 = +window.prompt("Enter the new high speed");
             return true;
         }
         return false;
@@ -2984,12 +2997,22 @@ var PhysicsControllerObject = (function (_super) {
         context.textBaseline = 'top';
         context.font = '20px Cambria';
         engine_1.fillText(context, this.message, 20, 20);
+        context.fillStyle = 'white';
+        context.textAlign = 'right';
+        context.textBaseline = 'top';
+        context.font = '20px Cambria';
+        var yy = 20;
         if (this.displayPreserveMass) {
-            context.fillStyle = 'white';
-            context.textAlign = 'right';
-            context.textBaseline = 'top';
-            context.font = '20px Cambria';
-            engine_1.fillText(context, "Preserve momentum: " + (this.preserveMomentum ? 'Enabled' : 'Disabled'), canvasWidth - 20, 20);
+            engine_1.fillText(context, "Preserve momentum: " + (this.preserveMomentum ? 'Enabled' : 'Disabled'), canvasWidth - 20, yy);
+            yy += 30;
+        }
+        if (this.dragForce) {
+            engine_1.fillText(context, "Drag (D): " + (this.dragForce.enabled ? 'Enabled' : 'Disabled'), canvasWidth - 20, yy);
+            yy += 30;
+            engine_1.fillText(context, "Drag lowSpeed (L): " + this.dragForce.k1, canvasWidth - 20, yy);
+            yy += 30;
+            engine_1.fillText(context, "Drag highSpeed (H): " + this.dragForce.k2, canvasWidth - 20, yy);
+            yy += 30;
         }
     };
     return PhysicsControllerObject;
@@ -4577,6 +4600,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(15));
 __export(__webpack_require__(24));
 __export(__webpack_require__(41));
+__export(__webpack_require__(44));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -5267,6 +5291,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var collision_mask_1 = __webpack_require__(15);
 var GravityForceGenerator = (function () {
     function GravityForceGenerator(hgravity, vgravity) {
+        this.enabled = true;
         if (hgravity instanceof collision_mask_1.CollisionMask)
             this._towards = hgravity;
         else if (typeof hgravity === 'number') {
@@ -5285,6 +5310,8 @@ var GravityForceGenerator = (function () {
         }
     }
     GravityForceGenerator.prototype.updateCollider = function (collider, delta) {
+        if (!this.enabled)
+            return;
         var hgrav = this._hgravity, vgrav = this._vgravity;
         if (this._towards) {
             throw new Error('Not implemented');
@@ -5401,6 +5428,7 @@ var ForceGeneratorScene = (function (_super) {
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
         this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        this.addForceGenerator(physicsController.dragForce = new engine_1.DragForceGenerator(.001, .001));
         for (var q = 0; q < BALL_COUNT; q++) {
             var obj_1 = new ball_select_1.BallSelectObject();
             obj_1.x = bounds.left + obj_1.radius + Math.random() * (bounds.right - bounds.left - obj_1.radius * 2);
@@ -5416,6 +5444,36 @@ var ForceGeneratorScene = (function (_super) {
 }(stack_scene_1.StackScene));
 exports.ForceGeneratorScene = ForceGeneratorScene;
 
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DragForceGenerator = (function () {
+    function DragForceGenerator(k1, k2) {
+        this.k1 = k1;
+        this.k2 = k2;
+        this.enabled = true;
+    }
+    DragForceGenerator.prototype.updateCollider = function (collider, delta) {
+        if (!this.enabled)
+            return;
+        if (!collider.gameObject.speed)
+            return;
+        var speed = collider.gameObject.speed;
+        var dragCoeff = this.k1 * speed + this.k2 * Math.pow(speed, 2);
+        var _a = [collider.gameObject.hspeed, collider.gameObject.vspeed], hspeed = _a[0], vspeed = _a[1];
+        var _b = [hspeed / speed, vspeed / speed], nhspeed = _b[0], nvspeed = _b[1];
+        var _c = [-nhspeed * dragCoeff, -nvspeed * dragCoeff], hdrag = _c[0], vdrag = _c[1];
+        collider.addForce(hdrag * delta, vdrag * delta);
+    };
+    return DragForceGenerator;
+}());
+exports.DragForceGenerator = DragForceGenerator;
+//# sourceMappingURL=drag-force-generator.js.map
 
 /***/ })
 /******/ ]);
