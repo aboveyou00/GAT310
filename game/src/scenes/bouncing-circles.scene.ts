@@ -1,4 +1,4 @@
-import { Camera, GameScene } from 'engine';
+import { Camera, GameScene, GravityForceGenerator } from 'engine';
 import { BoulderObject } from '../objects/boulder';
 import { BowlingBallObject } from '../objects/bowling-ball';
 import { GolfBallObject } from '../objects/golf-ball';
@@ -27,12 +27,13 @@ export class BouncingCirclesScene extends StackScene {
         this.addObject(physicsController);
         
         let bounds = this.camera.bounds;
+        this.addForceGenerator(new GravityForceGenerator(98));
         
         for (let q = 0; q < BALL_COUNT; q++) {
             let chance = Math.floor(Math.random() * 3);
-            let obj = chance === 0 ? new BoulderObject({ useGravity: true }) :
-                      chance === 1 ? new BowlingBallObject({ useGravity: true }) :
-                                     new GolfBallObject({ useGravity: true });
+            let obj = chance === 0 ? new BoulderObject() :
+                      chance === 1 ? new BowlingBallObject() :
+                                     new GolfBallObject();
             obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
             obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
             this.addObject(obj);

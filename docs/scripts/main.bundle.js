@@ -78,7 +78,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(12));
 __export(__webpack_require__(16));
-__export(__webpack_require__(7));
+__export(__webpack_require__(5));
 __export(__webpack_require__(20));
 __export(__webpack_require__(22));
 __export(__webpack_require__(13));
@@ -136,151 +136,6 @@ exports.pointDistance = pointDistance;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(10);
-var merge = __webpack_require__(6);
-var BOULDER_RADIUS = 128;
-var BoulderObject = (function (_super) {
-    __extends(BoulderObject, _super);
-    function BoulderObject(opts) {
-        return _super.call(this, 'Boulder', merge(opts, {
-            color: 'grey',
-            radius: BOULDER_RADIUS
-        })) || this;
-    }
-    return BoulderObject;
-}(ball_1.BallObject));
-exports.BoulderObject = BoulderObject;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(10);
-var merge = __webpack_require__(6);
-var BOWLING_BALL_RADIUS = 48;
-var BowlingBallObject = (function (_super) {
-    __extends(BowlingBallObject, _super);
-    function BowlingBallObject(opts) {
-        return _super.call(this, 'BowlingBall', merge(opts, {
-            color: 'green',
-            radius: BOWLING_BALL_RADIUS
-        })) || this;
-    }
-    return BowlingBallObject;
-}(ball_1.BallObject));
-exports.BowlingBallObject = BowlingBallObject;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(10);
-var merge = __webpack_require__(6);
-var GOLF_BALL_RADIUS = 24;
-var GolfBallObject = (function (_super) {
-    __extends(GolfBallObject, _super);
-    function GolfBallObject(opts) {
-        return _super.call(this, 'GolfBall', merge(opts, {
-            color: 'white',
-            radius: GOLF_BALL_RADIUS
-        })) || this;
-    }
-    return GolfBallObject;
-}(ball_1.BallObject));
-exports.GolfBallObject = GolfBallObject;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var StackScene = (function (_super) {
-    __extends(StackScene, _super);
-    function StackScene(_parentScene) {
-        var _this = _super.call(this) || this;
-        _this._parentScene = _parentScene;
-        return _this;
-    }
-    Object.defineProperty(StackScene.prototype, "parentScene", {
-        get: function () {
-            return this._parentScene;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    StackScene.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
-            return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
-            this.game.changeScene(this.parentScene);
-            return true;
-        }
-        return false;
-    };
-    return StackScene;
-}(engine_1.GameScene));
-exports.StackScene = StackScene;
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -2491,10 +2346,152 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38), __webpack_require__(39)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39), __webpack_require__(40)(module)))
 
 /***/ }),
-/* 7 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var BallObject = (function (_super) {
+    __extends(BallObject, _super);
+    function BallObject(name, opts) {
+        var _this = _super.call(this, name, opts) || this;
+        _this._radius = opts.radius;
+        _this._color = opts.color;
+        _this.mask = new engine_1.CircleCollisionMask(_this, _this._radius);
+        return _this;
+    }
+    Object.defineProperty(BallObject.prototype, "radius", {
+        get: function () {
+            return this._radius;
+        },
+        set: function (val) {
+            this._radius = val;
+            var mask = this.mask;
+            mask.radius = this._radius;
+            mask.mass = Math.PI * this.radius * this.radius;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BallObject.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (val) {
+            this._color = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BallObject.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyTyped' && evt.code === 'Enter' && !this.mask.updatePositions)
+            this.mask.updatePositions = 'once';
+        return false;
+    };
+    BallObject.prototype.tick = function (delta) {
+        _super.prototype.tick.call(this, delta);
+        if (this.hspeed !== 0 || this.vspeed !== 0) {
+            var bounds = this.scene.camera.bounds;
+            if (this.y + this._radius > bounds.top) {
+                this.y = bounds.top - this._radius;
+                if (this.vspeed > 0)
+                    this.vspeed *= -.8;
+            }
+            if (this.x + this._radius > bounds.right) {
+                this.x = bounds.right - this._radius;
+                if (this.hspeed > 0)
+                    this.hspeed *= -1;
+            }
+            if (this.x - this._radius < bounds.left) {
+                this.x = bounds.left + this._radius;
+                if (this.hspeed < 0)
+                    this.hspeed *= -1;
+            }
+        }
+    };
+    BallObject.prototype.renderImpl = function (adapter) {
+        if (adapter.context instanceof CanvasRenderingContext2D)
+            this.renderImplContext2d(adapter.context);
+        else
+            throw new Error("Not implemented!");
+    };
+    BallObject.prototype.renderImplContext2d = function (context) {
+        var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
+        context.fillStyle = this._color;
+        context.beginPath();
+        context.ellipse(0, 0, this._radius, this._radius, 0, 0, 2 * Math.PI);
+        context.fill();
+    };
+    return BallObject;
+}(engine_1.GameObject));
+exports.BallObject = BallObject;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var StackScene = (function (_super) {
+    __extends(StackScene, _super);
+    function StackScene(_parentScene) {
+        var _this = _super.call(this) || this;
+        _this._parentScene = _parentScene;
+        return _this;
+    }
+    Object.defineProperty(StackScene.prototype, "parentScene", {
+        get: function () {
+            return this._parentScene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StackScene.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
+            this.game.changeScene(this.parentScene);
+            return true;
+        }
+        return false;
+    };
+    return StackScene;
+}(engine_1.GameScene));
+exports.StackScene = StackScene;
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2655,7 +2652,7 @@ exports.Camera = Camera;
 //# sourceMappingURL=camera.js.map
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2673,7 +2670,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var render_1 = __webpack_require__(17);
 var graphics_adapter_1 = __webpack_require__(14);
-var sprite_1 = __webpack_require__(9);
+var sprite_1 = __webpack_require__(7);
 var math_1 = __webpack_require__(1);
 var DefaultGraphicsAdapter = (function (_super) {
     __extends(DefaultGraphicsAdapter, _super);
@@ -2795,7 +2792,7 @@ exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
 //# sourceMappingURL=default-graphics-adapter.js.map
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2810,6 +2807,72 @@ function isAnimationSprite(sprite) {
 }
 exports.isAnimationSprite = isAnimationSprite;
 //# sourceMappingURL=sprite.js.map
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var BOULDER_RADIUS = 128;
+var BoulderObject = (function (_super) {
+    __extends(BoulderObject, _super);
+    function BoulderObject(opts) {
+        return _super.call(this, 'Boulder', merge(opts, {
+            color: 'grey',
+            radius: BOULDER_RADIUS
+        })) || this;
+    }
+    return BoulderObject;
+}(ball_1.BallObject));
+exports.BoulderObject = BoulderObject;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var BOWLING_BALL_RADIUS = 48;
+var BowlingBallObject = (function (_super) {
+    __extends(BowlingBallObject, _super);
+    function BowlingBallObject(opts) {
+        return _super.call(this, 'BowlingBall', merge(opts, {
+            color: 'green',
+            radius: BOWLING_BALL_RADIUS
+        })) || this;
+    }
+    return BowlingBallObject;
+}(ball_1.BallObject));
+exports.BowlingBallObject = BowlingBallObject;
+
 
 /***/ }),
 /* 10 */
@@ -2828,94 +2891,20 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var BallObject = (function (_super) {
-    __extends(BallObject, _super);
-    function BallObject(name, opts) {
-        var _this = _super.call(this, name, opts) || this;
-        _this._gravity = 0;
-        _this._radius = opts.radius;
-        _this._color = opts.color;
-        _this.mask = new engine_1.CircleCollisionMask(_this, _this._radius);
-        if (opts.useGravity)
-            _this._gravity = 98;
-        return _this;
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var GOLF_BALL_RADIUS = 24;
+var GolfBallObject = (function (_super) {
+    __extends(GolfBallObject, _super);
+    function GolfBallObject(opts) {
+        return _super.call(this, 'GolfBall', merge(opts, {
+            color: 'white',
+            radius: GOLF_BALL_RADIUS
+        })) || this;
     }
-    Object.defineProperty(BallObject.prototype, "radius", {
-        get: function () {
-            return this._radius;
-        },
-        set: function (val) {
-            this._radius = val;
-            var mask = this.mask;
-            mask.radius = this._radius;
-            mask.mass = Math.PI * this.radius * this.radius;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BallObject.prototype, "color", {
-        get: function () {
-            return this._color;
-        },
-        set: function (val) {
-            this._color = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BallObject.prototype, "gravity", {
-        get: function () {
-            return this._gravity;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    BallObject.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
-            return true;
-        if (evt.type === 'keyTyped' && evt.code === 'Enter')
-            this.mask.updatePositions = 'once';
-        return false;
-    };
-    BallObject.prototype.tick = function (delta) {
-        _super.prototype.tick.call(this, delta);
-        if (this._gravity) {
-            this.vspeed += this._gravity * delta;
-            var bounds = this.scene.camera.bounds;
-            if (this.y + this._radius > bounds.top) {
-                this.y = bounds.top - this._radius;
-                if (this.vspeed > 0)
-                    this.vspeed *= -.8;
-            }
-            if (this.x + this._radius > bounds.right) {
-                this.x = bounds.right - this._radius;
-                if (this.hspeed > 0)
-                    this.hspeed *= -1;
-            }
-            if (this.x - this._radius < bounds.left) {
-                this.x = bounds.left + this._radius;
-                if (this.hspeed < 0)
-                    this.hspeed *= -1;
-            }
-        }
-    };
-    BallObject.prototype.renderImpl = function (adapter) {
-        if (adapter.context instanceof CanvasRenderingContext2D)
-            this.renderImplContext2d(adapter.context);
-        else
-            throw new Error("Not implemented!");
-    };
-    BallObject.prototype.renderImplContext2d = function (context) {
-        var _a = this.game.canvasSize, canvasWidth = _a[0], canvasHeight = _a[1];
-        context.fillStyle = this._color;
-        context.beginPath();
-        context.ellipse(0, 0, this._radius, this._radius, 0, 0, 2 * Math.PI);
-        context.fill();
-    };
-    return BallObject;
-}(engine_1.GameObject));
-exports.BallObject = BallObject;
+    return GolfBallObject;
+}(ball_1.BallObject));
+exports.GolfBallObject = GolfBallObject;
 
 
 /***/ }),
@@ -2936,9 +2925,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(2);
-var bowling_ball_1 = __webpack_require__(3);
-var golf_ball_1 = __webpack_require__(4);
+var boulder_1 = __webpack_require__(8);
+var bowling_ball_1 = __webpack_require__(9);
+var golf_ball_1 = __webpack_require__(10);
 var PhysicsControllerObject = (function (_super) {
     __extends(PhysicsControllerObject, _super);
     function PhysicsControllerObject(message, useGravity, updatePositions) {
@@ -3560,15 +3549,20 @@ exports.GraphicsAdapter = GraphicsAdapter;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = __webpack_require__(1);
-var default_graphics_adapter_1 = __webpack_require__(8);
+var default_graphics_adapter_1 = __webpack_require__(6);
 var CollisionMask = (function () {
     function CollisionMask(_gobj) {
         this._gobj = _gobj;
         this._mass = 1;
         this.contacts = [];
-        this.impulsex = 0;
-        this.impulsey = 0;
+        this.collisionImpulseX = 0;
+        this.collisionImpulseY = 0;
         this.impulseCount = 0;
+        this.forceAccumX = 0;
+        this.forceAccumY = 0;
+        this.impulseAccumX = 0;
+        this.impulseAccumY = 0;
+        this._generators = [];
         if (!this._gobj)
             throw new Error("Collision mask created without a game object!");
     }
@@ -3595,9 +3589,47 @@ var CollisionMask = (function () {
     CollisionMask.prototype.resolveImpulses = function () {
         if (this.impulseCount == 0)
             return;
-        this.gameObject.x += this.impulsex / this.impulseCount;
-        this.gameObject.y += this.impulsey / this.impulseCount;
-        this.impulsex = this.impulsey = this.impulseCount = 0;
+        this.addImpulse(this.collisionImpulseX / this.impulseCount, this.collisionImpulseY / this.impulseCount);
+        this.collisionImpulseX = this.collisionImpulseY = this.impulseCount = 0;
+    };
+    CollisionMask.prototype.addForce = function (x, y) {
+        this.forceAccumX += x;
+        this.forceAccumY += y;
+    };
+    CollisionMask.prototype.addImpulse = function (x, y) {
+        this.impulseAccumX += x;
+        this.impulseAccumY += y;
+    };
+    Object.defineProperty(CollisionMask.prototype, "forceGenerators", {
+        get: function () {
+            return this._generators;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    CollisionMask.prototype.addForceGenerator = function (generator) {
+        this._generators.push(generator);
+    };
+    CollisionMask.prototype.removeForceGenerator = function (generator) {
+        var idx = this._generators.indexOf(generator);
+        if (idx === -1)
+            return;
+        this._generators.splice(idx, 1);
+    };
+    CollisionMask.prototype.applyForces = function (delta) {
+        for (var _i = 0, _a = this.gameObject.scene.forceGenerators; _i < _a.length; _i++) {
+            var generator = _a[_i];
+            generator.updateCollider(this, delta);
+        }
+        for (var _b = 0, _c = this._generators; _b < _c.length; _b++) {
+            var generator = _c[_b];
+            generator.updateCollider(this, delta);
+        }
+        this.gameObject.hspeed += this.forceAccumX;
+        this.gameObject.vspeed += this.forceAccumY;
+        this.gameObject.x += this.impulseAccumX;
+        this.gameObject.y += this.impulseAccumY;
+        this.forceAccumX = this.forceAccumY = this.impulseAccumX = this.impulseAccumY = 0;
     };
     CollisionMask.prototype.render = function (adapter) {
         if (adapter instanceof default_graphics_adapter_1.DefaultGraphicsAdapter)
@@ -3740,7 +3772,7 @@ exports.ResourceLoader = ResourceLoader;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sprite_1 = __webpack_require__(9);
+var sprite_1 = __webpack_require__(7);
 var LINE_HEIGHT = 12;
 function fillText(context, text, x, y) {
     var lines = text.split('\n');
@@ -3784,7 +3816,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var menu_scene_1 = __webpack_require__(36);
+var menu_scene_1 = __webpack_require__(37);
 var main_menu_1 = __webpack_require__(32);
 var PhysicsGame = (function (_super) {
     __extends(PhysicsGame, _super);
@@ -3819,7 +3851,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var game_object_1 = __webpack_require__(13);
-var merge = __webpack_require__(6);
+var merge = __webpack_require__(2);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -3892,7 +3924,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(7);
+var camera_1 = __webpack_require__(5);
 var FollowCamera = (function (_super) {
     __extends(FollowCamera, _super);
     function FollowCamera(scene) {
@@ -3941,11 +3973,12 @@ exports.FollowCamera = FollowCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(7);
+var camera_1 = __webpack_require__(5);
 var GameScene = (function () {
     function GameScene(_game) {
         if (_game === void 0) { _game = null; }
         this._game = _game;
+        this._generators = [];
         this._objects = [];
         this._colliders = [];
         this._camera = null;
@@ -3979,6 +4012,22 @@ var GameScene = (function () {
             this.initCamera();
     };
     GameScene.prototype.stop = function () {
+    };
+    Object.defineProperty(GameScene.prototype, "forceGenerators", {
+        get: function () {
+            return this._generators;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameScene.prototype.addForceGenerator = function (generator) {
+        this._generators.push(generator);
+    };
+    GameScene.prototype.removeForceGenerator = function (generator) {
+        var idx = this._generators.indexOf(generator);
+        if (idx === -1)
+            return;
+        this._generators.splice(idx, 1);
     };
     GameScene.prototype.handleEvent = function (evt) {
         for (var _i = 0, _a = this._objects; _i < _a.length; _i++) {
@@ -4026,6 +4075,10 @@ var GameScene = (function () {
         for (var q = 0; q < this._colliders.length; q++) {
             var collider = this._colliders[q];
             collider.resolveImpulses();
+        }
+        for (var q = 0; q < this._colliders.length; q++) {
+            var collider = this._colliders[q];
+            collider.applyForces(delta);
         }
     };
     GameScene.prototype.render = function (adapter) {
@@ -4135,7 +4188,7 @@ exports.GameScene = GameScene;
 Object.defineProperty(exports, "__esModule", { value: true });
 var resource_loader_1 = __webpack_require__(16);
 var event_queue_1 = __webpack_require__(12);
-var default_graphics_adapter_1 = __webpack_require__(8);
+var default_graphics_adapter_1 = __webpack_require__(6);
 ;
 var Game = (function () {
     function Game(options) {
@@ -4376,7 +4429,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(14));
-__export(__webpack_require__(8));
+__export(__webpack_require__(6));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4464,10 +4517,10 @@ var CircleCollisionMask = (function (_super) {
             var relativeMass = this.mass / (this.mass + other.mass);
             var eAbsorb = 1 - relativeMass;
             if (this.updatePositions !== false) {
-                this.impulsex -= contact.contactNormal[0] * eAbsorb * contact.penetration;
-                this.impulsey -= contact.contactNormal[1] * eAbsorb * contact.penetration;
-                other.impulsex += contact.contactNormal[0] * relativeMass * contact.penetration;
-                other.impulsey += contact.contactNormal[1] * relativeMass * contact.penetration;
+                this.collisionImpulseX -= contact.contactNormal[0] * eAbsorb * contact.penetration;
+                this.collisionImpulseY -= contact.contactNormal[1] * eAbsorb * contact.penetration;
+                other.collisionImpulseX += contact.contactNormal[0] * relativeMass * contact.penetration;
+                other.collisionImpulseY += contact.contactNormal[1] * relativeMass * contact.penetration;
                 this.impulseCount++;
                 other.impulseCount++;
                 var a1 = (contact.contactNormal[0] * this.gameObject.hspeed) + ((contact.contactNormal[1] * this.gameObject.vspeed));
@@ -4523,6 +4576,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(15));
 __export(__webpack_require__(24));
+__export(__webpack_require__(41));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4605,7 +4659,7 @@ __export(__webpack_require__(28));
 __export(__webpack_require__(1));
 __export(__webpack_require__(30));
 __export(__webpack_require__(17));
-__export(__webpack_require__(9));
+__export(__webpack_require__(7));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4673,9 +4727,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var menu_1 = __webpack_require__(33);
-var circles_scene_1 = __webpack_require__(35);
-var bouncing_circles_scene_1 = __webpack_require__(34);
-var momentum_mass_scene_1 = __webpack_require__(37);
+var circles_scene_1 = __webpack_require__(36);
+var bouncing_circles_scene_1 = __webpack_require__(35);
+var momentum_mass_scene_1 = __webpack_require__(38);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -4825,270 +4879,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(2);
-var bowling_ball_1 = __webpack_require__(3);
-var golf_ball_1 = __webpack_require__(4);
-var physics_controller_1 = __webpack_require__(11);
-var stack_scene_1 = __webpack_require__(5);
-var BALL_COUNT = 0;
-var BouncingCirclesScene = (function (_super) {
-    __extends(BouncingCirclesScene, _super);
-    function BouncingCirclesScene(parent) {
-        var _this = _super.call(this, parent) || this;
-        _this.initialized = false;
-        return _this;
-    }
-    BouncingCirclesScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true, true);
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        for (var q = 0; q < BALL_COUNT; q++) {
-            var chance = Math.floor(Math.random() * 3);
-            var obj = chance === 0 ? new boulder_1.BoulderObject({ useGravity: true }) :
-                chance === 1 ? new bowling_ball_1.BowlingBallObject({ useGravity: true }) :
-                    new golf_ball_1.GolfBallObject({ useGravity: true });
-            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
-            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
-            this.addObject(obj);
-        }
-    };
-    return BouncingCirclesScene;
-}(stack_scene_1.StackScene));
-exports.BouncingCirclesScene = BouncingCirclesScene;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var boulder_1 = __webpack_require__(2);
-var bowling_ball_1 = __webpack_require__(3);
-var golf_ball_1 = __webpack_require__(4);
-var physics_controller_1 = __webpack_require__(11);
-var stack_scene_1 = __webpack_require__(5);
-var BALL_COUNT = 2;
-var CirclesScene = (function (_super) {
-    __extends(CirclesScene, _super);
-    function CirclesScene(parent) {
-        var _this = _super.call(this, parent) || this;
-        _this.initialized = false;
-        return _this;
-    }
-    CirclesScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject('Press enter to execute a single physics step. Click anywhere on the screen to place a random ball.');
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        for (var q = 0; q < BALL_COUNT; q++) {
-            var chance = Math.floor(Math.random() * 3);
-            var obj = chance === 0 ? new boulder_1.BoulderObject() :
-                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
-                    new golf_ball_1.GolfBallObject();
-            obj.mask.updatePositions = false;
-            obj.x = -20 + Math.random() * 40;
-            obj.y = -20 + Math.random() * 40;
-            this.addObject(obj);
-        }
-    };
-    return CirclesScene;
-}(stack_scene_1.StackScene));
-exports.CirclesScene = CirclesScene;
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var stack_scene_1 = __webpack_require__(5);
-var MenuScene = (function (_super) {
-    __extends(MenuScene, _super);
-    function MenuScene(menu, parentScene) {
-        var _this = _super.call(this, parentScene) || this;
-        _this.menu = menu;
-        _this.initialized = false;
-        return _this;
-    }
-    MenuScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        this.addObject(this.menu);
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-    };
-    return MenuScene;
-}(stack_scene_1.StackScene));
-exports.MenuScene = MenuScene;
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(40);
-var physics_controller_1 = __webpack_require__(11);
-var stack_scene_1 = __webpack_require__(5);
-var BALL_COUNT = 12;
-var MomentumMassScene = (function (_super) {
-    __extends(MomentumMassScene, _super);
-    function MomentumMassScene(parent) {
-        var _this = _super.call(this, parent) || this;
-        _this.initialized = false;
-        return _this;
-    }
-    MomentumMassScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.", true, true);
-        physicsController.createMore = false;
-        physicsController.displayPreserveMass = true;
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        for (var q = 0; q < BALL_COUNT; q++) {
-            var obj = new ball_select_1.BallSelectObject({ useGravity: true });
-            obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
-            obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
-            this.addObject(obj);
-        }
-    };
-    return MomentumMassScene;
-}(stack_scene_1.StackScene));
-exports.MomentumMassScene = MomentumMassScene;
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var ball_1 = __webpack_require__(10);
-var merge = __webpack_require__(6);
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
 var BallSelectObject = (function (_super) {
     __extends(BallSelectObject, _super);
     function BallSelectObject(opts) {
@@ -5139,16 +4931,27 @@ var BallSelectObject = (function (_super) {
     };
     BallSelectObject.prototype.tick = function (delta) {
         if (BallSelectObject.paused) {
+            if (typeof this.pausehspeed === 'undefined') {
+                this.pausehspeed = this.hspeed;
+                this.pausevspeed = this.vspeed;
+            }
+            else {
+                _a = [this.pausehspeed, this.pausevspeed], this.hspeed = _a[0], this.vspeed = _a[1];
+            }
             if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
                 var bounds = this.scene.camera.bounds;
                 var mc = this.events.mousePosition;
                 var mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
-                _a = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _a[0], this.vspeed = _a[1];
+                _b = (_c = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _c[0], this.vspeed = _c[1], _c), this.pausehspeed = _b[0], this.pausevspeed = _b[1];
             }
             return;
         }
+        else {
+            delete this.pausehspeed;
+            delete this.pausevspeed;
+        }
         _super.prototype.tick.call(this, delta);
-        var _a;
+        var _a, _c, _b;
     };
     BallSelectObject.prototype.renderImplContext2d = function (context) {
         _super.prototype.renderImplContext2d.call(this, context);
@@ -5182,6 +4985,309 @@ var BallSelectObject = (function (_super) {
 }(ball_1.BallObject));
 exports.BallSelectObject = BallSelectObject;
 
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var boulder_1 = __webpack_require__(8);
+var bowling_ball_1 = __webpack_require__(9);
+var golf_ball_1 = __webpack_require__(10);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(4);
+var BALL_COUNT = 0;
+var BouncingCirclesScene = (function (_super) {
+    __extends(BouncingCirclesScene, _super);
+    function BouncingCirclesScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    BouncingCirclesScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true, true);
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject() :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
+                    new golf_ball_1.GolfBallObject();
+            obj.x = bounds.left + Math.random() * (bounds.right - bounds.left);
+            obj.y = bounds.bottom + Math.random() * (bounds.top - bounds.bottom);
+            this.addObject(obj);
+        }
+    };
+    return BouncingCirclesScene;
+}(stack_scene_1.StackScene));
+exports.BouncingCirclesScene = BouncingCirclesScene;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var boulder_1 = __webpack_require__(8);
+var bowling_ball_1 = __webpack_require__(9);
+var golf_ball_1 = __webpack_require__(10);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(4);
+var BALL_COUNT = 2;
+var CirclesScene = (function (_super) {
+    __extends(CirclesScene, _super);
+    function CirclesScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    CirclesScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Press enter to execute a single physics step. Click anywhere on the screen to place a random ball.');
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = chance === 0 ? new boulder_1.BoulderObject() :
+                chance === 1 ? new bowling_ball_1.BowlingBallObject() :
+                    new golf_ball_1.GolfBallObject();
+            obj.mask.updatePositions = false;
+            obj.x = -20 + Math.random() * 40;
+            obj.y = -20 + Math.random() * 40;
+            this.addObject(obj);
+        }
+    };
+    return CirclesScene;
+}(stack_scene_1.StackScene));
+exports.CirclesScene = CirclesScene;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var stack_scene_1 = __webpack_require__(4);
+var MenuScene = (function (_super) {
+    __extends(MenuScene, _super);
+    function MenuScene(menu, parentScene) {
+        var _this = _super.call(this, parentScene) || this;
+        _this.menu = menu;
+        _this.initialized = false;
+        return _this;
+    }
+    MenuScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        this.addObject(this.menu);
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+    };
+    return MenuScene;
+}(stack_scene_1.StackScene));
+exports.MenuScene = MenuScene;
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(34);
+var physics_controller_1 = __webpack_require__(11);
+var stack_scene_1 = __webpack_require__(4);
+var BALL_COUNT = 12;
+var MomentumMassScene = (function (_super) {
+    __extends(MomentumMassScene, _super);
+    function MomentumMassScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    MomentumMassScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.", true, true);
+        physicsController.createMore = false;
+        physicsController.displayPreserveMass = true;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj = new ball_select_1.BallSelectObject();
+            obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
+            obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
+            this.addObject(obj);
+        }
+    };
+    return MomentumMassScene;
+}(stack_scene_1.StackScene));
+exports.MomentumMassScene = MomentumMassScene;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var collision_mask_1 = __webpack_require__(15);
+var GravityForceGenerator = (function () {
+    function GravityForceGenerator(hgravity, vgravity) {
+        if (hgravity instanceof collision_mask_1.CollisionMask)
+            this._towards = hgravity;
+        else if (typeof hgravity === 'number') {
+            if (typeof vgravity === 'number') {
+                this._hgravity = hgravity;
+                this._vgravity = vgravity;
+            }
+            else {
+                this._hgravity = 0;
+                this._vgravity = hgravity;
+            }
+        }
+        else {
+            this._hgravity = 0;
+            this._vgravity = 98;
+        }
+    }
+    GravityForceGenerator.prototype.updateCollider = function (collider, delta) {
+        var hgrav = this._hgravity, vgrav = this._vgravity;
+        if (this._towards) {
+            throw new Error('Not implemented');
+        }
+        collider.addForce(hgrav * delta, vgrav * delta);
+    };
+    return GravityForceGenerator;
+}());
+exports.GravityForceGenerator = GravityForceGenerator;
+//# sourceMappingURL=gravity-force-generator.js.map
 
 /***/ })
 /******/ ]);

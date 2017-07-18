@@ -2,8 +2,7 @@ import { GameObject, GameObjectOptions, CircleCollisionMask, GraphicsAdapter, Ga
 
 export type BallOptions = GameObjectOptions & {
     radius: number,
-    color: string,
-    useGravity?: boolean
+    color: string
 };
 
 export class BallObject extends GameObject {
@@ -12,7 +11,6 @@ export class BallObject extends GameObject {
         this._radius = opts.radius;
         this._color = opts.color;
         this.mask = new CircleCollisionMask(this, this._radius);
-        if (opts.useGravity) this._gravity = 98;
     }
     
     private _radius: number;
@@ -34,23 +32,17 @@ export class BallObject extends GameObject {
         this._color = val;
     }
     
-    private _gravity: number = 0;
-    get gravity() {
-        return this._gravity;
-    }
-    
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
         
-        if (evt.type === 'keyTyped' && evt.code === 'Enter') (<any>this.mask).updatePositions = 'once';
+        if (evt.type === 'keyTyped' && evt.code === 'Enter' && !(<any>this.mask).updatePositions) (<any>this.mask).updatePositions = 'once';
         
         return false;
     }
     
     tick(delta: number) {
         super.tick(delta);
-        if (this._gravity) {
-            this.vspeed += this._gravity * delta;
+        if (this.hspeed !== 0 || this.vspeed !== 0) {
             let bounds = this.scene.camera.bounds;
             if (this.y + this._radius > bounds.top) {
                 this.y = bounds.top - this._radius;

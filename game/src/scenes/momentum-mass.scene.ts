@@ -1,4 +1,4 @@
-import { Camera, GameScene } from 'engine';
+import { Camera, GameScene, GravityForceGenerator } from 'engine';
 import { BallSelectObject } from '../objects/ball-select';
 import { PhysicsControllerObject } from '../objects/physics-controller';
 import { StackScene } from './stack-scene';
@@ -30,9 +30,10 @@ Press P to toggle preserving momentum.`, true, true);
         this.addObject(physicsController);
         
         let bounds = this.camera.bounds;
+        this.addForceGenerator(new GravityForceGenerator(98));
         
         for (let q = 0; q < BALL_COUNT; q++) {
-            let obj = new BallSelectObject({ useGravity: true });
+            let obj = new BallSelectObject();
             obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
             obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
             this.addObject(obj);

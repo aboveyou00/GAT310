@@ -13,6 +13,8 @@ export class BallSelectObject extends BallObject {
     
     static currentSelection: BallSelectObject;
     static paused = false;
+    pausehspeed: number | undefined;
+    pausevspeed: number | undefined;
     
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
@@ -53,13 +55,24 @@ export class BallSelectObject extends BallObject {
     
     tick(delta: number) {
         if (BallSelectObject.paused) {
+            if (typeof this.pausehspeed === 'undefined') {
+                this.pausehspeed = this.hspeed;
+                this.pausevspeed = this.vspeed;
+            }
+            else {
+                [this.hspeed, this.vspeed] = [this.pausehspeed, this.pausevspeed];
+            }
             if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
                 let bounds = this.scene.camera.bounds;
                 let mc = this.events.mousePosition;
                 let mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
-                [this.hspeed, this.vspeed] = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2];
+                [this.pausehspeed, this.pausevspeed] = [this.hspeed, this.vspeed] = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2];
             }
             return;
+        }
+        else {
+            delete this.pausehspeed;
+            delete this.pausevspeed;
         }
         super.tick(delta);
     }
