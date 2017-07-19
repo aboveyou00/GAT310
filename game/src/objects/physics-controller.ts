@@ -4,7 +4,7 @@ import { BowlingBallObject } from './bowling-ball';
 import { GolfBallObject } from './golf-ball';
 
 export class PhysicsControllerObject extends GameObject {
-    constructor(private message: string, private useGravity = false, private updatePositions = false) {
+    constructor(private message: string, private updatePositions = false) {
         super('PhysicsController', {
             renderCamera: 'none'
         });

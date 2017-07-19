@@ -24,7 +24,7 @@ export class MomentumMassScene extends StackScene {
         let physicsController = new PhysicsControllerObject(`Click a ball to select it.
 Right click and drag to change the velocity of the selected ball.
 Use the mouse wheel to increase or decrease the selected ball's mass.
-Press P to toggle preserving momentum.`, true, true);
+Press P to toggle preserving momentum.`, true);
         physicsController.createMore = false;
         physicsController.displayPreserveMass = true;
         this.addObject(physicsController);

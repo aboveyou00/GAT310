@@ -26,7 +26,7 @@ export class ForceGeneratorScene extends StackScene {
 Right click and drag to change the velocity of the selected ball.
 Use the mouse wheel to increase or decrease the selected ball's mass.
 Press P to toggle preserving momentum.
-Move the orange ball using a force generator with the arrow keys.`, true, true);
+Move the orange ball using a force generator with the arrow keys.`, true);
         physicsController.createMore = false;
         physicsController.displayPreserveMass = true;
         this.addObject(physicsController);

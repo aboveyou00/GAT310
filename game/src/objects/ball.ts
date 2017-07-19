@@ -2,7 +2,8 @@ import { GameObject, GameObjectOptions, CircleCollisionMask, GraphicsAdapter, Ga
 
 export type BallOptions = GameObjectOptions & {
     radius: number,
-    color: string
+    color: string,
+    openWorld?: boolean
 };
 
 export class BallObject extends GameObject {
@@ -10,6 +11,7 @@ export class BallObject extends GameObject {
         super(name, opts);
         this._radius = opts.radius;
         this._color = opts.color;
+        this._openWorld = opts.openWorld || false;
         this.mask = new CircleCollisionMask(this, this._radius);
     }
     
@@ -32,6 +34,8 @@ export class BallObject extends GameObject {
         this._color = val;
     }
     
+    private _openWorld: boolean;
+    
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
         
@@ -42,7 +46,7 @@ export class BallObject extends GameObject {
     
     tick(delta: number) {
         super.tick(delta);
-        if (this.hspeed !== 0 || this.vspeed !== 0) {
+        if (!this._openWorld && (this.hspeed !== 0 || this.vspeed !== 0)) {
             let bounds = this.scene.camera.bounds;
             if (this.y + this._radius > bounds.top) {
                 this.y = bounds.top - this._radius;

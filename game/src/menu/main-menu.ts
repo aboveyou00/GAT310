@@ -3,6 +3,7 @@ import { CirclesScene } from '../scenes/circles.scene';
 import { BouncingCirclesScene } from '../scenes/bouncing-circles.scene';
 import { MomentumMassScene } from '../scenes/momentum-mass.scene';
 import { ForceGeneratorScene } from '../scenes/force-generator.scene';
+import { PlanetsScene } from '../scenes/planets.scene';
 
 export class MainMenuObject extends MenuObject {
     constructor() {
@@ -32,6 +33,12 @@ export class MainMenuObject extends MenuObject {
             text:"Force Generator",
             handler: () => {
                 this.game.changeScene(new ForceGeneratorScene(this.scene));
+            }
+        });
+        this.addMenuItem({
+            text:"Planets",
+            handler: () => {
+                this.game.changeScene(new PlanetsScene(this.scene));
             }
         });
         this.addMenuItem({

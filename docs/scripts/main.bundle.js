@@ -2372,6 +2372,7 @@ var BallObject = (function (_super) {
         var _this = _super.call(this, name, opts) || this;
         _this._radius = opts.radius;
         _this._color = opts.color;
+        _this._openWorld = opts.openWorld || false;
         _this.mask = new engine_1.CircleCollisionMask(_this, _this._radius);
         return _this;
     }
@@ -2407,7 +2408,7 @@ var BallObject = (function (_super) {
     };
     BallObject.prototype.tick = function (delta) {
         _super.prototype.tick.call(this, delta);
-        if (this.hspeed !== 0 || this.vspeed !== 0) {
+        if (!this._openWorld && (this.hspeed !== 0 || this.vspeed !== 0)) {
             var bounds = this.scene.camera.bounds;
             if (this.y + this._radius > bounds.top) {
                 this.y = bounds.top - this._radius;
@@ -2930,14 +2931,12 @@ var bowling_ball_1 = __webpack_require__(9);
 var golf_ball_1 = __webpack_require__(10);
 var PhysicsControllerObject = (function (_super) {
     __extends(PhysicsControllerObject, _super);
-    function PhysicsControllerObject(message, useGravity, updatePositions) {
-        if (useGravity === void 0) { useGravity = false; }
+    function PhysicsControllerObject(message, updatePositions) {
         if (updatePositions === void 0) { updatePositions = false; }
         var _this = _super.call(this, 'PhysicsController', {
             renderCamera: 'none'
         }) || this;
         _this.message = message;
-        _this.useGravity = useGravity;
         _this.updatePositions = updatePositions;
         _this.createMore = true;
         _this.displayPreserveMass = false;
@@ -4218,6 +4217,7 @@ var Game = (function () {
         this._scene = null;
         this._nextScene = null;
         this.LOGIC_TICKS_PER_RENDER_TICK = 3;
+        this.maximumDelta = .25;
         this._renderPhysics = false;
         this.previousTick = null;
         this._resourceLoader = null;
@@ -4231,6 +4231,7 @@ var Game = (function () {
         this.framesPerSecond = options.framesPerSecond || 30;
         this.graphicsAdapter = options.graphicsAdapter || new default_graphics_adapter_1.DefaultGraphicsAdapter();
         this.timePerFixedTick = 1 / this.framesPerSecond;
+        this.maximumDelta = options.maximumDelta || 0;
         this.init();
     }
     Object.defineProperty(Game.prototype, "scene", {
@@ -4362,6 +4363,8 @@ var Game = (function () {
         if (this.resourceLoader.isDone) {
             var currentTime = new Date();
             var delta = (this.previousTick == null) ? 0 : (currentTime.valueOf() - this.previousTick.valueOf()) / 1000;
+            if (this.maximumDelta && delta > this.maximumDelta)
+                delta = this.maximumDelta;
             this.previousTick = currentTime;
             this.sendEvents();
             for (var q = 0; q < this.LOGIC_TICKS_PER_RENDER_TICK; q++) {
@@ -4755,6 +4758,7 @@ var circles_scene_1 = __webpack_require__(36);
 var bouncing_circles_scene_1 = __webpack_require__(35);
 var momentum_mass_scene_1 = __webpack_require__(38);
 var force_generator_scene_1 = __webpack_require__(43);
+var planets_scene_1 = __webpack_require__(47);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -4784,6 +4788,12 @@ var MainMenuObject = (function (_super) {
             text: "Force Generator",
             handler: function () {
                 _this.game.changeScene(new force_generator_scene_1.ForceGeneratorScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Planets",
+            handler: function () {
+                _this.game.changeScene(new planets_scene_1.PlanetsScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -5055,7 +5065,7 @@ var BouncingCirclesScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true, true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true);
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
         this.addForceGenerator(new engine_1.GravityForceGenerator(98));
@@ -5208,7 +5218,7 @@ var MomentumMassScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.", true, true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.", true);
         physicsController.createMore = false;
         physicsController.displayPreserveMass = true;
         this.addObject(physicsController);
@@ -5289,6 +5299,7 @@ module.exports = function(module) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var collision_mask_1 = __webpack_require__(15);
+var math_1 = __webpack_require__(1);
 var GravityForceGenerator = (function () {
     function GravityForceGenerator(hgravity, vgravity) {
         this.enabled = true;
@@ -5314,9 +5325,12 @@ var GravityForceGenerator = (function () {
             return;
         var hgrav = this._hgravity, vgrav = this._vgravity;
         if (this._towards) {
-            throw new Error('Not implemented');
+            var dist = math_1.pointDistance(collider.gameObject.x, collider.gameObject.y, this._towards.gameObject.x, this._towards.gameObject.y);
+            var gravityCoeff = ((collider.mass * this._towards.mass) / dist) * .00001;
+            _a = [gravityCoeff * (this._towards.gameObject.x - collider.gameObject.x), gravityCoeff * (this._towards.gameObject.y - collider.gameObject.y)], hgrav = _a[0], vgrav = _a[1];
         }
         collider.addForce(hgrav * delta, vgrav * delta);
+        var _a;
     };
     return GravityForceGenerator;
 }());
@@ -5422,7 +5436,7 @@ var ForceGeneratorScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.\nMove the orange ball using a force generator with the arrow keys.", true, true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nPress P to toggle preserving momentum.\nMove the orange ball using a force generator with the arrow keys.", true);
         physicsController.createMore = false;
         physicsController.displayPreserveMass = true;
         this.addObject(physicsController);
@@ -5463,8 +5477,10 @@ var DragForceGenerator = (function () {
             return;
         if (!collider.gameObject.speed)
             return;
-        var speed = collider.gameObject.speed;
+        var speed = collider.gameObject.speed / 100;
         var dragCoeff = this.k1 * speed + this.k2 * Math.pow(speed, 2);
+        if (dragCoeff > speed * 100)
+            dragCoeff = speed * 100;
         var _a = [collider.gameObject.hspeed, collider.gameObject.vspeed], hspeed = _a[0], vspeed = _a[1];
         var _b = [hspeed / speed, vspeed / speed], nhspeed = _b[0], nvspeed = _b[1];
         var _c = [-nhspeed * dragCoeff, -nvspeed * dragCoeff], hdrag = _c[0], vdrag = _c[1];
@@ -5474,6 +5490,125 @@ var DragForceGenerator = (function () {
 }());
 exports.DragForceGenerator = DragForceGenerator;
 //# sourceMappingURL=drag-force-generator.js.map
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var PLANET_RADIUS = 32;
+var PlanetObject = (function (_super) {
+    __extends(PlanetObject, _super);
+    function PlanetObject(opts) {
+        return _super.call(this, 'Planet', merge(opts, {
+            color: 'blue',
+            radius: PLANET_RADIUS
+        })) || this;
+    }
+    return PlanetObject;
+}(ball_1.BallObject));
+exports.PlanetObject = PlanetObject;
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var SUN_RADIUS = 128;
+var SunObject = (function (_super) {
+    __extends(SunObject, _super);
+    function SunObject(opts) {
+        return _super.call(this, 'Sun', merge(opts, {
+            color: 'yellow',
+            radius: SUN_RADIUS
+        })) || this;
+    }
+    return SunObject;
+}(ball_1.BallObject));
+exports.SunObject = SunObject;
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var planet_1 = __webpack_require__(45);
+var sun_1 = __webpack_require__(46);
+var stack_scene_1 = __webpack_require__(4);
+var PlanetsScene = (function (_super) {
+    __extends(PlanetsScene, _super);
+    function PlanetsScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    PlanetsScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var bounds = this.camera.bounds;
+        var _a = [(bounds.left + bounds.right) / 2, (bounds.bottom + bounds.top) / 2], centerx = _a[0], centery = _a[1];
+        var sun = new sun_1.SunObject();
+        sun.x = centerx;
+        sun.y = centery;
+        this.addObject(sun);
+        var planet = new planet_1.PlanetObject({ openWorld: true });
+        planet.x = centerx - 400;
+        planet.y = centery;
+        planet.mask.addForce(0, 700);
+        planet.mask.addForceGenerator(new engine_1.GravityForceGenerator(sun.mask));
+        this.addObject(planet);
+    };
+    return PlanetsScene;
+}(stack_scene_1.StackScene));
+exports.PlanetsScene = PlanetsScene;
+
 
 /***/ })
 /******/ ]);

@@ -23,7 +23,7 @@ export class BouncingCirclesScene extends StackScene {
         let camera = this.camera = new Camera(this);
         camera.clearColor = 'black';
         
-        let physicsController = new PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true, true);
+        let physicsController = new PhysicsControllerObject('Click anywhere on the screen to place a random ball.', true);
         this.addObject(physicsController);
         
         let bounds = this.camera.bounds;
