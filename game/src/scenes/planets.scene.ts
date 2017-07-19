@@ -20,9 +20,6 @@ export class PlanetsScene extends StackScene {
         let camera = this.camera = new Camera(this);
         camera.clearColor = 'black';
         
-        // let physicsController = new PhysicsControllerObject('', true);
-        // this.addObject(physicsController);
-        
         let bounds = this.camera.bounds;
         let [centerx, centery] = [(bounds.left + bounds.right) / 2, (bounds.bottom + bounds.top) / 2];
         

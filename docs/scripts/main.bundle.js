@@ -2973,11 +2973,11 @@ var PhysicsControllerObject = (function (_super) {
             return true;
         }
         else if (evt.type === 'keyPressed' && evt.code === 'KeyL' && this.dragForce) {
-            this.dragForce.k1 = +window.prompt("Enter the new low speed");
+            this.dragForce.k1 = engine_1.clamp(+window.prompt("Enter the new low speed"), 0, 20);
             return true;
         }
         else if (evt.type === 'keyPressed' && evt.code === 'KeyH' && this.dragForce) {
-            this.dragForce.k2 = +window.prompt("Enter the new high speed");
+            this.dragForce.k2 = engine_1.clamp(+window.prompt("Enter the new high speed"), 0, 30);
             return true;
         }
         return false;
