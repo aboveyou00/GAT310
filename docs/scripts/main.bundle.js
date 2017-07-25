@@ -5087,6 +5087,7 @@ var momentum_mass_scene_1 = __webpack_require__(46);
 var force_generator_scene_1 = __webpack_require__(44);
 var planets_scene_1 = __webpack_require__(47);
 var spring_scene_1 = __webpack_require__(48);
+var spring_mesh_scene_1 = __webpack_require__(51);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -5134,6 +5135,12 @@ var MainMenuObject = (function (_super) {
             text: "Multiple Springs",
             handler: function () {
                 _this.game.changeScene(new spring_scene_1.SpringScene(_this.scene, 5));
+            }
+        });
+        this.addMenuItem({
+            text: "Mesh Springs",
+            handler: function () {
+                _this.game.changeScene(new spring_mesh_scene_1.SpringMeshScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -5820,6 +5827,88 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(11);
+var physics_controller_1 = __webpack_require__(5);
+var stack_scene_1 = __webpack_require__(4);
+var SpringMeshScene = (function (_super) {
+    __extends(SpringMeshScene, _super);
+    function SpringMeshScene(parent, MESH_WIDTH, MESH_HEIGHT) {
+        if (MESH_WIDTH === void 0) { MESH_WIDTH = 10; }
+        if (MESH_HEIGHT === void 0) { MESH_HEIGHT = 10; }
+        var _this = _super.call(this, parent) || this;
+        _this.MESH_WIDTH = MESH_WIDTH;
+        _this.MESH_HEIGHT = MESH_HEIGHT;
+        _this.initialized = false;
+        return _this;
+    }
+    SpringMeshScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click and drag any ball", true);
+        physicsController.createMore = false;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        var balls = [];
+        var count = 0;
+        for (var q = 0; q < this.MESH_WIDTH; q++) {
+            var column = [];
+            balls.push(column);
+            for (var w = 0; w < this.MESH_HEIGHT; w++) {
+                var obj = new ball_select_1.BallSelectObject();
+                obj.radius = 10;
+                obj.mask.addForceGenerator(new engine_1.DragForceGenerator(.1, .5));
+                obj.x = bounds.left + 50 * (q + 1);
+                obj.y = bounds.bottom + 50 * (w + 1);
+                this.addObject(obj);
+                column.push(obj);
+                count++;
+            }
+        }
+        for (var q = 0; q < this.MESH_WIDTH; q++) {
+            var column = balls[q];
+            for (var w = 0; w < this.MESH_HEIGHT - 1; w++) {
+                var one = column[w];
+                var two = column[w + 1];
+                var spring = new engine_1.SpringForceGenerator(one.mask, 50, 50);
+                two.mask.addForceGenerator(spring);
+            }
+        }
+        for (var q = 0; q < this.MESH_WIDTH - 1; q++) {
+            for (var w = 0; w < this.MESH_HEIGHT; w++) {
+                var one = balls[q][w];
+                var two = balls[q + 1][w];
+                var spring = new engine_1.SpringForceGenerator(one.mask, 50, 50);
+                two.mask.addForceGenerator(spring);
+            }
+        }
+    };
+    return SpringMeshScene;
+}(stack_scene_1.StackScene));
+exports.SpringMeshScene = SpringMeshScene;
 
 
 /***/ })

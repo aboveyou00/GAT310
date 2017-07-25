@@ -5,6 +5,7 @@ import { MomentumMassScene } from '../scenes/momentum-mass.scene';
 import { ForceGeneratorScene } from '../scenes/force-generator.scene';
 import { PlanetsScene } from '../scenes/planets.scene';
 import { SpringScene } from '../scenes/spring.scene';
+import { SpringMeshScene } from '../scenes/spring-mesh.scene';
 
 export class MainMenuObject extends MenuObject {
     constructor() {
@@ -52,6 +53,12 @@ export class MainMenuObject extends MenuObject {
             text:"Multiple Springs",
             handler: () => {
                 this.game.changeScene(new SpringScene(this.scene, 5));
+            }
+        });
+        this.addMenuItem({
+            text:"Mesh Springs",
+            handler: () => {
+                this.game.changeScene(new SpringMeshScene(this.scene));
             }
         });
         this.addMenuItem({
