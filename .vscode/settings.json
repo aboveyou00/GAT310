@@ -4,5 +4,19 @@
     "files.insertFinalNewline": true,
     "editor.renderIndentGuides": false,
     "editor.minimap.enabled": false,
-    "editor.trimAutoWhitespace": false
+    "editor.trimAutoWhitespace": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true,
+        "**/dist": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/dist": true
+    }
 }
