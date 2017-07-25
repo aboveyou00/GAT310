@@ -4,20 +4,27 @@ import merge = require('lodash.merge');
 
 const MOVEMENT_AMT = 300;
 
-export class PcBallObject extends BallObject implements ForceGenerator {
+class PcBallForceGenerator extends ForceGenerator {
+    constructor(private ball: PcBallObject) {
+        super();
+    }
+    
+    updateCollider(collider: CollisionMask, delta: number) {
+        let events = this.ball.events;
+        let fx = (events.isKeyDown('ArrowLeft') && -1) + (events.isKeyDown('ArrowRight') && 1);
+        let fy = (events.isKeyDown('ArrowUp') && -1) + (events.isKeyDown('ArrowDown') && 1);
+        let method = events.isKeyDown('KeyI') ? 'addImpulse' : 'addForce';
+        collider[method](fx * MOVEMENT_AMT * delta, fy * MOVEMENT_AMT * delta);
+    }
+}
+
+export class PcBallObject extends BallObject {
     constructor(opts?: Partial<BallOptions>) {
         super('PcBall', merge(opts, {
             color: 'orange',
             radius: 64
         }));
-        this.mask.addForceGenerator(this);
-    }
-    
-    updateCollider(collider: CollisionMask, delta: number) {
-        let fx = (this.events.isKeyDown('ArrowLeft') && -1) + (this.events.isKeyDown('ArrowRight') && 1);
-        let fy = (this.events.isKeyDown('ArrowUp') && -1) + (this.events.isKeyDown('ArrowDown') && 1);
-        let method = this.events.isKeyDown('KeyI') ? 'addImpulse' : 'addForce';
-        collider[method](fx * MOVEMENT_AMT * delta, fy * MOVEMENT_AMT * delta);
+        this.mask.addForceGenerator(new PcBallForceGenerator(this));
     }
     
     protected renderImplContext2d(context: CanvasRenderingContext2D) {
