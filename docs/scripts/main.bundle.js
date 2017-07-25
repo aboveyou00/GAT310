@@ -3080,6 +3080,7 @@ var BallSelectObject = (function (_super) {
             radius: 10 + Math.floor(Math.random() * 86)
         })) || this;
         _this.moving = false;
+        _this.controlSpring = null;
         _this.refreshColor();
         return _this;
     }
@@ -3105,6 +3106,16 @@ var BallSelectObject = (function (_super) {
         else if (BallSelectObject.currentSelection === this) {
             if (evt.type === 'mouseWheel') {
                 var delta = (evt.delta > 0 ? -1 : 1) * 4;
+                if (this.controlSpring) {
+                    if (this.events.isKeyDown('KeyL')) {
+                        this.controlSpring.restLength = engine_1.clamp(this.controlSpring.restLength + delta, 10, 300);
+                        return true;
+                    }
+                    else if (this.events.isKeyDown('KeyS')) {
+                        this.controlSpring.springConstant = engine_1.clamp(this.controlSpring.springConstant + delta, 5, 100);
+                        return true;
+                    }
+                }
                 var oldMass = this.mask.mass;
                 this.radius = engine_1.clamp(this.radius + delta, 10, 96);
                 var newMass = this.mask.mass;
@@ -3112,6 +3123,7 @@ var BallSelectObject = (function (_super) {
                 if (preserveMomentum)
                     this.speed = (this.speed / newMass) * oldMass;
                 this.refreshColor();
+                return true;
             }
         }
         else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Right) {
@@ -3180,6 +3192,14 @@ var BallSelectObject = (function (_super) {
             context.beginPath();
             context.ellipse(0, 0, this.radius + 4, this.radius + 4, 0, 0, 2 * Math.PI);
             context.stroke();
+            if (this.controlSpring) {
+                context.fillStyle = 'white';
+                context.font = '12pt Cambria';
+                context.textBaseline = 'bottom';
+                context.textAlign = 'left';
+                context.fillText("spring.restLength: " + this.controlSpring.restLength, this.radius * .9, (-this.radius * .9) - 20);
+                context.fillText("spring.springConstant: " + this.controlSpring.springConstant, this.radius * .9, -this.radius * .9);
+            }
         }
     };
     BallSelectObject.paused = false;
@@ -5757,7 +5777,7 @@ var SpringScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click and drag any ball", true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click and drag any ball. After you select one:\nL + mouse wheel to change the spring length;\nS + mouse wheel to change the spring constant;\nMouse wheel to change the ball radius/mass", true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
@@ -5776,6 +5796,7 @@ var SpringScene = (function (_super) {
             var two = balls[q + 1];
             var spring = new engine_1.SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
             two.mask.addForceGenerator(spring);
+            two.controlSpring = spring;
             if (q === 0)
                 spring.modifyOther = false;
         }

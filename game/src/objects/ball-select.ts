@@ -1,4 +1,4 @@
-import { GameObject, GameObjectOptions, GameEvent, pointDistance2, MouseButton, clamp, degToRad } from 'engine';
+import { GameObject, GameObjectOptions, GameEvent, pointDistance2, MouseButton, clamp, degToRad, SpringForceGenerator } from 'engine';
 import { BallObject, BallOptions } from './ball';
 import merge = require('lodash.merge');
 
@@ -17,6 +17,7 @@ export class BallSelectObject extends BallObject {
     pausevspeed: number | undefined;
     moving = false;
     clickPos: [number, number];
+    controlSpring: SpringForceGenerator | null = null;
     
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
@@ -39,12 +40,25 @@ export class BallSelectObject extends BallObject {
         else if (BallSelectObject.currentSelection === this) {
             if (evt.type === 'mouseWheel') {
                 let delta = (evt.delta > 0 ? -1 : 1) * 4;
+                if (this.controlSpring) {
+                    if (this.events.isKeyDown('KeyL')) {
+                        //spring length
+                        this.controlSpring.restLength = clamp(this.controlSpring.restLength + delta, 10, 300);
+                        return true;
+                    }
+                    else if (this.events.isKeyDown('KeyS')) {
+                        //spring force
+                        this.controlSpring.springConstant = clamp(this.controlSpring.springConstant + delta, 5, 100);
+                        return true;
+                    }
+                }
                 let oldMass = this.mask.mass;
                 this.radius = clamp(this.radius + delta, 10, 96);
                 let newMass = this.mask.mass;
                 let preserveMomentum = (<any>this.scene.findObject('PhysicsController')).preserveMomentum;
                 if (preserveMomentum) this.speed = (this.speed / newMass) * oldMass;
                 this.refreshColor();
+                return true;
             }
         }
         else if (evt.type === 'mouseButtonPressed' && evt.button === MouseButton.Right) {
@@ -116,6 +130,15 @@ export class BallSelectObject extends BallObject {
             context.beginPath();
             context.ellipse(0, 0, this.radius + 4, this.radius + 4, 0, 0, 2 * Math.PI);
             context.stroke();
+            
+            if (this.controlSpring) {
+                context.fillStyle = 'white';
+                context.font = '12pt Cambria';
+                context.textBaseline = 'bottom';
+                context.textAlign = 'left';
+                context.fillText(`spring.restLength: ${this.controlSpring.restLength}`, this.radius * .9, (-this.radius * .9) - 20);
+                context.fillText(`spring.springConstant: ${this.controlSpring.springConstant}`, this.radius * .9, -this.radius * .9);
+            }
         }
     }
 }

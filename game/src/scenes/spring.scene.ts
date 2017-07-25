@@ -20,7 +20,10 @@ export class SpringScene extends StackScene {
         let camera = this.camera = new Camera(this);
         camera.clearColor = 'black';
         
-        let physicsController = new PhysicsControllerObject(`Click and drag any ball`, true);
+        let physicsController = new PhysicsControllerObject(`Click and drag any ball. After you select one:
+L + mouse wheel to change the spring length;
+S + mouse wheel to change the spring constant;
+Mouse wheel to change the ball radius/mass`, true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         
@@ -43,6 +46,7 @@ export class SpringScene extends StackScene {
             let two = balls[q + 1];
             let spring = new SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
             two.mask.addForceGenerator(spring);
+            two.controlSpring = spring;
             if (q === 0) spring.modifyOther = false;
         }
     }
