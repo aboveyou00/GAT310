@@ -3079,6 +3079,7 @@ var BallSelectObject = (function (_super) {
             color: 'white',
             radius: 10 + Math.floor(Math.random() * 86)
         })) || this;
+        _this.moving = false;
         _this.refreshColor();
         return _this;
     }
@@ -3088,13 +3089,18 @@ var BallSelectObject = (function (_super) {
         if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
             var clickPos = this.scene.camera.transformPixelCoordinates(evt.pageX, evt.pageY);
             if (engine_1.pointDistance2(this.x, this.y, clickPos[0], clickPos[1]) <= Math.pow(this.radius, 2)) {
+                this.clickPos = [clickPos[0] - this.x, clickPos[1] - this.y];
                 BallSelectObject.currentSelection = this;
+                this.moving = true;
                 return true;
             }
             else if (BallSelectObject.currentSelection === this) {
                 BallSelectObject.currentSelection = null;
                 return false;
             }
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Left) {
+            this.moving = false;
         }
         else if (BallSelectObject.currentSelection === this) {
             if (evt.type === 'mouseWheel') {
@@ -3121,19 +3127,24 @@ var BallSelectObject = (function (_super) {
         this.color = "rgb(" + cc + ", " + cc + ", " + cc + ")";
     };
     BallSelectObject.prototype.tick = function (delta) {
+        if (this.moving) {
+            var mousePos = this.events.mousePosition;
+            var _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), cmpx = _a[0], cmpy = _a[1];
+            _b = [cmpx - this.clickPos[0], cmpy - this.clickPos[1]], this.x = _b[0], this.y = _b[1];
+        }
         if (BallSelectObject.paused) {
             if (typeof this.pausehspeed === 'undefined') {
                 this.pausehspeed = this.hspeed;
                 this.pausevspeed = this.vspeed;
             }
             else {
-                _a = [this.pausehspeed, this.pausevspeed], this.hspeed = _a[0], this.vspeed = _a[1];
+                _c = [this.pausehspeed, this.pausevspeed], this.hspeed = _c[0], this.vspeed = _c[1];
             }
             if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
                 var bounds = this.scene.camera.bounds;
                 var mc = this.events.mousePosition;
                 var mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
-                _b = (_c = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _c[0], this.vspeed = _c[1], _c), this.pausehspeed = _b[0], this.pausevspeed = _b[1];
+                _d = (_e = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _e[0], this.vspeed = _e[1], _e), this.pausehspeed = _d[0], this.pausevspeed = _d[1];
             }
             return;
         }
@@ -3142,7 +3153,7 @@ var BallSelectObject = (function (_super) {
             delete this.pausevspeed;
         }
         _super.prototype.tick.call(this, delta);
-        var _a, _c, _b;
+        var _b, _c, _e, _d;
     };
     BallSelectObject.prototype.renderImplContext2d = function (context) {
         _super.prototype.renderImplContext2d.call(this, context);

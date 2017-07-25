@@ -15,19 +15,26 @@ export class BallSelectObject extends BallObject {
     static paused = false;
     pausehspeed: number | undefined;
     pausevspeed: number | undefined;
+    moving = false;
+    clickPos: [number, number];
     
     handleEvent(evt: GameEvent) {
         if (super.handleEvent(evt)) return true;
         if (evt.type === 'mouseButtonPressed' && evt.button === MouseButton.Left) {
             let clickPos = this.scene.camera.transformPixelCoordinates(evt.pageX, evt.pageY);
             if (pointDistance2(this.x, this.y, clickPos[0], clickPos[1]) <= Math.pow(this.radius, 2)) {
+                this.clickPos = [clickPos[0] - this.x, clickPos[1] - this.y];
                 BallSelectObject.currentSelection = this;
+                this.moving = true;
                 return true;
             }
             else if (BallSelectObject.currentSelection === this) {
                 BallSelectObject.currentSelection = null;
                 return false;
             }
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === MouseButton.Left) {
+            this.moving = false;
         }
         else if (BallSelectObject.currentSelection === this) {
             if (evt.type === 'mouseWheel') {
@@ -54,6 +61,11 @@ export class BallSelectObject extends BallObject {
     }
     
     tick(delta: number) {
+        if (this.moving) {
+            let mousePos = this.events.mousePosition;
+            let [cmpx, cmpy] = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y);
+            [this.x, this.y] = [cmpx - this.clickPos[0], cmpy - this.clickPos[1]];
+        }
         if (BallSelectObject.paused) {
             if (typeof this.pausehspeed === 'undefined') {
                 this.pausehspeed = this.hspeed;
