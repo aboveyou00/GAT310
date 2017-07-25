@@ -3,14 +3,13 @@ import { BallSelectObject } from '../objects/ball-select';
 import { PhysicsControllerObject } from '../objects/physics-controller';
 import { StackScene } from './stack-scene';
 
-const BALL_COUNT = 5;
-
 export class SpringScene extends StackScene {
-    constructor(parent: GameScene) {
+    constructor(parent: GameScene, private BALL_COUNT = 2) {
         super(parent);
     }
     
     private initialized = false;
+    private firstBall: BallSelectObject;
     
     start() {
         super.start();
@@ -29,20 +28,22 @@ export class SpringScene extends StackScene {
         // this.addForceGenerator(new GravityForceGenerator(98));
         
         let balls: BallSelectObject[] = [];
-        for (let q = 0; q < BALL_COUNT; q++) {
+        for (let q = 0; q < this.BALL_COUNT; q++) {
             let obj = new BallSelectObject();
-            obj.mask.addForceGenerator(new DragForceGenerator(.1, .1));
+            obj.mask.addForceGenerator(new DragForceGenerator(.1, .5));
             obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
             obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
             this.addObject(obj);
             balls.push(obj);
         }
+        this.firstBall = balls[0];
         
-        for (let q = 0; q < BALL_COUNT - 1; q++) {
+        for (let q = 0; q < this.BALL_COUNT - 1; q++) {
             let one = balls[q];
             let two = balls[q + 1];
-            let spring = new SpringForceGenerator(two.mask, 25, (one.radius + two.radius) * 2);
-            one.mask.addForceGenerator(spring);
+            let spring = new SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
+            two.mask.addForceGenerator(spring);
+            if (q === 0) spring.modifyOther = false;
         }
     }
 }

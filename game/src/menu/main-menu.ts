@@ -43,9 +43,15 @@ export class MainMenuObject extends MenuObject {
             }
         });
         this.addMenuItem({
-            text:"Springs",
+            text:"Single Spring",
             handler: () => {
                 this.game.changeScene(new SpringScene(this.scene));
+            }
+        });
+        this.addMenuItem({
+            text:"Multiple Springs",
+            handler: () => {
+                this.game.changeScene(new SpringScene(this.scene, 5));
             }
         });
         this.addMenuItem({

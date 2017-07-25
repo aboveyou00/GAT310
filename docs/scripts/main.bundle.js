@@ -4886,6 +4886,7 @@ var SpringForceGenerator = (function (_super) {
         _this.springConstant = springConstant;
         _this.restLength = restLength;
         _this.enabled = true;
+        _this.modifyOther = true;
         return _this;
     }
     SpringForceGenerator.prototype.updateCollider = function (collider, delta) {
@@ -4898,7 +4899,8 @@ var SpringForceGenerator = (function (_super) {
         var _b = [hdist * magnitude * delta, vdist * magnitude * delta], hforce = _b[0], vforce = _b[1];
         var massRatio = collider.mass / (collider.mass + this.other.mass);
         collider.addForce(hforce * (1 - massRatio), vforce * (1 - massRatio));
-        this.other.addForce(-hforce * massRatio, -vforce * massRatio);
+        if (this.modifyOther)
+            this.other.addForce(-hforce * massRatio, -vforce * massRatio);
     };
     SpringForceGenerator.prototype.render = function (collider, context) {
         _super.prototype.render.call(this, collider, context);
@@ -5123,9 +5125,15 @@ var MainMenuObject = (function (_super) {
             }
         });
         this.addMenuItem({
-            text: "Springs",
+            text: "Single Spring",
             handler: function () {
                 _this.game.changeScene(new spring_scene_1.SpringScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Multiple Springs",
+            handler: function () {
+                _this.game.changeScene(new spring_scene_1.SpringScene(_this.scene, 5));
             }
         });
         this.addMenuItem({
@@ -5715,11 +5723,12 @@ var engine_1 = __webpack_require__(0);
 var ball_select_1 = __webpack_require__(11);
 var physics_controller_1 = __webpack_require__(5);
 var stack_scene_1 = __webpack_require__(4);
-var BALL_COUNT = 5;
 var SpringScene = (function (_super) {
     __extends(SpringScene, _super);
-    function SpringScene(parent) {
+    function SpringScene(parent, BALL_COUNT) {
+        if (BALL_COUNT === void 0) { BALL_COUNT = 2; }
         var _this = _super.call(this, parent) || this;
+        _this.BALL_COUNT = BALL_COUNT;
         _this.initialized = false;
         return _this;
     }
@@ -5735,19 +5744,22 @@ var SpringScene = (function (_super) {
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
         var balls = [];
-        for (var q = 0; q < BALL_COUNT; q++) {
+        for (var q = 0; q < this.BALL_COUNT; q++) {
             var obj = new ball_select_1.BallSelectObject();
-            obj.mask.addForceGenerator(new engine_1.DragForceGenerator(.1, .1));
+            obj.mask.addForceGenerator(new engine_1.DragForceGenerator(.1, .5));
             obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
             obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
             this.addObject(obj);
             balls.push(obj);
         }
-        for (var q = 0; q < BALL_COUNT - 1; q++) {
+        this.firstBall = balls[0];
+        for (var q = 0; q < this.BALL_COUNT - 1; q++) {
             var one = balls[q];
             var two = balls[q + 1];
-            var spring = new engine_1.SpringForceGenerator(two.mask, 25, (one.radius + two.radius) * 2);
-            one.mask.addForceGenerator(spring);
+            var spring = new engine_1.SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
+            two.mask.addForceGenerator(spring);
+            if (q === 0)
+                spring.modifyOther = false;
         }
     };
     return SpringScene;
