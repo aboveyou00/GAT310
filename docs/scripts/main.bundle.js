@@ -5987,7 +5987,7 @@ var RestingContactScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nMove the orange ball using a force generator with the arrow keys.", true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nMove the orange ball using a force generator with the arrow keys.\nPress F3 to render physics debug information.", true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         var bounds = this.camera.bounds;
@@ -6004,6 +6004,7 @@ var RestingContactScene = (function (_super) {
         obj.x = (bounds.right + bounds.left * 3) / 4;
         obj.y = bounds.top + obj.radius * 2;
         this.addObject(obj);
+        this.game.renderPhysics = false;
     };
     return RestingContactScene;
 }(stack_scene_1.StackScene));

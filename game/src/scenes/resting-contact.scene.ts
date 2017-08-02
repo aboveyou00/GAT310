@@ -25,7 +25,8 @@ export class RestingContactScene extends StackScene {
         let physicsController = new PhysicsControllerObject(`Click a ball to select it.
 Right click and drag to change the velocity of the selected ball.
 Use the mouse wheel to increase or decrease the selected ball's mass.
-Move the orange ball using a force generator with the arrow keys.`, true);
+Move the orange ball using a force generator with the arrow keys.
+Press F3 to render physics debug information.`, true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         
@@ -46,5 +47,7 @@ Move the orange ball using a force generator with the arrow keys.`, true);
         obj.x = (bounds.right + bounds.left * 3) / 4;
         obj.y = bounds.top + obj.radius * 2;
         this.addObject(obj);
+        
+        this.game.renderPhysics = false;
     }
 }
