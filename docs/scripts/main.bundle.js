@@ -78,7 +78,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(15));
 __export(__webpack_require__(18));
-__export(__webpack_require__(7));
+__export(__webpack_require__(8));
 __export(__webpack_require__(22));
 __export(__webpack_require__(24));
 __export(__webpack_require__(16));
@@ -136,6 +136,52 @@ exports.pointDistance = pointDistance;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var StackScene = (function (_super) {
+    __extends(StackScene, _super);
+    function StackScene(_parentScene) {
+        var _this = _super.call(this) || this;
+        _this._parentScene = _parentScene;
+        return _this;
+    }
+    Object.defineProperty(StackScene.prototype, "parentScene", {
+        get: function () {
+            return this._parentScene;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StackScene.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
+            this.game.changeScene(this.parentScene);
+            return true;
+        }
+        return false;
+    };
+    return StackScene;
+}(engine_1.GameScene));
+exports.StackScene = StackScene;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -2346,10 +2392,10 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(49), __webpack_require__(50)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(50), __webpack_require__(51)(module)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2443,52 +2489,6 @@ var BallObject = (function (_super) {
     return BallObject;
 }(engine_1.GameObject));
 exports.BallObject = BallObject;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var StackScene = (function (_super) {
-    __extends(StackScene, _super);
-    function StackScene(_parentScene) {
-        var _this = _super.call(this) || this;
-        _this._parentScene = _parentScene;
-        return _this;
-    }
-    Object.defineProperty(StackScene.prototype, "parentScene", {
-        get: function () {
-            return this._parentScene;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    StackScene.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
-            return true;
-        if (evt.type === 'keyPressed' && evt.code === 'Escape' && !!this.parentScene) {
-            this.game.changeScene(this.parentScene);
-            return true;
-        }
-        return false;
-    };
-    return StackScene;
-}(engine_1.GameScene));
-exports.StackScene = StackScene;
 
 
 /***/ }),
@@ -2620,6 +2620,162 @@ exports.ForceGenerator = ForceGenerator;
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
+var BallSelectObject = (function (_super) {
+    __extends(BallSelectObject, _super);
+    function BallSelectObject(opts) {
+        var _this = _super.call(this, 'Ball', merge(opts, {
+            color: 'white',
+            radius: 10 + Math.floor(Math.random() * 86)
+        })) || this;
+        _this.moving = false;
+        _this.controlSpring = null;
+        _this.refreshColor();
+        return _this;
+    }
+    BallSelectObject.prototype.handleEvent = function (evt) {
+        if (_super.prototype.handleEvent.call(this, evt))
+            return true;
+        if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
+            var clickPos = this.scene.camera.transformPixelCoordinates(evt.pageX, evt.pageY);
+            if (engine_1.pointDistance2(this.x, this.y, clickPos[0], clickPos[1]) <= Math.pow(this.radius, 2)) {
+                this.clickPos = [clickPos[0] - this.x, clickPos[1] - this.y];
+                BallSelectObject.currentSelection = this;
+                this.moving = true;
+                return true;
+            }
+            else if (BallSelectObject.currentSelection === this) {
+                BallSelectObject.currentSelection = null;
+                return false;
+            }
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Left) {
+            this.moving = false;
+        }
+        else if (BallSelectObject.currentSelection === this) {
+            if (evt.type === 'mouseWheel') {
+                var delta = (evt.delta > 0 ? -1 : 1) * 4;
+                if (this.controlSpring) {
+                    if (this.events.isKeyDown('KeyL')) {
+                        this.controlSpring.restLength = engine_1.clamp(this.controlSpring.restLength + delta, 10, 300);
+                        return true;
+                    }
+                    else if (this.events.isKeyDown('KeyS')) {
+                        this.controlSpring.springConstant = engine_1.clamp(this.controlSpring.springConstant + delta, 5, 100);
+                        return true;
+                    }
+                }
+                var oldMass = this.mask.mass;
+                this.radius = engine_1.clamp(this.radius + delta, 10, 96);
+                var newMass = this.mask.mass;
+                var preserveMomentum = this.scene.findObject('PhysicsController').preserveMomentum;
+                if (preserveMomentum)
+                    this.speed = (this.speed / newMass) * oldMass;
+                this.refreshColor();
+                return true;
+            }
+        }
+        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Right) {
+            BallSelectObject.paused = true;
+        }
+        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Right) {
+            BallSelectObject.paused = false;
+        }
+        return false;
+    };
+    BallSelectObject.prototype.refreshColor = function () {
+        var cc = 280 - Math.ceil(this.radius * 2.5);
+        this.color = "rgb(" + cc + ", " + cc + ", " + cc + ")";
+    };
+    BallSelectObject.prototype.tick = function (delta) {
+        if (this.moving) {
+            var mousePos = this.events.mousePosition;
+            var _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), cmpx = _a[0], cmpy = _a[1];
+            _b = [cmpx - this.clickPos[0], cmpy - this.clickPos[1]], this.x = _b[0], this.y = _b[1];
+        }
+        if (BallSelectObject.paused) {
+            if (typeof this.pausehspeed === 'undefined') {
+                this.pausehspeed = this.hspeed;
+                this.pausevspeed = this.vspeed;
+            }
+            else {
+                _c = [this.pausehspeed, this.pausevspeed], this.hspeed = _c[0], this.vspeed = _c[1];
+            }
+            if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
+                var bounds = this.scene.camera.bounds;
+                var mc = this.events.mousePosition;
+                var mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
+                _d = (_e = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _e[0], this.vspeed = _e[1], _e), this.pausehspeed = _d[0], this.pausevspeed = _d[1];
+            }
+            return;
+        }
+        else {
+            delete this.pausehspeed;
+            delete this.pausevspeed;
+        }
+        _super.prototype.tick.call(this, delta);
+        var _b, _c, _e, _d;
+    };
+    BallSelectObject.prototype.renderImplContext2d = function (context) {
+        _super.prototype.renderImplContext2d.call(this, context);
+        if (this.game.renderPhysics) {
+            context.save();
+            context.rotate(-engine_1.degToRad(this.direction + 90));
+            context.lineCap = 'arrow';
+            context.lineWidth = 3;
+            context.strokeStyle = 'green';
+            context.beginPath();
+            context.moveTo(3, 0);
+            context.lineTo(3, this.speed * .5);
+            context.stroke();
+            context.strokeStyle = 'red';
+            context.beginPath();
+            context.moveTo(-3, 0);
+            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
+            context.stroke();
+            context.restore();
+        }
+        if (BallSelectObject.currentSelection === this) {
+            context.strokeStyle = 'rgba(0, 0, 255, .4)';
+            context.lineWidth = 6;
+            context.beginPath();
+            context.ellipse(0, 0, this.radius + 4, this.radius + 4, 0, 0, 2 * Math.PI);
+            context.stroke();
+            if (this.controlSpring) {
+                context.fillStyle = 'white';
+                context.font = '12pt Cambria';
+                context.textBaseline = 'bottom';
+                context.textAlign = 'left';
+                context.fillText("spring.restLength: " + this.controlSpring.restLength, this.radius * .9, (-this.radius * .9) - 20);
+                context.fillText("spring.springConstant: " + this.controlSpring.springConstant, this.radius * .9, -this.radius * .9);
+            }
+        }
+    };
+    BallSelectObject.paused = false;
+    return BallSelectObject;
+}(ball_1.BallObject));
+exports.BallSelectObject = BallSelectObject;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2780,7 +2936,7 @@ exports.Camera = Camera;
 //# sourceMappingURL=camera.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2798,7 +2954,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var render_1 = __webpack_require__(19);
 var graphics_adapter_1 = __webpack_require__(17);
-var sprite_1 = __webpack_require__(10);
+var sprite_1 = __webpack_require__(11);
 var math_1 = __webpack_require__(1);
 var DefaultGraphicsAdapter = (function (_super) {
     __extends(DefaultGraphicsAdapter, _super);
@@ -2920,14 +3076,14 @@ exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
 //# sourceMappingURL=default-graphics-adapter.js.map
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = __webpack_require__(1);
-var default_graphics_adapter_1 = __webpack_require__(8);
+var default_graphics_adapter_1 = __webpack_require__(9);
 var CollisionMask = (function () {
     function CollisionMask(_gobj) {
         this._gobj = _gobj;
@@ -3036,7 +3192,7 @@ exports.CollisionMask = CollisionMask;
 //# sourceMappingURL=collision-mask.js.map
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3051,162 +3207,6 @@ function isAnimationSprite(sprite) {
 }
 exports.isAnimationSprite = isAnimationSprite;
 //# sourceMappingURL=sprite.js.map
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
-var BallSelectObject = (function (_super) {
-    __extends(BallSelectObject, _super);
-    function BallSelectObject(opts) {
-        var _this = _super.call(this, 'Ball', merge(opts, {
-            color: 'white',
-            radius: 10 + Math.floor(Math.random() * 86)
-        })) || this;
-        _this.moving = false;
-        _this.controlSpring = null;
-        _this.refreshColor();
-        return _this;
-    }
-    BallSelectObject.prototype.handleEvent = function (evt) {
-        if (_super.prototype.handleEvent.call(this, evt))
-            return true;
-        if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Left) {
-            var clickPos = this.scene.camera.transformPixelCoordinates(evt.pageX, evt.pageY);
-            if (engine_1.pointDistance2(this.x, this.y, clickPos[0], clickPos[1]) <= Math.pow(this.radius, 2)) {
-                this.clickPos = [clickPos[0] - this.x, clickPos[1] - this.y];
-                BallSelectObject.currentSelection = this;
-                this.moving = true;
-                return true;
-            }
-            else if (BallSelectObject.currentSelection === this) {
-                BallSelectObject.currentSelection = null;
-                return false;
-            }
-        }
-        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Left) {
-            this.moving = false;
-        }
-        else if (BallSelectObject.currentSelection === this) {
-            if (evt.type === 'mouseWheel') {
-                var delta = (evt.delta > 0 ? -1 : 1) * 4;
-                if (this.controlSpring) {
-                    if (this.events.isKeyDown('KeyL')) {
-                        this.controlSpring.restLength = engine_1.clamp(this.controlSpring.restLength + delta, 10, 300);
-                        return true;
-                    }
-                    else if (this.events.isKeyDown('KeyS')) {
-                        this.controlSpring.springConstant = engine_1.clamp(this.controlSpring.springConstant + delta, 5, 100);
-                        return true;
-                    }
-                }
-                var oldMass = this.mask.mass;
-                this.radius = engine_1.clamp(this.radius + delta, 10, 96);
-                var newMass = this.mask.mass;
-                var preserveMomentum = this.scene.findObject('PhysicsController').preserveMomentum;
-                if (preserveMomentum)
-                    this.speed = (this.speed / newMass) * oldMass;
-                this.refreshColor();
-                return true;
-            }
-        }
-        else if (evt.type === 'mouseButtonPressed' && evt.button === engine_1.MouseButton.Right) {
-            BallSelectObject.paused = true;
-        }
-        else if (evt.type === 'mouseButtonReleased' && evt.button === engine_1.MouseButton.Right) {
-            BallSelectObject.paused = false;
-        }
-        return false;
-    };
-    BallSelectObject.prototype.refreshColor = function () {
-        var cc = 280 - Math.ceil(this.radius * 2.5);
-        this.color = "rgb(" + cc + ", " + cc + ", " + cc + ")";
-    };
-    BallSelectObject.prototype.tick = function (delta) {
-        if (this.moving) {
-            var mousePos = this.events.mousePosition;
-            var _a = this.scene.camera.transformPixelCoordinates(mousePos.x, mousePos.y), cmpx = _a[0], cmpy = _a[1];
-            _b = [cmpx - this.clickPos[0], cmpy - this.clickPos[1]], this.x = _b[0], this.y = _b[1];
-        }
-        if (BallSelectObject.paused) {
-            if (typeof this.pausehspeed === 'undefined') {
-                this.pausehspeed = this.hspeed;
-                this.pausevspeed = this.vspeed;
-            }
-            else {
-                _c = [this.pausehspeed, this.pausevspeed], this.hspeed = _c[0], this.vspeed = _c[1];
-            }
-            if (this.events.isKeyDown('KeyA') || BallSelectObject.currentSelection === this) {
-                var bounds = this.scene.camera.bounds;
-                var mc = this.events.mousePosition;
-                var mpc = this.scene.camera.transformPixelCoordinates(mc.x, mc.y);
-                _d = (_e = [(mpc[0] - this.x) * 2, (mpc[1] - this.y) * 2], this.hspeed = _e[0], this.vspeed = _e[1], _e), this.pausehspeed = _d[0], this.pausevspeed = _d[1];
-            }
-            return;
-        }
-        else {
-            delete this.pausehspeed;
-            delete this.pausevspeed;
-        }
-        _super.prototype.tick.call(this, delta);
-        var _b, _c, _e, _d;
-    };
-    BallSelectObject.prototype.renderImplContext2d = function (context) {
-        _super.prototype.renderImplContext2d.call(this, context);
-        if (this.game.renderPhysics) {
-            context.save();
-            context.rotate(-engine_1.degToRad(this.direction + 90));
-            context.lineCap = 'arrow';
-            context.lineWidth = 3;
-            context.strokeStyle = 'green';
-            context.beginPath();
-            context.moveTo(3, 0);
-            context.lineTo(3, this.speed * .5);
-            context.stroke();
-            context.strokeStyle = 'red';
-            context.beginPath();
-            context.moveTo(-3, 0);
-            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
-            context.stroke();
-            context.restore();
-        }
-        if (BallSelectObject.currentSelection === this) {
-            context.strokeStyle = 'rgba(0, 0, 255, .4)';
-            context.lineWidth = 6;
-            context.beginPath();
-            context.ellipse(0, 0, this.radius + 4, this.radius + 4, 0, 0, 2 * Math.PI);
-            context.stroke();
-            if (this.controlSpring) {
-                context.fillStyle = 'white';
-                context.font = '12pt Cambria';
-                context.textBaseline = 'bottom';
-                context.textAlign = 'left';
-                context.fillText("spring.restLength: " + this.controlSpring.restLength, this.radius * .9, (-this.radius * .9) - 20);
-                context.fillText("spring.springConstant: " + this.controlSpring.springConstant, this.radius * .9, -this.radius * .9);
-            }
-        }
-    };
-    BallSelectObject.paused = false;
-    return BallSelectObject;
-}(ball_1.BallObject));
-exports.BallSelectObject = BallSelectObject;
-
 
 /***/ }),
 /* 12 */
@@ -3225,8 +3225,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var BOULDER_RADIUS = 128;
 var BoulderObject = (function (_super) {
     __extends(BoulderObject, _super);
@@ -3258,8 +3258,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var BOWLING_BALL_RADIUS = 48;
 var BowlingBallObject = (function (_super) {
     __extends(BowlingBallObject, _super);
@@ -3291,8 +3291,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var GOLF_BALL_RADIUS = 24;
 var GolfBallObject = (function (_super) {
     __extends(GolfBallObject, _super);
@@ -3970,7 +3970,7 @@ exports.ResourceLoader = ResourceLoader;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sprite_1 = __webpack_require__(10);
+var sprite_1 = __webpack_require__(11);
 var LINE_HEIGHT = 12;
 function fillText(context, text, x, y) {
     var lines = text.split('\n');
@@ -4049,7 +4049,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var game_object_1 = __webpack_require__(16);
-var merge = __webpack_require__(2);
+var merge = __webpack_require__(3);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -4122,7 +4122,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(7);
+var camera_1 = __webpack_require__(8);
 var FollowCamera = (function (_super) {
     __extends(FollowCamera, _super);
     function FollowCamera(scene) {
@@ -4171,7 +4171,7 @@ exports.FollowCamera = FollowCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var camera_1 = __webpack_require__(7);
+var camera_1 = __webpack_require__(8);
 var GameScene = (function () {
     function GameScene(_game) {
         if (_game === void 0) { _game = null; }
@@ -4386,7 +4386,7 @@ exports.GameScene = GameScene;
 Object.defineProperty(exports, "__esModule", { value: true });
 var resource_loader_1 = __webpack_require__(18);
 var event_queue_1 = __webpack_require__(15);
-var default_graphics_adapter_1 = __webpack_require__(8);
+var default_graphics_adapter_1 = __webpack_require__(9);
 ;
 var Game = (function () {
     function Game(options) {
@@ -4631,7 +4631,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(17));
-__export(__webpack_require__(8));
+__export(__webpack_require__(9));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4651,7 +4651,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var collision_mask_1 = __webpack_require__(9);
+var collision_mask_1 = __webpack_require__(10);
 var math_1 = __webpack_require__(1);
 var CircleCollisionMask = (function (_super) {
     __extends(CircleCollisionMask, _super);
@@ -4829,7 +4829,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var collision_mask_1 = __webpack_require__(9);
+var collision_mask_1 = __webpack_require__(10);
 var force_generator_1 = __webpack_require__(6);
 var math_1 = __webpack_require__(1);
 var GravityForceGenerator = (function (_super) {
@@ -4882,7 +4882,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(9));
+__export(__webpack_require__(10));
 __export(__webpack_require__(26));
 __export(__webpack_require__(6));
 __export(__webpack_require__(27));
@@ -5044,7 +5044,7 @@ __export(__webpack_require__(33));
 __export(__webpack_require__(1));
 __export(__webpack_require__(35));
 __export(__webpack_require__(19));
-__export(__webpack_require__(10));
+__export(__webpack_require__(11));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -5117,8 +5117,9 @@ var bouncing_circles_scene_1 = __webpack_require__(42);
 var momentum_mass_scene_1 = __webpack_require__(46);
 var force_generator_scene_1 = __webpack_require__(44);
 var planets_scene_1 = __webpack_require__(47);
-var spring_scene_1 = __webpack_require__(48);
-var spring_mesh_scene_1 = __webpack_require__(51);
+var spring_scene_1 = __webpack_require__(49);
+var spring_mesh_scene_1 = __webpack_require__(48);
+var resting_contact_scene_1 = __webpack_require__(52);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -5172,6 +5173,12 @@ var MainMenuObject = (function (_super) {
             text: "Mesh Springs",
             handler: function () {
                 _this.game.changeScene(new spring_mesh_scene_1.SpringMeshScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Resting Contact",
+            handler: function () {
+                _this.game.changeScene(new resting_contact_scene_1.RestingContactScene(_this.scene));
             }
         });
         this.addMenuItem({
@@ -5298,8 +5305,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var MOVEMENT_AMT = 300;
 var PcBallForceGenerator = (function (_super) {
     __extends(PcBallForceGenerator, _super);
@@ -5369,8 +5376,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var PLANET_RADIUS = 32;
 var PlanetObject = (function (_super) {
     __extends(PlanetObject, _super);
@@ -5402,8 +5409,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(3);
-var merge = __webpack_require__(2);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(3);
 var SUN_RADIUS = 128;
 var SunObject = (function (_super) {
     __extends(SunObject, _super);
@@ -5440,7 +5447,7 @@ var boulder_1 = __webpack_require__(12);
 var bowling_ball_1 = __webpack_require__(13);
 var golf_ball_1 = __webpack_require__(14);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var BALL_COUNT = 0;
 var BouncingCirclesScene = (function (_super) {
     __extends(BouncingCirclesScene, _super);
@@ -5497,7 +5504,7 @@ var boulder_1 = __webpack_require__(12);
 var bowling_ball_1 = __webpack_require__(13);
 var golf_ball_1 = __webpack_require__(14);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var BALL_COUNT = 2;
 var CirclesScene = (function (_super) {
     __extends(CirclesScene, _super);
@@ -5550,10 +5557,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(11);
+var ball_select_1 = __webpack_require__(7);
 var pc_ball_1 = __webpack_require__(39);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var BALL_COUNT = 12;
 var ForceGeneratorScene = (function (_super) {
     __extends(ForceGeneratorScene, _super);
@@ -5610,7 +5617,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var MenuScene = (function (_super) {
     __extends(MenuScene, _super);
     function MenuScene(menu, parentScene) {
@@ -5651,9 +5658,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(11);
+var ball_select_1 = __webpack_require__(7);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var BALL_COUNT = 12;
 var MomentumMassScene = (function (_super) {
     __extends(MomentumMassScene, _super);
@@ -5707,7 +5714,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
 var planet_1 = __webpack_require__(40);
 var sun_1 = __webpack_require__(41);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var PlanetsScene = (function (_super) {
     __extends(PlanetsScene, _super);
     function PlanetsScene(parent) {
@@ -5758,130 +5765,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(11);
+var ball_select_1 = __webpack_require__(7);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
-var SpringScene = (function (_super) {
-    __extends(SpringScene, _super);
-    function SpringScene(parent, BALL_COUNT) {
-        if (BALL_COUNT === void 0) { BALL_COUNT = 2; }
-        var _this = _super.call(this, parent) || this;
-        _this.BALL_COUNT = BALL_COUNT;
-        _this.initialized = false;
-        return _this;
-    }
-    SpringScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click and drag any ball. After you select one:\nL + mouse wheel to change the spring length;\nS + mouse wheel to change the spring constant;\nMouse wheel to change the ball radius/mass", true);
-        physicsController.createMore = false;
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        var balls = [];
-        for (var q = 0; q < this.BALL_COUNT; q++) {
-            var obj = new ball_select_1.BallSelectObject();
-            obj.mask.addForceGenerator(new engine_1.DragForceGenerator(.1, .5));
-            obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
-            obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
-            this.addObject(obj);
-            balls.push(obj);
-        }
-        this.firstBall = balls[0];
-        for (var q = 0; q < this.BALL_COUNT - 1; q++) {
-            var one = balls[q];
-            var two = balls[q + 1];
-            var spring = new engine_1.SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
-            two.mask.addForceGenerator(spring);
-            two.controlSpring = spring;
-            if (q === 0)
-                spring.modifyOther = false;
-        }
-    };
-    return SpringScene;
-}(stack_scene_1.StackScene));
-exports.SpringScene = SpringScene;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(11);
-var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(4);
+var stack_scene_1 = __webpack_require__(2);
 var SpringMeshScene = (function (_super) {
     __extends(SpringMeshScene, _super);
     function SpringMeshScene(parent, MESH_WIDTH, MESH_HEIGHT) {
@@ -5941,6 +5827,187 @@ var SpringMeshScene = (function (_super) {
     return SpringMeshScene;
 }(stack_scene_1.StackScene));
 exports.SpringMeshScene = SpringMeshScene;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(7);
+var physics_controller_1 = __webpack_require__(5);
+var stack_scene_1 = __webpack_require__(2);
+var SpringScene = (function (_super) {
+    __extends(SpringScene, _super);
+    function SpringScene(parent, BALL_COUNT) {
+        if (BALL_COUNT === void 0) { BALL_COUNT = 2; }
+        var _this = _super.call(this, parent) || this;
+        _this.BALL_COUNT = BALL_COUNT;
+        _this.initialized = false;
+        return _this;
+    }
+    SpringScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click and drag any ball. After you select one:\nL + mouse wheel to change the spring length;\nS + mouse wheel to change the spring constant;\nMouse wheel to change the ball radius/mass", true);
+        physicsController.createMore = false;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        var balls = [];
+        for (var q = 0; q < this.BALL_COUNT; q++) {
+            var obj = new ball_select_1.BallSelectObject();
+            obj.mask.addForceGenerator(new engine_1.DragForceGenerator(.1, .5));
+            obj.x = bounds.left + obj.radius + Math.random() * (bounds.right - bounds.left - obj.radius * 2);
+            obj.y = bounds.bottom + obj.radius + Math.random() * (bounds.top - bounds.bottom - obj.radius * 2);
+            this.addObject(obj);
+            balls.push(obj);
+        }
+        this.firstBall = balls[0];
+        for (var q = 0; q < this.BALL_COUNT - 1; q++) {
+            var one = balls[q];
+            var two = balls[q + 1];
+            var spring = new engine_1.SpringForceGenerator(one.mask, 25, (one.radius + two.radius) * 2);
+            two.mask.addForceGenerator(spring);
+            two.controlSpring = spring;
+            if (q === 0)
+                spring.modifyOther = false;
+        }
+    };
+    return SpringScene;
+}(stack_scene_1.StackScene));
+exports.SpringScene = SpringScene;
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(7);
+var pc_ball_1 = __webpack_require__(39);
+var physics_controller_1 = __webpack_require__(5);
+var stack_scene_1 = __webpack_require__(2);
+var BALL_COUNT = 6;
+var RestingContactScene = (function (_super) {
+    __extends(RestingContactScene, _super);
+    function RestingContactScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    RestingContactScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nMove the orange ball using a force generator with the arrow keys.", true);
+        physicsController.createMore = false;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        this.addForceGenerator(physicsController.dragForce = new engine_1.DragForceGenerator(.002, .002));
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj_1 = new ball_select_1.BallSelectObject();
+            obj_1.radius = 48;
+            obj_1.x = (bounds.right + bounds.left) / 2;
+            obj_1.y = bounds.top - obj_1.radius - ((obj_1.radius * 2) + 2) * q;
+            this.addObject(obj_1);
+        }
+        var obj = new pc_ball_1.PcBallObject();
+        obj.x = (bounds.right + bounds.left * 3) / 4;
+        obj.y = bounds.top + obj.radius * 2;
+        this.addObject(obj);
+    };
+    return RestingContactScene;
+}(stack_scene_1.StackScene));
+exports.RestingContactScene = RestingContactScene;
 
 
 /***/ })

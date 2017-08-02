@@ -6,6 +6,7 @@ import { ForceGeneratorScene } from '../scenes/force-generator.scene';
 import { PlanetsScene } from '../scenes/planets.scene';
 import { SpringScene } from '../scenes/spring.scene';
 import { SpringMeshScene } from '../scenes/spring-mesh.scene';
+import { RestingContactScene } from '../scenes/resting-contact.scene';
 
 export class MainMenuObject extends MenuObject {
     constructor() {
@@ -14,51 +15,57 @@ export class MainMenuObject extends MenuObject {
     
     initItems() {
         this.addMenuItem({
-            text:"Circle Separation - Step by Step",
+            text: "Circle Separation - Step by Step",
             handler: () => {
                 this.game.changeScene(new CirclesScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Circle Collision",
+            text: "Circle Collision",
             handler: () => {
                 this.game.changeScene(new BouncingCirclesScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Mass and Force",
+            text: "Mass and Force",
             handler: () => {
                 this.game.changeScene(new MomentumMassScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Force Generator",
+            text: "Force Generator",
             handler: () => {
                 this.game.changeScene(new ForceGeneratorScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Planets",
+            text: "Planets",
             handler: () => {
                 this.game.changeScene(new PlanetsScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Single Spring",
+            text: "Single Spring",
             handler: () => {
                 this.game.changeScene(new SpringScene(this.scene));
             }
         });
         this.addMenuItem({
-            text:"Multiple Springs",
+            text: "Multiple Springs",
             handler: () => {
                 this.game.changeScene(new SpringScene(this.scene, 5));
             }
         });
         this.addMenuItem({
-            text:"Mesh Springs",
+            text: "Mesh Springs",
             handler: () => {
                 this.game.changeScene(new SpringMeshScene(this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Resting Contact",
+            handler: () => {
+                this.game.changeScene(new RestingContactScene(this.scene));
             }
         });
         this.addMenuItem({
