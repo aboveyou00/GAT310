@@ -5402,7 +5402,7 @@ var FixedBallObject = (function (_super) {
     FixedBallObject.prototype.handleEvent = function (e) {
         if (_super.prototype.handleEvent.call(this, e))
             return true;
-        if (e.type === 'keyPressed' && e.code === 'Space' && this.attachTo) {
+        if (e.type === 'keyPressed' && (e.code === 'Space' || e.code === 'Enter') && this.attachTo) {
             var forceGenerators = this.attachTo.mask.forceGenerators;
             for (var _i = 0, forceGenerators_1 = forceGenerators; _i < forceGenerators_1.length; _i++) {
                 var forceGen = forceGenerators_1[_i];

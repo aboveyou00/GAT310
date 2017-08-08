@@ -20,7 +20,7 @@ export class FixedBallObject extends BallObject {
     handleEvent(e: GameEvent) {
         if (super.handleEvent(e)) return true;
         
-        if (e.type === 'keyPressed' && e.code === 'Space' && this.attachTo) {
+        if (e.type === 'keyPressed' && (e.code === 'Space' || e.code === 'Enter') && this.attachTo) {
             let forceGenerators = this.attachTo.mask.forceGenerators;
             for (let forceGen of forceGenerators) {
                 if (!(forceGen instanceof GravityForceGenerator)) continue;
