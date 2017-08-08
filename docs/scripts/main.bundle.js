@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 36);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,66 +76,21 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(15));
-__export(__webpack_require__(18));
+__export(__webpack_require__(16));
+__export(__webpack_require__(19));
 __export(__webpack_require__(8));
+__export(__webpack_require__(23));
+__export(__webpack_require__(25));
+__export(__webpack_require__(17));
 __export(__webpack_require__(22));
 __export(__webpack_require__(24));
-__export(__webpack_require__(16));
-__export(__webpack_require__(21));
-__export(__webpack_require__(23));
-__export(__webpack_require__(34));
-__export(__webpack_require__(25));
-__export(__webpack_require__(29));
+__export(__webpack_require__(35));
+__export(__webpack_require__(26));
+__export(__webpack_require__(30));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function degToRad(deg) {
-    return (deg / 180) * Math.PI;
-}
-exports.degToRad = degToRad;
-function radToDeg(rad) {
-    return (rad / Math.PI) * 180;
-}
-exports.radToDeg = radToDeg;
-function clamp(value, lowerBound, upperBound) {
-    if (lowerBound > upperBound) {
-        throw new Error("Attempting to clamp with a lower bound greater than the upper bound");
-    }
-    if (value < lowerBound)
-        value = lowerBound;
-    else if (value > upperBound)
-        value = upperBound;
-    return value;
-}
-exports.clamp = clamp;
-function fmod(a, b) {
-    return +(a - (Math.floor(a / b) * b)).toPrecision(8);
-}
-exports.fmod = fmod;
-function pointDirection(x1, y1, x2, y2) {
-    var xdiff = x2 - x1, ydiff = y2 - y1;
-    return fmod(radToDeg(Math.atan2(-ydiff, xdiff)), 360);
-}
-exports.pointDirection = pointDirection;
-function pointDistance2(x1, y1, x2, y2) {
-    return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
-}
-exports.pointDistance2 = pointDistance2;
-function pointDistance(x1, y1, x2, y2) {
-    return Math.sqrt(pointDistance2(x1, y1, x2, y2));
-}
-exports.pointDistance = pointDistance;
-//# sourceMappingURL=math.js.map
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -181,7 +136,7 @@ exports.StackScene = StackScene;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -2392,7 +2347,52 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(50), __webpack_require__(51)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(53), __webpack_require__(54)(module)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function degToRad(deg) {
+    return (deg / 180) * Math.PI;
+}
+exports.degToRad = degToRad;
+function radToDeg(rad) {
+    return (rad / Math.PI) * 180;
+}
+exports.radToDeg = radToDeg;
+function clamp(value, lowerBound, upperBound) {
+    if (lowerBound > upperBound) {
+        throw new Error("Attempting to clamp with a lower bound greater than the upper bound");
+    }
+    if (value < lowerBound)
+        value = lowerBound;
+    else if (value > upperBound)
+        value = upperBound;
+    return value;
+}
+exports.clamp = clamp;
+function fmod(a, b) {
+    return +(a - (Math.floor(a / b) * b)).toPrecision(8);
+}
+exports.fmod = fmod;
+function pointDirection(x1, y1, x2, y2) {
+    var xdiff = x2 - x1, ydiff = y2 - y1;
+    return fmod(radToDeg(Math.atan2(-ydiff, xdiff)), 360);
+}
+exports.pointDirection = pointDirection;
+function pointDistance2(x1, y1, x2, y2) {
+    return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
+}
+exports.pointDistance2 = pointDistance2;
+function pointDistance(x1, y1, x2, y2) {
+    return Math.sqrt(pointDistance2(x1, y1, x2, y2));
+}
+exports.pointDistance = pointDistance;
+//# sourceMappingURL=math.js.map
 
 /***/ }),
 /* 4 */
@@ -2608,22 +2608,6 @@ exports.PhysicsControllerObject = PhysicsControllerObject;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var ForceGenerator = (function () {
-    function ForceGenerator() {
-    }
-    ForceGenerator.prototype.render = function (collider, context) { };
-    return ForceGenerator;
-}());
-exports.ForceGenerator = ForceGenerator;
-//# sourceMappingURL=force-generator.js.map
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2637,7 +2621,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
+var merge = __webpack_require__(2);
 var BallSelectObject = (function (_super) {
     __extends(BallSelectObject, _super);
     function BallSelectObject(opts) {
@@ -2775,13 +2759,29 @@ exports.BallSelectObject = BallSelectObject;
 
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ForceGenerator = (function () {
+    function ForceGenerator() {
+    }
+    ForceGenerator.prototype.render = function (collider, context) { };
+    return ForceGenerator;
+}());
+exports.ForceGenerator = ForceGenerator;
+//# sourceMappingURL=force-generator.js.map
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(1);
+var math_1 = __webpack_require__(3);
 var Camera = (function () {
     function Camera(_scene) {
         this._scene = _scene;
@@ -2952,10 +2952,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var render_1 = __webpack_require__(19);
-var graphics_adapter_1 = __webpack_require__(17);
+var render_1 = __webpack_require__(20);
+var graphics_adapter_1 = __webpack_require__(18);
 var sprite_1 = __webpack_require__(11);
-var math_1 = __webpack_require__(1);
+var math_1 = __webpack_require__(3);
 var DefaultGraphicsAdapter = (function (_super) {
     __extends(DefaultGraphicsAdapter, _super);
     function DefaultGraphicsAdapter(_context) {
@@ -3082,7 +3082,7 @@ exports.DefaultGraphicsAdapter = DefaultGraphicsAdapter;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(1);
+var math_1 = __webpack_require__(3);
 var default_graphics_adapter_1 = __webpack_require__(9);
 var CollisionMask = (function () {
     function CollisionMask(_gobj) {
@@ -3226,7 +3226,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
+var merge = __webpack_require__(2);
 var BOULDER_RADIUS = 128;
 var BoulderObject = (function (_super) {
     __extends(BoulderObject, _super);
@@ -3259,7 +3259,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
+var merge = __webpack_require__(2);
 var BOWLING_BALL_RADIUS = 48;
 var BowlingBallObject = (function (_super) {
     __extends(BowlingBallObject, _super);
@@ -3292,7 +3292,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
+var merge = __webpack_require__(2);
 var GOLF_BALL_RADIUS = 24;
 var GolfBallObject = (function (_super) {
     __extends(GolfBallObject, _super);
@@ -3309,6 +3309,78 @@ exports.GolfBallObject = GolfBallObject;
 
 /***/ }),
 /* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(2);
+var MOVEMENT_AMT = 300;
+var PcBallForceGenerator = (function (_super) {
+    __extends(PcBallForceGenerator, _super);
+    function PcBallForceGenerator(ball) {
+        var _this = _super.call(this) || this;
+        _this.ball = ball;
+        return _this;
+    }
+    PcBallForceGenerator.prototype.updateCollider = function (collider, delta) {
+        var events = this.ball.events;
+        var fx = (events.isKeyDown('ArrowLeft') && -1) + (events.isKeyDown('ArrowRight') && 1);
+        var fy = (events.isKeyDown('ArrowUp') && -1) + (events.isKeyDown('ArrowDown') && 1);
+        var method = events.isKeyDown('KeyI') ? 'addImpulse' : 'addForce';
+        collider[method](fx * MOVEMENT_AMT * delta, fy * MOVEMENT_AMT * delta);
+    };
+    return PcBallForceGenerator;
+}(engine_1.ForceGenerator));
+var PcBallObject = (function (_super) {
+    __extends(PcBallObject, _super);
+    function PcBallObject(opts) {
+        var _this = _super.call(this, 'PcBall', merge(opts, {
+            color: 'orange',
+            radius: 64
+        })) || this;
+        _this.mask.addForceGenerator(new PcBallForceGenerator(_this));
+        return _this;
+    }
+    PcBallObject.prototype.renderImplContext2d = function (context) {
+        _super.prototype.renderImplContext2d.call(this, context);
+        if (this.game.renderPhysics) {
+            context.save();
+            context.rotate(-engine_1.degToRad(this.direction + 90));
+            context.lineCap = 'arrow';
+            context.lineWidth = 3;
+            context.strokeStyle = 'green';
+            context.beginPath();
+            context.moveTo(3, 0);
+            context.lineTo(3, this.speed * .5);
+            context.stroke();
+            context.strokeStyle = 'red';
+            context.beginPath();
+            context.moveTo(-3, 0);
+            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
+            context.stroke();
+            context.restore();
+        }
+    };
+    return PcBallObject;
+}(ball_1.BallObject));
+exports.PcBallObject = PcBallObject;
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3496,13 +3568,13 @@ exports.EventQueue = EventQueue;
 //# sourceMappingURL=event-queue.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(1);
+var math_1 = __webpack_require__(3);
 ;
 var GameObject = (function () {
     function GameObject(name, opts) {
@@ -3837,7 +3909,7 @@ exports.GameObject = GameObject;
 //# sourceMappingURL=game-object.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3852,7 +3924,7 @@ exports.GraphicsAdapter = GraphicsAdapter;
 //# sourceMappingURL=graphics-adapter.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3964,7 +4036,7 @@ exports.ResourceLoader = ResourceLoader;
 //# sourceMappingURL=resource-loader.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3997,41 +4069,6 @@ exports.measureSprite = measureSprite;
 //# sourceMappingURL=render.js.map
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var menu_scene_1 = __webpack_require__(45);
-var main_menu_1 = __webpack_require__(37);
-var PhysicsGame = (function (_super) {
-    __extends(PhysicsGame, _super);
-    function PhysicsGame(framesPerSecond) {
-        if (framesPerSecond === void 0) { framesPerSecond = 30; }
-        return _super.call(this, { framesPerSecond: framesPerSecond }) || this;
-    }
-    PhysicsGame.prototype.start = function () {
-        _super.prototype.start.call(this);
-        this.changeScene(new menu_scene_1.MenuScene(new main_menu_1.MainMenuObject(), null));
-    };
-    return PhysicsGame;
-}(engine_1.Game));
-exports.PhysicsGame = PhysicsGame;
-
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4048,8 +4085,43 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var game_object_1 = __webpack_require__(16);
-var merge = __webpack_require__(3);
+var engine_1 = __webpack_require__(0);
+var menu_scene_1 = __webpack_require__(47);
+var main_menu_1 = __webpack_require__(38);
+var PhysicsGame = (function (_super) {
+    __extends(PhysicsGame, _super);
+    function PhysicsGame(framesPerSecond) {
+        if (framesPerSecond === void 0) { framesPerSecond = 30; }
+        return _super.call(this, { framesPerSecond: framesPerSecond }) || this;
+    }
+    PhysicsGame.prototype.start = function () {
+        _super.prototype.start.call(this);
+        this.changeScene(new menu_scene_1.MenuScene(new main_menu_1.MainMenuObject(), null));
+    };
+    return PhysicsGame;
+}(engine_1.Game));
+exports.PhysicsGame = PhysicsGame;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_object_1 = __webpack_require__(17);
+var merge = __webpack_require__(2);
 var AudioSourceObject = (function (_super) {
     __extends(AudioSourceObject, _super);
     function AudioSourceObject(name, audio, opts) {
@@ -4106,7 +4178,7 @@ exports.AudioSourceObject = AudioSourceObject;
 //# sourceMappingURL=audio-source-object.js.map
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4165,7 +4237,7 @@ exports.FollowCamera = FollowCamera;
 //# sourceMappingURL=follow-camera.js.map
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4378,14 +4450,14 @@ exports.GameScene = GameScene;
 //# sourceMappingURL=game-scene.js.map
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var resource_loader_1 = __webpack_require__(18);
-var event_queue_1 = __webpack_require__(15);
+var resource_loader_1 = __webpack_require__(19);
+var event_queue_1 = __webpack_require__(16);
 var default_graphics_adapter_1 = __webpack_require__(9);
 ;
 var Game = (function () {
@@ -4621,7 +4693,7 @@ exports.Game = Game;
 //# sourceMappingURL=game.js.map
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4630,12 +4702,12 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(17));
+__export(__webpack_require__(18));
 __export(__webpack_require__(9));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4652,7 +4724,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var collision_mask_1 = __webpack_require__(10);
-var math_1 = __webpack_require__(1);
+var math_1 = __webpack_require__(3);
 var CircleCollisionMask = (function (_super) {
     __extends(CircleCollisionMask, _super);
     function CircleCollisionMask(gobj, _radius, _offset, mass) {
@@ -4767,7 +4839,7 @@ exports.CircleCollisionMask = CircleCollisionMask;
 //# sourceMappingURL=circle-collision-mask.js.map
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4783,7 +4855,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var force_generator_1 = __webpack_require__(6);
+var force_generator_1 = __webpack_require__(7);
 var DragForceGenerator = (function (_super) {
     __extends(DragForceGenerator, _super);
     function DragForceGenerator(k1, k2) {
@@ -4813,7 +4885,7 @@ exports.DragForceGenerator = DragForceGenerator;
 //# sourceMappingURL=drag-force-generator.js.map
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4830,8 +4902,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var collision_mask_1 = __webpack_require__(10);
-var force_generator_1 = __webpack_require__(6);
-var math_1 = __webpack_require__(1);
+var force_generator_1 = __webpack_require__(7);
+var math_1 = __webpack_require__(3);
 var GravityForceGenerator = (function (_super) {
     __extends(GravityForceGenerator, _super);
     function GravityForceGenerator(hgravity, vgravity) {
@@ -4873,7 +4945,7 @@ exports.GravityForceGenerator = GravityForceGenerator;
 //# sourceMappingURL=gravity-force-generator.js.map
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4883,15 +4955,15 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(10));
-__export(__webpack_require__(26));
-__export(__webpack_require__(6));
 __export(__webpack_require__(27));
+__export(__webpack_require__(7));
 __export(__webpack_require__(28));
-__export(__webpack_require__(30));
+__export(__webpack_require__(29));
+__export(__webpack_require__(31));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4907,8 +4979,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var force_generator_1 = __webpack_require__(6);
-var math_1 = __webpack_require__(1);
+var force_generator_1 = __webpack_require__(7);
+var math_1 = __webpack_require__(3);
 var SpringForceGenerator = (function (_super) {
     __extends(SpringForceGenerator, _super);
     function SpringForceGenerator(other, springConstant, restLength) {
@@ -4965,7 +5037,7 @@ exports.SpringForceGenerator = SpringForceGenerator;
 //# sourceMappingURL=spring-force-generator.js.map
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4980,7 +5052,7 @@ exports.delay = delay;
 //# sourceMappingURL=delay.js.map
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5012,7 +5084,7 @@ exports.EventEmitter = EventEmitter;
 //# sourceMappingURL=event-emitter.js.map
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5029,7 +5101,7 @@ var MouseButton;
 //# sourceMappingURL=events.js.map
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5038,17 +5110,17 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(31));
 __export(__webpack_require__(32));
 __export(__webpack_require__(33));
-__export(__webpack_require__(1));
-__export(__webpack_require__(35));
-__export(__webpack_require__(19));
+__export(__webpack_require__(34));
+__export(__webpack_require__(3));
+__export(__webpack_require__(36));
+__export(__webpack_require__(20));
 __export(__webpack_require__(11));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5083,19 +5155,19 @@ exports.Rect = Rect;
 //# sourceMappingURL=rect.js.map
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var physics_game_1 = __webpack_require__(20);
+var physics_game_1 = __webpack_require__(21);
 var game = new physics_game_1.PhysicsGame();
 game.start();
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5111,15 +5183,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var menu_1 = __webpack_require__(38);
-var circles_scene_1 = __webpack_require__(43);
-var bouncing_circles_scene_1 = __webpack_require__(42);
-var momentum_mass_scene_1 = __webpack_require__(46);
-var force_generator_scene_1 = __webpack_require__(44);
-var planets_scene_1 = __webpack_require__(47);
-var spring_scene_1 = __webpack_require__(49);
-var spring_mesh_scene_1 = __webpack_require__(48);
-var resting_contact_scene_1 = __webpack_require__(52);
+var menu_1 = __webpack_require__(39);
+var circles_scene_1 = __webpack_require__(45);
+var bouncing_circles_scene_1 = __webpack_require__(44);
+var momentum_mass_scene_1 = __webpack_require__(48);
+var force_generator_scene_1 = __webpack_require__(46);
+var planets_scene_1 = __webpack_require__(49);
+var spring_scene_1 = __webpack_require__(52);
+var spring_mesh_scene_1 = __webpack_require__(51);
+var resting_contact_scene_1 = __webpack_require__(50);
+var angular_velocity_scene_1 = __webpack_require__(43);
 var MainMenuObject = (function (_super) {
     __extends(MainMenuObject, _super);
     function MainMenuObject() {
@@ -5182,6 +5255,12 @@ var MainMenuObject = (function (_super) {
             }
         });
         this.addMenuItem({
+            text: "Angular Velocity and Chasles Theorem",
+            handler: function () {
+                _this.game.changeScene(new angular_velocity_scene_1.AngularVelocityScene(_this.scene));
+            }
+        });
+        this.addMenuItem({
             text: "Exit",
             handler: function () {
                 window.close();
@@ -5194,7 +5273,7 @@ exports.MainMenuObject = MainMenuObject;
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5288,7 +5367,7 @@ exports.MenuObject = MenuObject;
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5306,90 +5385,75 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
-var MOVEMENT_AMT = 300;
-var PcBallForceGenerator = (function (_super) {
-    __extends(PcBallForceGenerator, _super);
-    function PcBallForceGenerator(ball) {
-        var _this = _super.call(this) || this;
-        _this.ball = ball;
-        return _this;
-    }
-    PcBallForceGenerator.prototype.updateCollider = function (collider, delta) {
-        var events = this.ball.events;
-        var fx = (events.isKeyDown('ArrowLeft') && -1) + (events.isKeyDown('ArrowRight') && 1);
-        var fy = (events.isKeyDown('ArrowUp') && -1) + (events.isKeyDown('ArrowDown') && 1);
-        var method = events.isKeyDown('KeyI') ? 'addImpulse' : 'addForce';
-        collider[method](fx * MOVEMENT_AMT * delta, fy * MOVEMENT_AMT * delta);
-    };
-    return PcBallForceGenerator;
-}(engine_1.ForceGenerator));
-var PcBallObject = (function (_super) {
-    __extends(PcBallObject, _super);
-    function PcBallObject(opts) {
-        var _this = _super.call(this, 'PcBall', merge(opts, {
-            color: 'orange',
-            radius: 64
+var merge = __webpack_require__(2);
+var FIXED_BALL_RADIUS = 64;
+var FixedBallObject = (function (_super) {
+    __extends(FixedBallObject, _super);
+    function FixedBallObject(opts) {
+        var _this = _super.call(this, 'FixedBall', merge(opts, {
+            color: 'grey',
+            radius: FIXED_BALL_RADIUS
         })) || this;
-        _this.mask.addForceGenerator(new PcBallForceGenerator(_this));
+        _this.angle = 0;
+        _this.angleChangeSpeed = 0;
+        _this.distance = 0;
         return _this;
     }
-    PcBallObject.prototype.renderImplContext2d = function (context) {
-        _super.prototype.renderImplContext2d.call(this, context);
-        if (this.game.renderPhysics) {
-            context.save();
-            context.rotate(-engine_1.degToRad(this.direction + 90));
-            context.lineCap = 'arrow';
-            context.lineWidth = 3;
-            context.strokeStyle = 'green';
-            context.beginPath();
-            context.moveTo(3, 0);
-            context.lineTo(3, this.speed * .5);
-            context.stroke();
-            context.strokeStyle = 'red';
-            context.beginPath();
-            context.moveTo(-3, 0);
-            context.lineTo(-3, this.speed * .0001 * this.mask.mass);
-            context.stroke();
-            context.restore();
+    FixedBallObject.prototype.handleEvent = function (e) {
+        if (_super.prototype.handleEvent.call(this, e))
+            return true;
+        if (e.type === 'keyPressed' && e.code === 'Space' && this.attachTo) {
+            var forceGenerators = this.attachTo.mask.forceGenerators;
+            for (var _i = 0, forceGenerators_1 = forceGenerators; _i < forceGenerators_1.length; _i++) {
+                var forceGen = forceGenerators_1[_i];
+                if (!(forceGen instanceof engine_1.GravityForceGenerator))
+                    continue;
+                this.mask.addForceGenerator(forceGen);
+            }
+            _a = [this.attachTo.hspeed, this.attachTo.vspeed], this.hspeed = _a[0], this.vspeed = _a[1];
+            this.attachTo = null;
+            if (!this.angleChangeSpeed)
+                return false;
+            var perpAngle = this.angle + (Math.PI / 2) * Math.sign(this.angleChangeSpeed);
+            var magnitude = (this.distance * 2 * this.angleChangeSpeed) / Math.PI;
+            this.hspeed += Math.sin(perpAngle) * magnitude;
+            this.vspeed += Math.cos(perpAngle) * magnitude;
         }
+        return false;
+        var _a;
     };
-    return PcBallObject;
-}(ball_1.BallObject));
-exports.PcBallObject = PcBallObject;
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    FixedBallObject.prototype.tick = function (delta) {
+        _super.prototype.tick.call(this, delta);
+        if (!this.attachTo)
+            return;
+        this.angle += delta *= this.angleChangeSpeed;
+        _a = [
+            this.attachTo.x + Math.sin(this.angle) * this.distance,
+            this.attachTo.y + Math.cos(this.angle) * this.distance
+        ], this.x = _a[0], this.y = _a[1];
+        var _a;
     };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
-var PLANET_RADIUS = 32;
-var PlanetObject = (function (_super) {
-    __extends(PlanetObject, _super);
-    function PlanetObject(opts) {
-        return _super.call(this, 'Planet', merge(opts, {
-            color: 'blue',
-            radius: PLANET_RADIUS
-        })) || this;
-    }
-    return PlanetObject;
+    FixedBallObject.prototype.render = function (adapter) {
+        if (this.attachTo) {
+            if (adapter instanceof engine_1.DefaultGraphicsAdapter)
+                this.renderAttachmentContext2d(adapter);
+            else
+                throw new Error("Not implemented");
+        }
+        _super.prototype.render.call(this, adapter);
+    };
+    FixedBallObject.prototype.renderAttachmentContext2d = function (adapter) {
+        var context = adapter.context;
+        context.strokeStyle = 'blue';
+        context.lineWidth = 4;
+        context.beginPath();
+        context.moveTo(this.x, this.y);
+        context.lineTo(this.attachTo.x, this.attachTo.y);
+        context.stroke();
+    };
+    return FixedBallObject;
 }(ball_1.BallObject));
-exports.PlanetObject = PlanetObject;
+exports.FixedBallObject = FixedBallObject;
 
 
 /***/ }),
@@ -5410,7 +5474,40 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ball_1 = __webpack_require__(4);
-var merge = __webpack_require__(3);
+var merge = __webpack_require__(2);
+var PLANET_RADIUS = 32;
+var PlanetObject = (function (_super) {
+    __extends(PlanetObject, _super);
+    function PlanetObject(opts) {
+        return _super.call(this, 'Planet', merge(opts, {
+            color: 'blue',
+            radius: PLANET_RADIUS
+        })) || this;
+    }
+    return PlanetObject;
+}(ball_1.BallObject));
+exports.PlanetObject = PlanetObject;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ball_1 = __webpack_require__(4);
+var merge = __webpack_require__(2);
 var SUN_RADIUS = 128;
 var SunObject = (function (_super) {
     __extends(SunObject, _super);
@@ -5426,7 +5523,74 @@ exports.SunObject = SunObject;
 
 
 /***/ }),
-/* 42 */
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var physics_controller_1 = __webpack_require__(5);
+var stack_scene_1 = __webpack_require__(1);
+var fixed_ball_1 = __webpack_require__(40);
+var pc_ball_1 = __webpack_require__(15);
+var BALL_COUNT = 6;
+var AngularVelocityScene = (function (_super) {
+    __extends(AngularVelocityScene, _super);
+    function AngularVelocityScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    AngularVelocityScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Press space to cut the ball ties.', true);
+        physicsController.createMore = false;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        var gravity = new engine_1.GravityForceGenerator(98);
+        var pcObj = new pc_ball_1.PcBallObject({ openWorld: true });
+        pcObj.x = (bounds.left + bounds.right) / 2;
+        pcObj.y = (bounds.top + bounds.bottom) / 2;
+        pcObj.mask.addForceGenerator(gravity);
+        this.addObject(pcObj);
+        var angle = 0;
+        var angleChangeSpeed = Math.PI / 2;
+        var dist = 256;
+        var angleAdd = (2 * Math.PI) / BALL_COUNT;
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var chance = Math.floor(Math.random() * 3);
+            var obj = new fixed_ball_1.FixedBallObject({ openWorld: true });
+            obj.attachTo = pcObj;
+            obj.angle = angle;
+            obj.angleChangeSpeed = angleChangeSpeed;
+            obj.distance = dist;
+            angle += angleAdd;
+            this.addObject(obj);
+        }
+    };
+    return AngularVelocityScene;
+}(stack_scene_1.StackScene));
+exports.AngularVelocityScene = AngularVelocityScene;
+
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5447,7 +5611,7 @@ var boulder_1 = __webpack_require__(12);
 var bowling_ball_1 = __webpack_require__(13);
 var golf_ball_1 = __webpack_require__(14);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var BALL_COUNT = 0;
 var BouncingCirclesScene = (function (_super) {
     __extends(BouncingCirclesScene, _super);
@@ -5483,7 +5647,7 @@ exports.BouncingCirclesScene = BouncingCirclesScene;
 
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5504,7 +5668,7 @@ var boulder_1 = __webpack_require__(12);
 var bowling_ball_1 = __webpack_require__(13);
 var golf_ball_1 = __webpack_require__(14);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var BALL_COUNT = 2;
 var CirclesScene = (function (_super) {
     __extends(CirclesScene, _super);
@@ -5540,7 +5704,7 @@ exports.CirclesScene = CirclesScene;
 
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5557,10 +5721,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(7);
-var pc_ball_1 = __webpack_require__(39);
+var ball_select_1 = __webpack_require__(6);
+var pc_ball_1 = __webpack_require__(15);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var BALL_COUNT = 12;
 var ForceGeneratorScene = (function (_super) {
     __extends(ForceGeneratorScene, _super);
@@ -5600,7 +5764,7 @@ exports.ForceGeneratorScene = ForceGeneratorScene;
 
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5617,7 +5781,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var MenuScene = (function (_super) {
     __extends(MenuScene, _super);
     function MenuScene(menu, parentScene) {
@@ -5641,7 +5805,7 @@ exports.MenuScene = MenuScene;
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5658,9 +5822,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(7);
+var ball_select_1 = __webpack_require__(6);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var BALL_COUNT = 12;
 var MomentumMassScene = (function (_super) {
     __extends(MomentumMassScene, _super);
@@ -5695,7 +5859,7 @@ exports.MomentumMassScene = MomentumMassScene;
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5712,9 +5876,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var planet_1 = __webpack_require__(40);
-var sun_1 = __webpack_require__(41);
-var stack_scene_1 = __webpack_require__(2);
+var planet_1 = __webpack_require__(41);
+var sun_1 = __webpack_require__(42);
+var stack_scene_1 = __webpack_require__(1);
 var PlanetsScene = (function (_super) {
     __extends(PlanetsScene, _super);
     function PlanetsScene(parent) {
@@ -5748,7 +5912,7 @@ exports.PlanetsScene = PlanetsScene;
 
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5765,9 +5929,70 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(7);
+var ball_select_1 = __webpack_require__(6);
+var pc_ball_1 = __webpack_require__(15);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
+var BALL_COUNT = 6;
+var RestingContactScene = (function (_super) {
+    __extends(RestingContactScene, _super);
+    function RestingContactScene(parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.initialized = false;
+        return _this;
+    }
+    RestingContactScene.prototype.start = function () {
+        _super.prototype.start.call(this);
+        if (this.initialized)
+            return;
+        this.initialized = true;
+        var camera = this.camera = new engine_1.Camera(this);
+        camera.clearColor = 'black';
+        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nMove the orange ball using a force generator with the arrow keys.\nPress F3 to render physics debug information.", true);
+        physicsController.createMore = false;
+        this.addObject(physicsController);
+        var bounds = this.camera.bounds;
+        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
+        this.addForceGenerator(physicsController.dragForce = new engine_1.DragForceGenerator(.002, .002));
+        for (var q = 0; q < BALL_COUNT; q++) {
+            var obj_1 = new ball_select_1.BallSelectObject();
+            obj_1.radius = 48;
+            obj_1.x = (bounds.right + bounds.left) / 2;
+            obj_1.y = bounds.top - obj_1.radius - ((obj_1.radius * 2) + 2) * q;
+            this.addObject(obj_1);
+        }
+        var obj = new pc_ball_1.PcBallObject();
+        obj.x = (bounds.right + bounds.left * 3) / 4;
+        obj.y = bounds.top + obj.radius * 2;
+        this.addObject(obj);
+        this.game.renderPhysics = false;
+    };
+    return RestingContactScene;
+}(stack_scene_1.StackScene));
+exports.RestingContactScene = RestingContactScene;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(0);
+var ball_select_1 = __webpack_require__(6);
+var physics_controller_1 = __webpack_require__(5);
+var stack_scene_1 = __webpack_require__(1);
 var SpringMeshScene = (function (_super) {
     __extends(SpringMeshScene, _super);
     function SpringMeshScene(parent, MESH_WIDTH, MESH_HEIGHT) {
@@ -5830,7 +6055,7 @@ exports.SpringMeshScene = SpringMeshScene;
 
 
 /***/ }),
-/* 49 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5847,9 +6072,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(7);
+var ball_select_1 = __webpack_require__(6);
 var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
+var stack_scene_1 = __webpack_require__(1);
 var SpringScene = (function (_super) {
     __extends(SpringScene, _super);
     function SpringScene(parent, BALL_COUNT) {
@@ -5896,7 +6121,7 @@ exports.SpringScene = SpringScene;
 
 
 /***/ }),
-/* 50 */
+/* 53 */
 /***/ (function(module, exports) {
 
 var g;
@@ -5923,7 +6148,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 51 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -5948,67 +6173,6 @@ module.exports = function(module) {
 	}
 	return module;
 };
-
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var engine_1 = __webpack_require__(0);
-var ball_select_1 = __webpack_require__(7);
-var pc_ball_1 = __webpack_require__(39);
-var physics_controller_1 = __webpack_require__(5);
-var stack_scene_1 = __webpack_require__(2);
-var BALL_COUNT = 6;
-var RestingContactScene = (function (_super) {
-    __extends(RestingContactScene, _super);
-    function RestingContactScene(parent) {
-        var _this = _super.call(this, parent) || this;
-        _this.initialized = false;
-        return _this;
-    }
-    RestingContactScene.prototype.start = function () {
-        _super.prototype.start.call(this);
-        if (this.initialized)
-            return;
-        this.initialized = true;
-        var camera = this.camera = new engine_1.Camera(this);
-        camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject("Click a ball to select it.\nRight click and drag to change the velocity of the selected ball.\nUse the mouse wheel to increase or decrease the selected ball's mass.\nMove the orange ball using a force generator with the arrow keys.\nPress F3 to render physics debug information.", true);
-        physicsController.createMore = false;
-        this.addObject(physicsController);
-        var bounds = this.camera.bounds;
-        this.addForceGenerator(new engine_1.GravityForceGenerator(98));
-        this.addForceGenerator(physicsController.dragForce = new engine_1.DragForceGenerator(.002, .002));
-        for (var q = 0; q < BALL_COUNT; q++) {
-            var obj_1 = new ball_select_1.BallSelectObject();
-            obj_1.radius = 48;
-            obj_1.x = (bounds.right + bounds.left) / 2;
-            obj_1.y = bounds.top - obj_1.radius - ((obj_1.radius * 2) + 2) * q;
-            this.addObject(obj_1);
-        }
-        var obj = new pc_ball_1.PcBallObject();
-        obj.x = (bounds.right + bounds.left * 3) / 4;
-        obj.y = bounds.top + obj.radius * 2;
-        this.addObject(obj);
-        this.game.renderPhysics = false;
-    };
-    return RestingContactScene;
-}(stack_scene_1.StackScene));
-exports.RestingContactScene = RestingContactScene;
 
 
 /***/ })

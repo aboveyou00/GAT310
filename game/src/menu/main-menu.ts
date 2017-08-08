@@ -7,6 +7,7 @@ import { PlanetsScene } from '../scenes/planets.scene';
 import { SpringScene } from '../scenes/spring.scene';
 import { SpringMeshScene } from '../scenes/spring-mesh.scene';
 import { RestingContactScene } from '../scenes/resting-contact.scene';
+import { AngularVelocityScene } from '../scenes/angular-velocity.scene';
 
 export class MainMenuObject extends MenuObject {
     constructor() {
@@ -66,6 +67,12 @@ export class MainMenuObject extends MenuObject {
             text: "Resting Contact",
             handler: () => {
                 this.game.changeScene(new RestingContactScene(this.scene));
+            }
+        });
+        this.addMenuItem({
+            text: "Angular Velocity and Chasles Theorem",
+            handler: () => {
+                this.game.changeScene(new AngularVelocityScene(this.scene));
             }
         });
         this.addMenuItem({
