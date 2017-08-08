@@ -5552,6 +5552,15 @@ var AngularVelocityScene = (function (_super) {
         _this.initialized = false;
         return _this;
     }
+    AngularVelocityScene.prototype.handleEvent = function (e) {
+        if (_super.prototype.handleEvent.call(this, e))
+            return true;
+        if (e.type === 'keyPressed' && e.code === 'KeyR') {
+            this.game.changeScene(new AngularVelocityScene(this.parentScene));
+            return true;
+        }
+        return false;
+    };
     AngularVelocityScene.prototype.start = function () {
         _super.prototype.start.call(this);
         if (this.initialized)
@@ -5559,7 +5568,7 @@ var AngularVelocityScene = (function (_super) {
         this.initialized = true;
         var camera = this.camera = new engine_1.Camera(this);
         camera.clearColor = 'black';
-        var physicsController = new physics_controller_1.PhysicsControllerObject('Press space to cut the ball ties.', true);
+        var physicsController = new physics_controller_1.PhysicsControllerObject('Press space to cut the ball ties.\r\nPress R to restart the simulation', true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         var bounds = this.camera.bounds;

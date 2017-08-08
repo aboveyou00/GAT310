@@ -1,4 +1,4 @@
-import { Camera, GameScene, GravityForceGenerator } from 'engine';
+import { Camera, GameScene, GravityForceGenerator, GameEvent } from 'engine';
 import { PhysicsControllerObject } from '../objects/physics-controller';
 import { StackScene } from './stack-scene';
 import { FixedBallObject } from '../objects/fixed-ball';
@@ -13,6 +13,17 @@ export class AngularVelocityScene extends StackScene {
     
     private initialized = false;
     
+    handleEvent(e: GameEvent) {
+        if (super.handleEvent(e)) return true;
+        
+        if (e.type === 'keyPressed' && e.code === 'KeyR') {
+            this.game.changeScene(new AngularVelocityScene(this.parentScene));
+            return true;
+        }
+        
+        return false;
+    }
+    
     start() {
         super.start();
         
@@ -22,7 +33,7 @@ export class AngularVelocityScene extends StackScene {
         let camera = this.camera = new Camera(this);
         camera.clearColor = 'black';
         
-        let physicsController = new PhysicsControllerObject('Press space to cut the ball ties.', true);
+        let physicsController = new PhysicsControllerObject('Press space to cut the ball ties.\r\nPress R to restart the simulation', true);
         physicsController.createMore = false;
         this.addObject(physicsController);
         
