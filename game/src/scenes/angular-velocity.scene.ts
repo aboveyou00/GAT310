@@ -7,7 +7,7 @@ import { PcBallObject } from '../objects/pc-ball';
 const BALL_COUNT = 6;
 
 export class AngularVelocityScene extends StackScene {
-    constructor(parent: GameScene) {
+    constructor(parent: GameScene, private shiftPressed = false) {
         super(parent);
     }
     
@@ -17,7 +17,7 @@ export class AngularVelocityScene extends StackScene {
         if (super.handleEvent(e)) return true;
         
         if (e.type === 'keyPressed' && e.code === 'KeyR') {
-            this.game.changeScene(new AngularVelocityScene(this.parentScene));
+            this.game.changeScene(new AngularVelocityScene(this.parentScene, e.shiftPressed));
             return true;
         }
         
@@ -56,7 +56,7 @@ export class AngularVelocityScene extends StackScene {
             obj.attachTo = pcObj;
             obj.angle = angle;
             obj.angleChangeSpeed = angleChangeSpeed;
-            obj.distance = dist;
+            obj.distance = (this.shiftPressed ? .5 + Math.random() : 1) * dist;
             angle += angleAdd;
             this.addObject(obj);
         }

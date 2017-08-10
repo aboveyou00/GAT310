@@ -76,16 +76,16 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(16));
 __export(__webpack_require__(19));
 __export(__webpack_require__(8));
 __export(__webpack_require__(23));
 __export(__webpack_require__(25));
 __export(__webpack_require__(17));
-__export(__webpack_require__(22));
 __export(__webpack_require__(24));
 __export(__webpack_require__(35));
+__export(__webpack_require__(58));
 __export(__webpack_require__(26));
+__export(__webpack_require__(60));
 __export(__webpack_require__(30));
 //# sourceMappingURL=index.js.map
 
@@ -2791,6 +2791,7 @@ var Camera = (function () {
         this._zoomScale = 1;
         this._maxZoomScale = 4;
         this._minZoomScale = .25;
+        this.renderTransformedSymbol = Symbol();
         if (!this._scene)
             throw new Error("You must pass in a valid Scene when you create a Camera.");
     }
@@ -2913,7 +2914,7 @@ var Camera = (function () {
         var _b = this.game.canvasSize, cvWidth = _b[0], cvHeight = _b[1];
         tx = Math.floor(cvWidth / 2) - (tx * this._zoomScale);
         ty = Math.floor(cvHeight / 2) - (ty * this._zoomScale);
-        adapter.renderTransformed(tx, ty, 0, this._zoomScale, this._zoomScale, act);
+        adapter.renderTransformed(tx, ty, 0, this._zoomScale, this._zoomScale, act, this.renderTransformedSymbol);
     };
     Camera.prototype.transformPixelCoordinates = function (x, y) {
         if (typeof x === 'object') {
@@ -2965,15 +2966,20 @@ var DefaultGraphicsAdapter = (function (_super) {
         _this._initialized = false;
         return _this;
     }
-    DefaultGraphicsAdapter.prototype.init = function () {
+    DefaultGraphicsAdapter.prototype.init = function (game) {
+        var _this = this;
         if (this._initialized)
             throw new Error("Cannot initialize DefaultGraphicsAdapter twice.");
         this._initialized = true;
         if (this._context)
             throw new Error("This DefaultGraphicsAdapter was created with a context");
         if (!this.canvas)
-            this._canvas = document.getElementById('gameCanvas');
+            this._canvas = document.createElement('canvas');
         this._context = this.canvas.getContext("2d");
+        game.bodyResized.addListener(function () {
+            _a = [window.innerWidth, window.innerHeight], _this.canvas.width = _a[0], _this.canvas.height = _a[1];
+            var _a;
+        });
     };
     Object.defineProperty(DefaultGraphicsAdapter.prototype, "canvas", {
         get: function () {
@@ -3011,6 +3017,9 @@ var DefaultGraphicsAdapter = (function (_super) {
         context.textAlign = 'left';
         context.fillStyle = 'black';
         render_1.fillText(context, msg, 4, 12);
+    };
+    DefaultGraphicsAdapter.prototype.renderScene = function (scene) {
+        scene.render(this);
     };
     DefaultGraphicsAdapter.prototype.renderObject = function (obj) {
         var context = this.context;
@@ -3067,7 +3076,7 @@ var DefaultGraphicsAdapter = (function (_super) {
             context.drawImage(img, tileset.tilex * tileset.width, tileset.tiley * tileset.height, tileset.width, tileset.height, x - pivot.x, y - pivot.y, tileset.width, tileset.height);
         }
         else {
-            context.drawImage(img, x - pivot.x, y - pivot.y);
+            context.drawImage(img, x - pivot.x, y - pivot.y, img.width, img.height);
         }
     };
     return DefaultGraphicsAdapter;
@@ -3380,194 +3389,7 @@ exports.PcBallObject = PcBallObject;
 
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var EventQueue = (function () {
-    function EventQueue() {
-        this.DEBUG_KEYS = false;
-        this.DEBUG_MOUSE = false;
-        this._events = [];
-        this._keys = new Map();
-        this._mouseButtons = new Map();
-        this._pageX = 0;
-        this._pageY = 0;
-        this.init();
-    }
-    EventQueue.prototype.init = function () {
-        var body = document.getElementsByTagName('body')[0];
-        this.initKeyboard(body);
-        this.initMouse(body);
-    };
-    EventQueue.prototype.initKeyboard = function (body) {
-        var _this = this;
-        body.onkeydown = function (e) {
-            if (e.code === 'F12')
-                return;
-            if (e.code === 'F4' && e.altKey)
-                return;
-            if (!e.ctrlKey || (e.code !== 'KeyV' && e.code !== 'KeyX' && e.code !== 'KeyC'))
-                e.preventDefault();
-            if (_this.DEBUG_KEYS)
-                console.log("Key Pressed: " + e.key + "; " + e.code);
-            if (!_this.isKeyDown(e.code)) {
-                _this.enqueue({
-                    type: 'keyPressed',
-                    code: e.code,
-                    altPressed: !!e.altKey,
-                    ctrlPressed: !!e.ctrlKey,
-                    shiftPressed: !!e.shiftKey
-                });
-                _this._keys.set(e.code, true);
-            }
-            _this.enqueue({
-                type: 'keyTyped',
-                key: e.key,
-                code: e.code,
-                altPressed: !!e.altKey,
-                ctrlPressed: !!e.ctrlKey,
-                shiftPressed: !!e.shiftKey
-            });
-        };
-        body.onkeyup = function (e) {
-            e.preventDefault();
-            if (_this.DEBUG_KEYS)
-                console.log("Key Released: " + e.key + "; " + e.code);
-            if (_this.isKeyDown(e.code)) {
-                _this.enqueue({
-                    type: 'keyReleased',
-                    code: e.code,
-                    altPressed: !!e.altKey,
-                    ctrlPressed: !!e.ctrlKey,
-                    shiftPressed: !!e.shiftKey
-                });
-                _this._keys.set(e.code, false);
-            }
-        };
-    };
-    EventQueue.prototype.initMouse = function (body) {
-        var _this = this;
-        body.onmousemove = function (e) {
-            e.preventDefault();
-            if (_this.DEBUG_MOUSE)
-                console.log("Mouse moved. Movement: " + e.movementX + ", " + e.movementY + "; Position: " + e.pageX + ", " + e.pageY);
-            if (typeof e.pageX !== 'undefined')
-                _this._pageX = e.pageX;
-            else
-                _this._pageX += e.movementX;
-            if (typeof e.pageY !== 'undefined')
-                _this._pageY = e.pageY;
-            else
-                _this._pageY += e.movementY;
-            _this.enqueue({
-                type: 'mouseMoved',
-                movementX: e.movementX,
-                movementY: e.movementY,
-                pageX: _this._pageX,
-                pageY: _this._pageY
-            });
-        };
-        body.onmousedown = function (e) {
-            e.preventDefault();
-            if (_this.DEBUG_MOUSE)
-                console.log("Mouse button pressed. Button: " + e.button + "; Position: " + e.pageX + ", " + e.pageY);
-            if (!_this.isMouseButtonDown(e.button)) {
-                if (typeof e.pageX !== 'undefined')
-                    _this._pageX = e.pageX;
-                if (typeof e.pageY !== 'undefined')
-                    _this._pageY = e.pageY;
-                _this.enqueue({
-                    type: 'mouseButtonPressed',
-                    button: e.button,
-                    pageX: _this._pageX,
-                    pageY: _this._pageY
-                });
-                _this._mouseButtons.set(e.button, true);
-            }
-        };
-        body.onmouseup = function (e) {
-            e.preventDefault();
-            if (_this.DEBUG_MOUSE)
-                console.log("Mouse button released. Button: " + e.button + "; Position: " + e.pageX + ", " + e.pageY);
-            if (_this.isMouseButtonDown(e.button)) {
-                if (typeof e.pageX !== 'undefined')
-                    _this._pageX = e.pageX;
-                if (typeof e.pageY !== 'undefined')
-                    _this._pageY = e.pageY;
-                _this.enqueue({
-                    type: 'mouseButtonReleased',
-                    button: e.button,
-                    pageX: _this._pageX,
-                    pageY: _this._pageY
-                });
-                _this._mouseButtons.set(e.button, false);
-            }
-        };
-        body.onwheel = function (e) {
-            e.preventDefault();
-            if (_this.DEBUG_MOUSE)
-                console.log("Mouse wheel. delta: " + e.deltaY + "; Position: " + e.pageX + ", " + e.pageY);
-            if (typeof e.pageX !== 'undefined')
-                _this._pageX = e.pageX;
-            if (typeof e.pageY !== 'undefined')
-                _this._pageY = e.pageY;
-            _this.enqueue({
-                type: 'mouseWheel',
-                delta: e.deltaY,
-                pageX: _this._pageX,
-                pageY: _this._pageY
-            });
-        };
-    };
-    EventQueue.prototype.isKeyDown = function (code) {
-        if (!this._keys.has(code))
-            return false;
-        return this._keys.get(code);
-    };
-    EventQueue.prototype.isMouseButtonDown = function (button) {
-        if (!this._mouseButtons.has(button))
-            return false;
-        return this._mouseButtons.get(button);
-    };
-    Object.defineProperty(EventQueue.prototype, "mousePosition", {
-        get: function () {
-            return { x: this._pageX, y: this._pageY };
-        },
-        enumerable: true,
-        configurable: true
-    });
-    EventQueue.prototype.enqueue = function (e) {
-        var lastEvent = this._events[this._events.length - 1];
-        if (lastEvent && lastEvent.type == e.type) {
-            switch (e.type) {
-                case 'mouseMoved':
-                    lastEvent.movementX += e.movementX;
-                    lastEvent.movementY += e.movementY;
-                    lastEvent.pageX = e.pageX;
-                    lastEvent.pageY = e.pageY;
-                    return;
-                case 'mouseWheel':
-                    lastEvent.delta += e.delta;
-                    return;
-                case 'canvasResize':
-                    lastEvent.size = e.size;
-                    return;
-            }
-        }
-        this._events.push(e);
-    };
-    EventQueue.prototype.clearQueue = function () {
-        return this._events.splice(0);
-    };
-    return EventQueue;
-}());
-exports.EventQueue = EventQueue;
-//# sourceMappingURL=event-queue.js.map
-
-/***/ }),
+/* 16 */,
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3593,6 +3415,7 @@ var GameObject = (function () {
         this._animationAge = 0;
         this._animationSpeed = 1;
         this._imageAngle = 0;
+        this.renderTransformedSymbol = Symbol();
         this._name = name;
         if (typeof opts.x != 'undefined')
             this.x = opts.x;
@@ -3885,7 +3708,7 @@ var GameObject = (function () {
             return;
         adapter.renderTransformed(this.x, this.y, -math_1.degToRad(this.imageAngle), 1, 1, function () {
             _this.renderImpl(adapter);
-        });
+        }, this.renderTransformedSymbol);
     };
     GameObject.prototype.renderImpl = function (adapter) {
         adapter.renderObject(this);
@@ -4020,6 +3843,8 @@ var ResourceLoader = (function () {
         return aud;
     };
     ResourceLoader.prototype.resolvePath = function (src) {
+        if (!src)
+            throw new Error("Invalid src: [" + src + "]");
         if (src.match(/^[a-z]:\/\//i))
             return src;
         if (src.startsWith('/'))
@@ -4104,80 +3929,7 @@ exports.PhysicsGame = PhysicsGame;
 
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var game_object_1 = __webpack_require__(17);
-var merge = __webpack_require__(2);
-var AudioSourceObject = (function (_super) {
-    __extends(AudioSourceObject, _super);
-    function AudioSourceObject(name, audio, opts) {
-        if (opts === void 0) { opts = {}; }
-        var _this = _super.call(this, name, merge({
-            shouldRender: false
-        }, opts)) || this;
-        _this.audio = audio;
-        _this._shouldLoop = false;
-        if (typeof opts.shouldLoop !== 'undefined')
-            _this._shouldLoop = opts.shouldLoop;
-        return _this;
-    }
-    Object.defineProperty(AudioSourceObject.prototype, "shouldLoop", {
-        get: function () {
-            return this._shouldLoop;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    AudioSourceObject.prototype.addToScene = function (scene) {
-        var _this = this;
-        _super.prototype.addToScene.call(this, scene);
-        var theirAudio = this.resources.loadAudio(this.audio.src);
-        this._myAudio = document.createElement('audio');
-        this._myAudio.src = theirAudio.src;
-        this._myAudio.onended = function () {
-            if (_this._shouldLoop)
-                _this._myAudio.play();
-            else
-                _this.scene.removeObject(_this);
-        };
-        if (this.game.scene == scene)
-            this._myAudio.play();
-    };
-    Object.defineProperty(AudioSourceObject.prototype, "myAudio", {
-        get: function () {
-            return this._myAudio;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    AudioSourceObject.prototype.onSceneEnter = function () {
-        if (this.myAudio.paused)
-            this._myAudio.play();
-    };
-    AudioSourceObject.prototype.onSceneExit = function () {
-        if (!this.myAudio.paused)
-            this._myAudio.pause();
-    };
-    return AudioSourceObject;
-}(game_object_1.GameObject));
-exports.AudioSourceObject = AudioSourceObject;
-//# sourceMappingURL=audio-source-object.js.map
-
-/***/ }),
+/* 22 */,
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4457,7 +4209,8 @@ exports.GameScene = GameScene;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var resource_loader_1 = __webpack_require__(19);
-var event_queue_1 = __webpack_require__(16);
+var event_queue_1 = __webpack_require__(56);
+var event_emitter_1 = __webpack_require__(55);
 var default_graphics_adapter_1 = __webpack_require__(9);
 ;
 var Game = (function () {
@@ -4466,6 +4219,7 @@ var Game = (function () {
         this._nextScene = null;
         this.LOGIC_TICKS_PER_RENDER_TICK = 3;
         this.maximumDelta = .25;
+        this.bodyResized = new event_emitter_1.EventEmitter();
         this._renderPhysics = false;
         this.previousTick = null;
         this._resourceLoader = null;
@@ -4526,13 +4280,10 @@ var Game = (function () {
     };
     Game.prototype.initResize = function (body) {
         var _this = this;
-        body.onresize = function (e) { return _this.refreshCanvasSize(); };
-    };
-    Game.prototype.refreshCanvasSize = function () {
-        if (this.canvas) {
-            _a = this.canvasSize = [this.canvas.scrollWidth, this.canvas.scrollHeight], this.canvas.width = _a[0], this.canvas.height = _a[1];
-        }
-        var _a;
+        window.addEventListener('resize', function () { return _this.bodyResized.emit(void (0)); });
+        this.bodyResized.addListener(function () {
+            _this.canvasSize = [window.innerWidth, window.innerHeight];
+        });
     };
     Object.defineProperty(Game.prototype, "renderPhysics", {
         get: function () {
@@ -4577,8 +4328,9 @@ var Game = (function () {
         if (this.isRunning)
             throw new Error("This game is already running. You can't run it again.");
         this._isRunning = true;
-        this.graphicsAdapter.init();
-        this.refreshCanvasSize();
+        this.graphicsAdapter.init(this);
+        this.bodyResized.emit(void (0));
+        document.currentScript.parentElement.insertBefore(this.canvas, document.currentScript);
         this._intervalHandle = setInterval(function () { return _this.onTick(); }, 1000 / this.framesPerSecond);
     };
     Game.prototype.stop = function () {
@@ -4608,13 +4360,14 @@ var Game = (function () {
     Game.prototype.onTick = function () {
         if (!this.isRunning)
             throw new Error("An error occurred. Game.onTick was invoked although the game is not running.");
+        var currentTime = new Date();
+        var delta = (this.previousTick == null) ? 0 : (currentTime.valueOf() - this.previousTick.valueOf()) / 1000;
+        if (this.maximumDelta && delta > this.maximumDelta)
+            delta = this.maximumDelta;
+        this.previousTick = currentTime;
+        this.eventQueue.tick(delta);
+        this.sendEvents(this.scene);
         if (this.resourceLoader.isDone) {
-            var currentTime = new Date();
-            var delta = (this.previousTick == null) ? 0 : (currentTime.valueOf() - this.previousTick.valueOf()) / 1000;
-            if (this.maximumDelta && delta > this.maximumDelta)
-                delta = this.maximumDelta;
-            this.previousTick = currentTime;
-            this.sendEvents();
             for (var q = 0; q < this.LOGIC_TICKS_PER_RENDER_TICK; q++) {
                 this.tick(delta / this.LOGIC_TICKS_PER_RENDER_TICK);
             }
@@ -4624,22 +4377,38 @@ var Game = (function () {
             this.resourceLoader.render(this.graphicsAdapter);
         }
     };
-    Game.prototype.sendEvents = function () {
+    Game.prototype.sendEvents = function (sendTo) {
         var events = this._eventQueue.clearQueue();
         for (var _i = 0, events_1 = events; _i < events_1.length; _i++) {
             var evt = events_1[_i];
-            if (this._scene) {
-                var handled = this._scene.handleEvent(evt);
-                if (!handled) {
-                    if (evt.type === 'keyPressed' && evt.code === 'F5') {
-                        location.reload(evt.shiftPressed);
-                    }
-                    else if (evt.type === 'keyPressed' && evt.code === 'F11') {
-                        this.toggleFullscreen();
-                    }
-                }
+            var handled = false;
+            if (this.resourceLoader.isDone && this.sendEvent(sendTo, evt))
+                handled = true;
+            if (!handled && this.handleEvent(evt))
+                handled = true;
+            if (!handled && (evt.type === 'abstractButtonPressed' || evt.type === 'abstractButtonReleased') && evt.wrappedEvent) {
+                if (this.resourceLoader.isDone && this.sendEvent(sendTo, evt.wrappedEvent))
+                    handled = true;
+                if (!handled && this.handleEvent(evt.wrappedEvent))
+                    handled = true;
             }
         }
+    };
+    Game.prototype.handleEvent = function (evt) {
+        if (evt.type === 'keyPressed' && evt.code === 'F5') {
+            location.reload(evt.shiftPressed);
+            return true;
+        }
+        else if (evt.type === 'keyPressed' && evt.code === 'F11') {
+            this.toggleFullscreen();
+            return true;
+        }
+        return false;
+    };
+    Game.prototype.sendEvent = function (sendTo, evt) {
+        if (this._scene)
+            return this._scene.handleEvent(evt);
+        return false;
     };
     Game.prototype.toggleFullscreen = function () {
         if (document.fullscreenElement || document.webkitFullscreenElement || document.webkitCurrentFullScreenElement) {
@@ -4685,7 +4454,7 @@ var Game = (function () {
         if (!adapter)
             throw new Error("What the heck just happened? There is no graphics adapter!");
         if (this._scene)
-            this._scene.render(adapter);
+            adapter.renderScene(this._scene);
     };
     return Game;
 }());
@@ -5052,55 +4821,8 @@ exports.delay = delay;
 //# sourceMappingURL=delay.js.map
 
 /***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var EventEmitter = (function () {
-    function EventEmitter() {
-        this._listeners = [];
-        this._isEmitting = false;
-    }
-    EventEmitter.prototype.addListener = function (listener) {
-        if (!listener || typeof listener !== 'function')
-            throw new Error("Listener is not a function: " + listener);
-        this._listeners.push(listener);
-    };
-    EventEmitter.prototype.emit = function (val) {
-        if (this._isEmitting)
-            throw new Error("EventEmitter.emit was recursively invoked. New value: " + val);
-        this._isEmitting = true;
-        for (var _i = 0, _a = this._listeners; _i < _a.length; _i++) {
-            var listener = _a[_i];
-            listener(val);
-        }
-        this._isEmitting = false;
-    };
-    return EventEmitter;
-}());
-exports.EventEmitter = EventEmitter;
-//# sourceMappingURL=event-emitter.js.map
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var MouseButton;
-(function (MouseButton) {
-    MouseButton[MouseButton["Left"] = 0] = "Left";
-    MouseButton[MouseButton["Middle"] = 1] = "Middle";
-    MouseButton[MouseButton["Right"] = 2] = "Right";
-    MouseButton[MouseButton["BrowserBack"] = 3] = "BrowserBack";
-    MouseButton[MouseButton["BrowserForward"] = 5] = "BrowserForward";
-})(MouseButton = exports.MouseButton || (exports.MouseButton = {}));
-//# sourceMappingURL=events.js.map
-
-/***/ }),
+/* 33 */,
+/* 34 */,
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5111,8 +4833,6 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(__webpack_require__(32));
-__export(__webpack_require__(33));
-__export(__webpack_require__(34));
 __export(__webpack_require__(3));
 __export(__webpack_require__(36));
 __export(__webpack_require__(20));
@@ -5547,8 +5267,10 @@ var pc_ball_1 = __webpack_require__(15);
 var BALL_COUNT = 6;
 var AngularVelocityScene = (function (_super) {
     __extends(AngularVelocityScene, _super);
-    function AngularVelocityScene(parent) {
+    function AngularVelocityScene(parent, shiftPressed) {
+        if (shiftPressed === void 0) { shiftPressed = false; }
         var _this = _super.call(this, parent) || this;
+        _this.shiftPressed = shiftPressed;
         _this.initialized = false;
         return _this;
     }
@@ -5556,7 +5278,7 @@ var AngularVelocityScene = (function (_super) {
         if (_super.prototype.handleEvent.call(this, e))
             return true;
         if (e.type === 'keyPressed' && e.code === 'KeyR') {
-            this.game.changeScene(new AngularVelocityScene(this.parentScene));
+            this.game.changeScene(new AngularVelocityScene(this.parentScene, e.shiftPressed));
             return true;
         }
         return false;
@@ -5588,7 +5310,7 @@ var AngularVelocityScene = (function (_super) {
             obj.attachTo = pcObj;
             obj.angle = angle;
             obj.angleChangeSpeed = angleChangeSpeed;
-            obj.distance = dist;
+            obj.distance = (this.shiftPressed ? .5 + Math.random() : 1) * dist;
             angle += angleAdd;
             this.addObject(obj);
         }
@@ -6183,6 +5905,829 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var EventEmitter = (function () {
+    function EventEmitter() {
+        this._listeners = [];
+        this._isEmitting = false;
+    }
+    EventEmitter.prototype.addListener = function (listener) {
+        if (!listener || typeof listener !== 'function')
+            throw new Error("Listener is not a function: " + listener);
+        this._listeners.push(listener);
+    };
+    EventEmitter.prototype.emit = function (val) {
+        if (this._isEmitting)
+            throw new Error("EventEmitter.emit was recursively invoked. New value: " + val);
+        this._isEmitting = true;
+        for (var _i = 0, _a = this._listeners; _i < _a.length; _i++) {
+            var listener = _a[_i];
+            listener(val);
+        }
+        this._isEmitting = false;
+    };
+    return EventEmitter;
+}());
+exports.EventEmitter = EventEmitter;
+//# sourceMappingURL=event-emitter.js.map
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var events_1 = __webpack_require__(57);
+var EventQueue = (function () {
+    function EventQueue() {
+        this.DEBUG_KEYS = false;
+        this.DEBUG_MOUSE = false;
+        this.DEBUG_MOUSE_VERBOSE = false;
+        this.DEBUG_GAMEPAD = false;
+        this.DEBUG_GAMEPAD_VERBOSE = false;
+        this.GAMEPAD_AXIS_THRESHOLD = .4;
+        this.ABSTRACT_BUTTON_TYPE_TIMEOUT = .5;
+        this.ABSTRACT_BUTTON_TYPE_REPEAT = 15;
+        this._events = [];
+        this._keys = new Map();
+        this._mouseButtons = new Map();
+        this._pageX = 0;
+        this._pageY = 0;
+        this._gamepads = [];
+        this._gamepadAxes = [];
+        this._gamepadButtonsRaw = [];
+        this._gamepadButtons = new Map();
+        this._currentInput = 'keyboard';
+        this._abstractButtonProviders = [];
+        this.abstractButtons = new Map();
+        this.mrAbstractButton = '';
+        this.init();
+    }
+    EventQueue.prototype.init = function () {
+        var body = document.getElementsByTagName('body')[0];
+        this.initKeyboard(body);
+        this.initMouse(body);
+        this.initGamepad(window);
+    };
+    EventQueue.prototype.initKeyboard = function (body) {
+        var _this = this;
+        body.addEventListener('keydown', function (e) {
+            if (e.code === 'F12')
+                return;
+            if (e.code === 'F4' && e.altKey)
+                return;
+            if (!e.ctrlKey || (e.code !== 'KeyV' && e.code !== 'KeyX' && e.code !== 'KeyC'))
+                e.preventDefault();
+            _this.currentInputType = 'keyboard';
+            if (_this.DEBUG_KEYS)
+                console.log("Key Pressed: " + e.key + "; " + e.code);
+            if (!_this.isKeyDown(e.code)) {
+                _this._keys.set(e.code, true);
+                _this.enqueue({
+                    type: 'keyPressed',
+                    code: e.code,
+                    altPressed: !!e.altKey,
+                    ctrlPressed: !!e.ctrlKey,
+                    shiftPressed: !!e.shiftKey
+                });
+            }
+            _this.enqueue({
+                type: 'keyTyped',
+                key: e.key,
+                code: e.code,
+                altPressed: !!e.altKey,
+                ctrlPressed: !!e.ctrlKey,
+                shiftPressed: !!e.shiftKey
+            });
+        });
+        body.addEventListener('keyup', function (e) {
+            e.preventDefault();
+            _this.currentInputType = 'keyboard';
+            if (_this.DEBUG_KEYS)
+                console.log("Key Released: " + e.key + "; " + e.code);
+            if (_this.isKeyDown(e.code)) {
+                _this._keys.set(e.code, false);
+                _this.enqueue({
+                    type: 'keyReleased',
+                    code: e.code,
+                    altPressed: !!e.altKey,
+                    ctrlPressed: !!e.ctrlKey,
+                    shiftPressed: !!e.shiftKey
+                });
+            }
+        });
+    };
+    EventQueue.prototype.initMouse = function (body) {
+        var _this = this;
+        body.addEventListener('mousemove', function (e) {
+            e.preventDefault();
+            _this.currentInputType = 'mouse';
+            if (_this.DEBUG_MOUSE_VERBOSE)
+                console.log("Mouse moved. Movement: " + e.movementX + ", " + e.movementY + "; Position: " + e.pageX + ", " + e.pageY);
+            if (typeof e.pageX !== 'undefined')
+                _this._pageX = e.pageX;
+            else
+                _this._pageX += e.movementX;
+            if (typeof e.pageY !== 'undefined')
+                _this._pageY = e.pageY;
+            else
+                _this._pageY += e.movementY;
+            _this.enqueue({
+                type: 'mouseMoved',
+                movementX: e.movementX,
+                movementY: e.movementY,
+                pageX: _this._pageX,
+                pageY: _this._pageY
+            });
+        });
+        body.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            _this.currentInputType = 'mouse';
+            if (_this.DEBUG_MOUSE)
+                console.log("Mouse button pressed. Button: " + e.button + "; Position: " + e.pageX + ", " + e.pageY);
+            if (!_this.isMouseButtonDown(e.button)) {
+                if (typeof e.pageX !== 'undefined')
+                    _this._pageX = e.pageX;
+                if (typeof e.pageY !== 'undefined')
+                    _this._pageY = e.pageY;
+                _this._mouseButtons.set(e.button, true);
+                _this.enqueue({
+                    type: 'mouseButtonPressed',
+                    button: e.button,
+                    pageX: _this._pageX,
+                    pageY: _this._pageY
+                });
+            }
+        });
+        body.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            _this.currentInputType = 'mouse';
+            if (_this.DEBUG_MOUSE)
+                console.log("Mouse button released. Button: " + e.button + "; Position: " + e.pageX + ", " + e.pageY);
+            if (_this.isMouseButtonDown(e.button)) {
+                if (typeof e.pageX !== 'undefined')
+                    _this._pageX = e.pageX;
+                if (typeof e.pageY !== 'undefined')
+                    _this._pageY = e.pageY;
+                _this._mouseButtons.set(e.button, false);
+                _this.enqueue({
+                    type: 'mouseButtonReleased',
+                    button: e.button,
+                    pageX: _this._pageX,
+                    pageY: _this._pageY
+                });
+            }
+        });
+        body.addEventListener('wheel', function (e) {
+            e.preventDefault();
+            _this.currentInputType = 'mouse';
+            if (_this.DEBUG_MOUSE)
+                console.log("Mouse wheel. delta: " + e.deltaY + "; Position: " + e.pageX + ", " + e.pageY);
+            if (typeof e.pageX !== 'undefined')
+                _this._pageX = e.pageX;
+            if (typeof e.pageY !== 'undefined')
+                _this._pageY = e.pageY;
+            _this.enqueue({
+                type: 'mouseWheel',
+                delta: e.deltaY,
+                pageX: _this._pageX,
+                pageY: _this._pageY
+            });
+        });
+    };
+    EventQueue.prototype.initGamepad = function (window) {
+        var _this = this;
+        window.addEventListener('gamepadconnected', function (e) { return _this.connectGamepad(e.gamepad); });
+        window.addEventListener('gamepaddisconnected', function (e) { return _this.disconnectGamepad(e.gamepad); });
+        if (!window.navigator)
+            return;
+        for (var _i = 0, _a = navigator.getGamepads(); _i < _a.length; _i++) {
+            var gp = _a[_i];
+            if (!gp || !gp.connected)
+                continue;
+            this.connectGamepad(gp);
+        }
+    };
+    EventQueue.prototype.connectGamepad = function (gp) {
+        if (gp.mapping !== 'standard') {
+            console.error("Gamepad connected with invalid mapping: \"" + gp.mapping + "\"");
+            return;
+        }
+        this._gamepads.push(gp.index);
+        if (this.DEBUG_GAMEPAD)
+            console.log("Gamepad connected. ID: " + gp.id + "; Index: " + gp.index);
+        this.refreshGamepads();
+    };
+    EventQueue.prototype.disconnectGamepad = function (gp) {
+        var idx = this._gamepads.indexOf(gp.index);
+        if (idx === -1)
+            return;
+        this._gamepads.splice(idx);
+        if (this.DEBUG_GAMEPAD)
+            console.log("Gamepad disconnected. ID: " + gp.id + "; Index: " + gp.index);
+        this.refreshGamepads();
+    };
+    EventQueue.prototype.refreshGamepads = function () {
+        if (!window.navigator)
+            return;
+        var axes = [];
+        for (var q = 0; q < this._gamepadAxes.length; q++) {
+            axes[q] = 0;
+        }
+        var buttons = [];
+        for (var q = 0; q < this._gamepadButtonsRaw.length; q++) {
+            buttons[q] = false;
+        }
+        var gamepads = navigator.getGamepads();
+        for (var _i = 0, _a = this._gamepads; _i < _a.length; _i++) {
+            var gpIdx = _a[_i];
+            var gp = gamepads[gpIdx];
+            if (!gp.connected)
+                continue;
+            for (var q = 0; q < gp.axes.length; q++) {
+                if (typeof axes[q] === 'undefined')
+                    axes[q] = 0;
+                axes[q] += gp.axes[q];
+            }
+            for (var q = 0; q < gp.buttons.length; q++) {
+                if (typeof buttons[q] === 'undefined')
+                    buttons[q] = false;
+                if (gp.buttons[q].pressed)
+                    buttons[q] = true;
+            }
+        }
+        for (var q = 0; q < axes.length; q++) {
+            if (Math.abs(axes[q]) > 1)
+                axes[q] = Math.sign(axes[q]);
+            if (axes[q] !== 0)
+                this.currentInputType = 'gamepad';
+            if (typeof this._gamepadAxes[q] === 'undefined')
+                this._gamepadAxes[q] = 0;
+            if (this._gamepadAxes[q] !== axes[q]) {
+                if (this.DEBUG_GAMEPAD_VERBOSE)
+                    console.log("Gamepad axis changed. Idx: " + q + ", Value: " + axes[q] + "; Previous: " + this._gamepadAxes[q]);
+                this.enqueue({
+                    type: 'gamepadAxisChanged',
+                    idx: q,
+                    previousValue: this._gamepadAxes[q],
+                    value: axes[q]
+                });
+                var oldAxisSign = Math.abs(this._gamepadAxes[q]) < this.GAMEPAD_AXIS_THRESHOLD ? 0 : Math.sign(this._gamepadAxes[q]);
+                var newAxisSign = Math.abs(axes[q]) < this.GAMEPAD_AXIS_THRESHOLD ? 0 : Math.sign(axes[q]);
+                if (oldAxisSign !== newAxisSign) {
+                    var axisNames = events_1.standardGamepadAxisNames[q] || ["Axis" + q + "Negative", "Axis" + q + "Positive"];
+                    if (this._gamepadAxes[q] < -this.GAMEPAD_AXIS_THRESHOLD) {
+                        if (this.DEBUG_GAMEPAD)
+                            console.log("Gamepad button released. Button: " + axisNames[0]);
+                        this._gamepadButtons.set(axisNames[0], false);
+                        this.enqueue({
+                            type: 'gamepadButtonReleased',
+                            button: axisNames[0]
+                        });
+                    }
+                    else if (this._gamepadAxes[q] > this.GAMEPAD_AXIS_THRESHOLD) {
+                        if (this.DEBUG_GAMEPAD)
+                            console.log("Gamepad button released. Button: " + axisNames[1]);
+                        this._gamepadButtons.set(axisNames[1], false);
+                        this.enqueue({
+                            type: 'gamepadButtonReleased',
+                            button: axisNames[1]
+                        });
+                    }
+                    if (axes[q] < -this.GAMEPAD_AXIS_THRESHOLD) {
+                        if (this.DEBUG_GAMEPAD)
+                            console.log("Gamepad button pressed. Button: " + axisNames[0]);
+                        this._gamepadButtons.set(axisNames[0], true);
+                        this.enqueue({
+                            type: 'gamepadButtonPressed',
+                            button: axisNames[0]
+                        });
+                    }
+                    else if (axes[q] > this.GAMEPAD_AXIS_THRESHOLD) {
+                        if (this.DEBUG_GAMEPAD)
+                            console.log("Gamepad button pressed. Button: " + axisNames[1]);
+                        this._gamepadButtons.set(axisNames[1], true);
+                        this.enqueue({
+                            type: 'gamepadButtonPressed',
+                            button: axisNames[1]
+                        });
+                    }
+                }
+            }
+            this._gamepadAxes[q] = axes[q];
+        }
+        for (var q = 0; q < buttons.length; q++) {
+            var buttonName = events_1.standardGamepadButtonNames[q] || "" + q;
+            if (!this._gamepadButtonsRaw[q])
+                this._gamepadButtonsRaw[q] = false;
+            if (!this._gamepadButtonsRaw[q] && buttons[q]) {
+                if (this.DEBUG_GAMEPAD)
+                    console.log("Gamepad button pressed. Button: " + buttonName);
+                this._gamepadButtons.set(buttonName, true);
+                this.currentInputType = 'gamepad';
+                this.enqueue({
+                    type: 'gamepadButtonPressed',
+                    button: buttonName
+                });
+            }
+            else if (this._gamepadButtonsRaw[q] && !buttons[q]) {
+                if (this.DEBUG_GAMEPAD)
+                    console.log("Gamepad button released. Button: " + buttonName);
+                this._gamepadButtons.set(buttonName, false);
+                this.currentInputType = 'gamepad';
+                this.enqueue({
+                    type: 'gamepadButtonReleased',
+                    button: buttonName
+                });
+            }
+            this._gamepadButtonsRaw[q] = buttons[q];
+        }
+    };
+    EventQueue.prototype.tick = function (delta) {
+        this.refreshGamepads();
+        if (this.isAbstractButtonDown(this.mrAbstractButton) && this.ABSTRACT_BUTTON_TYPE_REPEAT !== 0) {
+            this.mrAbstractButtonTimeout -= delta;
+            while (this.mrAbstractButtonTimeout < 0) {
+                this.mrAbstractButtonTimeout += 1 / this.ABSTRACT_BUTTON_TYPE_REPEAT;
+                this.enqueue({
+                    type: 'abstractButtonTyped',
+                    name: this.mrAbstractButton
+                });
+            }
+        }
+    };
+    Object.defineProperty(EventQueue.prototype, "currentInputType", {
+        get: function () {
+            return this._currentInput;
+        },
+        set: function (val) {
+            if (this._currentInput === val)
+                return;
+            this.enqueue({
+                type: 'currentInputTypeChanged',
+                previous: this._currentInput,
+                current: this._currentInput = val
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    EventQueue.prototype.addAbstractButtonProvider = function (provider) {
+        this._abstractButtonProviders.push(provider);
+    };
+    EventQueue.prototype.isKeyDown = function (code) {
+        if (!this._keys.has(code))
+            return false;
+        return this._keys.get(code);
+    };
+    EventQueue.prototype.isMouseButtonDown = function (button) {
+        if (!this._mouseButtons.has(button))
+            return false;
+        return this._mouseButtons.get(button);
+    };
+    Object.defineProperty(EventQueue.prototype, "mousePosition", {
+        get: function () {
+            return { x: this._pageX, y: this._pageY };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    EventQueue.prototype.isGamepadButtonDown = function (idx) {
+        if (typeof idx === 'number') {
+            if (idx < 0 || idx >= this._gamepadButtonsRaw.length)
+                return false;
+            return this._gamepadButtonsRaw[idx];
+        }
+        else {
+            return this._gamepadButtons.get(idx) || false;
+        }
+    };
+    EventQueue.prototype.getGamepadAxis = function (idx) {
+        if (idx < 0 || idx >= this._gamepadAxes.length)
+            return 0;
+        return this._gamepadAxes[idx];
+    };
+    EventQueue.prototype.isAbstractButtonDown = function (name, manualCheck) {
+        if (manualCheck === void 0) { manualCheck = false; }
+        if (!this.abstractButtons.has(name))
+            return false;
+        if (manualCheck) {
+            for (var _i = 0, _a = this._abstractButtonProviders; _i < _a.length; _i++) {
+                var provider = _a[_i];
+                if (provider.isAbstractButtonDown(name))
+                    return true;
+            }
+            return false;
+        }
+        else {
+            return this.abstractButtons.get(name);
+        }
+    };
+    EventQueue.prototype.enqueue = function (e) {
+        var lastEvent = this._events[this._events.length - 1];
+        if (lastEvent) {
+            if (lastEvent.type == e.type) {
+                switch (e.type) {
+                    case 'mouseMoved':
+                        lastEvent.movementX += e.movementX;
+                        lastEvent.movementY += e.movementY;
+                        lastEvent.pageX = e.pageX;
+                        lastEvent.pageY = e.pageY;
+                        return;
+                    case 'mouseWheel':
+                        lastEvent.delta += e.delta;
+                        return;
+                    case 'canvasResize':
+                        lastEvent.size = e.size;
+                        return;
+                    case 'gamepadAxisChanged':
+                        lastEvent.value = e.value;
+                        if (lastEvent.value === lastEvent.previousValue)
+                            this._events.splice(this._events.length - 1, 1);
+                        return;
+                }
+            }
+        }
+        for (var _i = 0, _a = this._abstractButtonProviders; _i < _a.length; _i++) {
+            var provider = _a[_i];
+            e = provider.transformEvent(e) || e;
+        }
+        this._events.push(e);
+        if (e.type === 'abstractButtonPressed') {
+            this.mrAbstractButton = e.name;
+            this.mrAbstractButtonTimeout = this.ABSTRACT_BUTTON_TYPE_TIMEOUT;
+            this.enqueue({
+                type: 'abstractButtonTyped',
+                name: e.name,
+                wrappedEvent: e.wrappedEvent
+            });
+        }
+    };
+    EventQueue.prototype.clearQueue = function () {
+        return this._events.splice(0);
+    };
+    return EventQueue;
+}());
+exports.EventQueue = EventQueue;
+//# sourceMappingURL=event-queue.js.map
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var MouseButton;
+(function (MouseButton) {
+    MouseButton[MouseButton["Left"] = 0] = "Left";
+    MouseButton[MouseButton["Middle"] = 1] = "Middle";
+    MouseButton[MouseButton["Right"] = 2] = "Right";
+    MouseButton[MouseButton["BrowserBack"] = 3] = "BrowserBack";
+    MouseButton[MouseButton["BrowserForward"] = 5] = "BrowserForward";
+})(MouseButton = exports.MouseButton || (exports.MouseButton = {}));
+exports.standardGamepadButtonNames = [
+    'A', 'B', 'X', 'Y',
+    'TriggerLeft', 'TriggerRight', 'TriggerLeftAlt', 'TriggerRightAlt',
+    'Back', 'Start',
+    'LeftStick', 'RightStick',
+    'DPadUp', 'DPadDown', 'DPadLeft', 'DPadRight',
+    'Center'
+];
+exports.standardGamepadAxisNames = [
+    ['LeftStickLeft', 'LeftStickRight'],
+    ['LeftStickUp', 'LeftStickDown'],
+    ['RightStickLeft', 'RightStickRight'],
+    ['RightStickUp', 'RightStickDown'],
+];
+//# sourceMappingURL=events.js.map
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(55));
+__export(__webpack_require__(56));
+__export(__webpack_require__(57));
+__export(__webpack_require__(62));
+__export(__webpack_require__(61));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var game_object_1 = __webpack_require__(17);
+var merge = __webpack_require__(2);
+var AudioSourceObject = (function (_super) {
+    __extends(AudioSourceObject, _super);
+    function AudioSourceObject(name, audio, opts) {
+        if (opts === void 0) { opts = {}; }
+        var _this = _super.call(this, name, merge({
+            shouldRender: false
+        }, opts)) || this;
+        _this.audio = audio;
+        _this._shouldLoop = false;
+        _this._sceneIndependent = false;
+        _this._beginPlay = true;
+        if (typeof opts.shouldLoop !== 'undefined')
+            _this._shouldLoop = opts.shouldLoop;
+        if (typeof opts.sceneIndependent !== 'undefined')
+            _this._sceneIndependent = opts.sceneIndependent;
+        if (typeof opts.beginPlay !== 'undefined')
+            _this._beginPlay = opts.beginPlay;
+        return _this;
+    }
+    Object.defineProperty(AudioSourceObject.prototype, "shouldLoop", {
+        get: function () {
+            return this._shouldLoop;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AudioSourceObject.prototype, "sceneIndependent", {
+        get: function () {
+            return this._sceneIndependent;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AudioSourceObject.prototype.addToScene = function (scene) {
+        var _this = this;
+        _super.prototype.addToScene.call(this, scene);
+        var theirAudio = this.resources.loadAudio(this.audio.src);
+        this._myAudio = document.createElement('audio');
+        this._myAudio.src = theirAudio.src;
+        this._myAudio.onended = function () {
+            if (_this._shouldLoop)
+                _this._myAudio.play();
+            else if (_this.scene)
+                _this.scene.removeObject(_this);
+        };
+        if ((this.game.scene == scene || this.sceneIndependent) && this._beginPlay)
+            this._myAudio.play();
+    };
+    Object.defineProperty(AudioSourceObject.prototype, "myAudio", {
+        get: function () {
+            return this._myAudio;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AudioSourceObject.prototype.onSceneEnter = function () {
+        if (this.myAudio.paused)
+            this._myAudio.play();
+    };
+    AudioSourceObject.prototype.onSceneExit = function () {
+        if (!this.myAudio.paused && !this.sceneIndependent)
+            this._myAudio.pause();
+    };
+    return AudioSourceObject;
+}(game_object_1.GameObject));
+exports.AudioSourceObject = AudioSourceObject;
+//# sourceMappingURL=audio-source-object.js.map
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(59));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var GamepadAbstractButtonProvider = (function () {
+    function GamepadAbstractButtonProvider(queue) {
+        this.queue = queue;
+        this._buttons = new Map();
+    }
+    GamepadAbstractButtonProvider.prototype.bindAbstractButton = function (name) {
+        var buttons = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            buttons[_i - 1] = arguments[_i];
+        }
+        for (var _a = 0, buttons_1 = buttons; _a < buttons_1.length; _a++) {
+            var button = buttons_1[_a];
+            if (this._buttons.has(button))
+                throw new Error("The gamepad button '" + button + "' is already registered to the '" + this._buttons.get(button) + "' abstract button.");
+            this._buttons.set(button, name);
+            if (!this.queue.abstractButtons.has(name))
+                this.queue.abstractButtons.set(name, false);
+            var previous = this.queue.abstractButtons.get(name);
+            var current = this.queue.isGamepadButtonDown(button);
+            if (!previous && current) {
+                this.queue.abstractButtons.set(name, true);
+                this.queue.enqueue({
+                    type: 'abstractButtonPressed',
+                    name: name
+                });
+            }
+        }
+    };
+    GamepadAbstractButtonProvider.prototype.unbindAbstractButton = function (name) {
+        var buttons = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            buttons[_i - 1] = arguments[_i];
+        }
+        for (var _a = 0, buttons_2 = buttons; _a < buttons_2.length; _a++) {
+            var button = buttons_2[_a];
+            if (!this._buttons.has(button) || this._buttons.get(button) !== name)
+                throw new Error("The gamepad button '" + button + "' is not registered to the '" + name + "' abstract button.");
+            this._buttons.delete(button);
+            var previous = this.queue.abstractButtons.get(name);
+            var current = this.queue.isAbstractButtonDown(name, true);
+            if (previous && !current) {
+                this.queue.abstractButtons.set(name, false);
+                this.queue.enqueue({
+                    type: 'abstractButtonReleased',
+                    name: name
+                });
+            }
+        }
+    };
+    GamepadAbstractButtonProvider.prototype.transformEvent = function (e) {
+        if (e.type === 'gamepadButtonPressed') {
+            if (this._buttons.has(e.button)) {
+                var abName = this._buttons.get(e.button);
+                if (!this.queue.isAbstractButtonDown(abName)) {
+                    this.queue.abstractButtons.set(abName, true);
+                    this.queue.enqueue({
+                        type: 'abstractButtonPressed',
+                        name: abName,
+                        wrappedEvent: e
+                    });
+                }
+            }
+        }
+        else if (e.type === 'gamepadButtonReleased') {
+            if (this._buttons.has(e.button)) {
+                var abName = this._buttons.get(e.button);
+                if (this.queue.isAbstractButtonDown(abName) && !this.queue.isAbstractButtonDown(abName, true)) {
+                    this.queue.abstractButtons.set(abName, false);
+                    this.queue.enqueue({
+                        type: 'abstractButtonReleased',
+                        name: abName,
+                        wrappedEvent: e
+                    });
+                }
+            }
+        }
+        else
+            return null;
+    };
+    GamepadAbstractButtonProvider.prototype.isAbstractButtonDown = function (name) {
+        for (var _i = 0, _a = this._buttons.keys(); _i < _a.length; _i++) {
+            var button = _a[_i];
+            if (this._buttons.get(button) === name) {
+                if (this.queue.isGamepadButtonDown(button))
+                    return true;
+            }
+        }
+        return false;
+    };
+    return GamepadAbstractButtonProvider;
+}());
+exports.GamepadAbstractButtonProvider = GamepadAbstractButtonProvider;
+//# sourceMappingURL=gamepad-abstract-button-provider.js.map
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var KeyboardAbstractButtonProvider = (function () {
+    function KeyboardAbstractButtonProvider(queue) {
+        this.queue = queue;
+        this._keys = new Map();
+    }
+    KeyboardAbstractButtonProvider.prototype.bindAbstractButton = function (name) {
+        var keys = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            keys[_i - 1] = arguments[_i];
+        }
+        for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
+            var key = keys_1[_a];
+            if (this._keys.has(key))
+                throw new Error("The key '" + key + "' is already registered to the '" + this._keys.get(key) + "' abstract button.");
+            this._keys.set(key, name);
+            if (!this.queue.abstractButtons.has(name))
+                this.queue.abstractButtons.set(name, false);
+            var previous = this.queue.abstractButtons.get(name);
+            var current = this.queue.isKeyDown(key);
+            if (!previous && current) {
+                this.queue.abstractButtons.set(name, true);
+                this.queue.enqueue({
+                    type: 'abstractButtonPressed',
+                    name: name
+                });
+            }
+        }
+    };
+    KeyboardAbstractButtonProvider.prototype.unbindAbstractButton = function (name) {
+        var keys = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            keys[_i - 1] = arguments[_i];
+        }
+        for (var _a = 0, keys_2 = keys; _a < keys_2.length; _a++) {
+            var key = keys_2[_a];
+            if (!this._keys.has(key) || this._keys.get(key) !== name)
+                throw new Error("The key '" + key + "' is not registered to the '" + name + "' abstract button.");
+            this._keys.delete(key);
+            var previous = this.queue.abstractButtons.get(name);
+            var current = this.queue.isAbstractButtonDown(name, true);
+            if (previous && !current) {
+                this.queue.abstractButtons.set(name, false);
+                this.queue.enqueue({
+                    type: 'abstractButtonReleased',
+                    name: name
+                });
+            }
+        }
+    };
+    KeyboardAbstractButtonProvider.prototype.transformEvent = function (e) {
+        if (e.type === 'keyPressed') {
+            if (this._keys.has(e.code)) {
+                var abName = this._keys.get(e.code);
+                if (!this.queue.isAbstractButtonDown(abName)) {
+                    this.queue.abstractButtons.set(abName, true);
+                    this.queue.enqueue({
+                        type: 'abstractButtonPressed',
+                        name: abName,
+                        wrappedEvent: e
+                    });
+                }
+            }
+        }
+        else if (e.type === 'keyReleased') {
+            if (this._keys.has(e.code)) {
+                var abName = this._keys.get(e.code);
+                if (this.queue.isAbstractButtonDown(abName) && !this.queue.isAbstractButtonDown(abName, true)) {
+                    this.queue.abstractButtons.set(abName, false);
+                    this.queue.enqueue({
+                        type: 'abstractButtonReleased',
+                        name: abName,
+                        wrappedEvent: e
+                    });
+                }
+            }
+        }
+        else
+            return null;
+    };
+    KeyboardAbstractButtonProvider.prototype.isAbstractButtonDown = function (name) {
+        for (var _i = 0, _a = this._keys.keys(); _i < _a.length; _i++) {
+            var key = _a[_i];
+            if (this._keys.get(key) === name) {
+                if (this.queue.isKeyDown(key))
+                    return true;
+            }
+        }
+        return false;
+    };
+    return KeyboardAbstractButtonProvider;
+}());
+exports.KeyboardAbstractButtonProvider = KeyboardAbstractButtonProvider;
+//# sourceMappingURL=keyboard-abstract-button-provider.js.map
 
 /***/ })
 /******/ ]);
